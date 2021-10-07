@@ -65,7 +65,7 @@ pipeline{
                         try {
                             
                             echo "Pushing Nexus build to xebialabs distribution"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --exclude '*operator*.zip' --exclude .htaccess --exclude '*.xml' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*Release*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
                         
                         }catch(error) {
                             throw error
@@ -74,7 +74,7 @@ pipeline{
                         try {
 
                             echo "Pushing Nexus build to xebialabs distribution"
-                            "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --exclude '*operator*.zip' --exclude .htaccess --exclude '*.xml' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*Deploy*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
                             
                         }catch(error) {
                             throw error
