@@ -74,7 +74,7 @@ pipeline{
                         try {
 
                             echo "Pushing Nexus build to xebialabs distribution"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*reploy*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*deploy*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
                             
                         }catch(error) {
                             throw error
