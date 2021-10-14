@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.2"
+  ImageTag: "10.3"
   K8sSetup:
     Platform: PlainK8s
   KeystorePassphrase: <Provide store pass for the keystore>
