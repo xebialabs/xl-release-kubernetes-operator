@@ -13,6 +13,7 @@ pipeline{
         NEXUS_PASSWORD = credentials('nexus-ci')
         XEBIA_DIST_PASSWORD = credentials('16717ee9-bee2-4eb4-ab9e-022ff33a75ef')
         GitHubUser= credentials('git_api_token')
+        NEXUS_URL= 'https://nexus.xebialabs.com/nexus/content/repositories/releases/com/xebialabs/operator-based-installer'
     }
     stages {
         stage('Git clone and zip') {
@@ -57,18 +58,18 @@ pipeline{
                     if ( params.PRODUCT == 'XL Release' ) {
                             dir("xl-release-kubernetes-operator") {
                                  echo "Pushing nexus build to nexus"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-aw*.zip ${NEXUS_URL}"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-az*.zip ${NEXUS_URL}"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-open*.zip ${NEXUS_URL}"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-aw*.zip ${NEXUS_URL}/Release/"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-az*.zip ${NEXUS_URL}/Release/"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-open*.zip ${NEXUS_URL}/Release/"
                                 echo "Push successful"
                             }
                            
                     }else {
                             dir("xl-deploy-kubernetes-operator") {
                                 echo "Pushing nexus build to nexus"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-aw*.zip ${NEXUS_URL}"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-az*.zip ${NEXUS_URL}"
-                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-open*.zip ${NEXUS_URL}"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-aw*.zip ${NEXUS_URL}/Deploy/"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-az*.zip ${NEXUS_URL}/Deploy/"
+                                sh  "curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-open*.zip ${NEXUS_URL}/Deploy/"
                                 echo "Push successful"
                             }
                     }                                      
@@ -88,16 +89,14 @@ pipeline{
                      if ( params.PRODUCT == 'XL Release' ) {
                         dir("xl-release-kubernetes-operator") {
                            echo "Pushing Nexus build to xebialabs distribution"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aw*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*release-operator-azu*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-open*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aw*.zip' --include='*release-operator-azu*.zip' --include='release-operator-open*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/release xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                           
                          }
                     }else {
                             dir("xl-deploy-kubernetes-operator") {
                             echo "Pushing Nexus build to xebialabs distribution"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aw*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-az*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-open*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aw*.zip' --include='deploy-operator-az*.zip' --include='deploy-operator-open*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/operator/deploy xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+
                         }
                     }
                             
