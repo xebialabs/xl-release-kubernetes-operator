@@ -1,8 +1,6 @@
 pipeline{
-    agent {
-        label "master"
-    }
-     parameters {
+    agent none
+    parameters {
         choice(name: 'PRODUCT', choices: ['XL Release', 'XL Deploy'], description: 'Select the product to package')
         choice(name: 'PUSH_TO_NEXUS', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus?')
         choice(name: 'PUSH_TO_NEXUS_TO_XEBIALABS_DIST', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus to xebialans dist server?')        
@@ -12,7 +10,7 @@ pipeline{
         NEXUS_PROTOCOL = "http"
         NEXUS_PASSWORD = credentials('nexus-ci')
         XEBIA_DIST_PASSWORD = credentials('16717ee9-bee2-4eb4-ab9e-022ff33a75ef')
-        GitHubUser= credentials('git_api_token')
+        GitHubUser= credentials('XebiaLabsCIGithubToken2')
         NEXUS_URL= 'https://nexus.xebialabs.com/nexus/content/repositories/releases/com/xebialabs/operator-based-installer'
     }
     stages {
