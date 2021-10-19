@@ -25,6 +25,7 @@ pipeline{
                 node {
                     label "xlp-helm"
             }
+            }
             steps {
                 step([$class: 'WsCleanup'])
                 script {     
@@ -58,6 +59,7 @@ pipeline{
             agent {
                 node {
                     label "xlp-helm"
+            }
             }
             steps {
                 script {     
@@ -93,6 +95,7 @@ pipeline{
             agent {
                 node {
                     label "xlp-helm"
+            }
             }
             steps {
                 script { 
