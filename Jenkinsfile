@@ -107,7 +107,7 @@ pipeline{
                     }else {
                             dir("xl-deploy-kubernetes-operator") {
                             echo "Pushing Nexus build to xebialabs distribution"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks.zip' --include='deploy-ooperator-azure-aks.zip' --include='deploy-operator-openshift.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks.zip' --include='deploy-operator-azure-aks.zip' --include='deploy-operator-openshift.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
 
                         }
                     }
