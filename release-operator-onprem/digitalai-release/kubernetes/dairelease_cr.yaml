@@ -15,7 +15,7 @@ spec:
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   K8sSetup:
-    Platform: AWSEKS
+    Platform: PlainK8s
   KeystorePassphrase: <Provide store pass for the keystore>
   Persistence:
     AccessMode: ReadWriteOnce
@@ -443,11 +443,11 @@ spec:
     updateStrategy: {}
   nodeSelector: {}
   oidc:
-    enabled: false
     accessTokenUri: null
     clientId: null
     clientSecret: null
     emailClaim: null
+    enabled: false
     fullNameClaim: null
     issuer: null
     keyRetrievalUri: null
