@@ -27,7 +27,6 @@ pipeline{
             }
             }
             steps {
-                step([$class: 'WsCleanup'])
                 script {     
                     if ( params.PRODUCT == 'XL Release' ) {                    
                             sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"     
