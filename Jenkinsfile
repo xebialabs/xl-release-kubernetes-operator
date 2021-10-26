@@ -79,7 +79,7 @@ pipeline{
                                 sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-aws-ek*.zip ${NEXUS_URL}/Deploy/'
                                 sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-az*.zip ${NEXUS_URL}/Deploy/'
                                 sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-open*.zip ${NEXUS_URL}/Deploy/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-onpr*.zip ${NEXUS_URL}/Deploy/'
+                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-onpr*.zip ${NEXUS_URL}/Deploy/'
                                 echo "Push successful"
                             }
                     }                                      
