@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.2"
+  ImageTag: "10.3.3"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   KeystorePassphrase: <Provide store pass for the keystore>
@@ -180,7 +180,7 @@ spec:
       existingClaim: null
       mountPath: /bitnami/postgresql
       size: 50Gi
-      storageClass: <Provode Storage Class to be defined as PostgreSQL>
+      storageClass: <Provode Storage Class to be defined for PostgreSQL>
       subPath: ""
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null
@@ -464,7 +464,7 @@ spec:
       enabled: true
       selector: {}
       size: 8Gi
-      storageClass: <Storage Class to be defined as RabbitMQ>
+      storageClass: <Storage Class to be defined for RabbitMQ>
       volumes: null
     plugins: rabbitmq_management rabbitmq_peer_discovery_k8s
     podAffinityPreset: ""
