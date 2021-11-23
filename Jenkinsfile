@@ -4,6 +4,7 @@ pipeline{
         choice(name: 'PRODUCT', choices: ['XL Release', 'XL Deploy'], description: 'Select the product to package')
         choice(name: 'PUSH_TO_NEXUS', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus?')
         choice(name: 'PUSH_TO_NEXUS_TO_XEBIALABS_DIST', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus to xebialans dist server?')        
+        string(name: 'PRODUCT_RELEASE_VERSION', defaultValue: '', description: 'Product release version number for Operator artifacts')
     }
     environment {
         NEXUS_VERSION = "nexus3"
@@ -31,7 +32,7 @@ pipeline{
                     if ( params.PRODUCT == 'XL Release' ) {                    
                             sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"     
                             dir("xl-release-kubernetes-operator") {
-                                sh 'for r in */; do zip -r "${r%/}.zip" "$r"; done'
+                                sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
                                 sh "ls -lah"
                             }
                             echo "Git check out successful !!!"
@@ -39,7 +40,7 @@ pipeline{
                     }else {
                             sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git"     
                             dir("xl-deploy-kubernetes-operator") {
-                                sh 'for r in */; do zip -r "${r%/}.zip" "$r"; done'
+                                sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
                                 sh "ls -lah"
                             }
                             echo "Git check out successful !!!"
@@ -104,12 +105,12 @@ pipeline{
                      if ( params.PRODUCT == 'XL Release' ) {
                         dir("xl-release-kubernetes-operator") {
                            echo "Pushing Nexus build to xebialabs distribution"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aws-eks.zip' --include='release-operator-azure-aks.zip' --include='release-operator-openshift.zip' --include='release-operator-onprem.zip' --exclude='*'  /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Release/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aws-eks-*.zip' --include='release-operator-azure-aks-*.zip' --include='release-operator-openshift-*.zip' --include='release-operator-onprem-*.zip' --exclude='*'  /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Release/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
                          }
                     }else {
                             dir("xl-deploy-kubernetes-operator") {
                             echo "Pushing Nexus build to xebialabs distribution"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks.zip' --include='deploy-operator-azure-aks.zip' --include='deploy-operator-openshift.zip' --include='deploy-operator-onprem.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks-*.zip' --include='deploy-operator-azure-aks-*.zip' --include='deploy-operator-openshift-*.zip' --include='deploy-operator-onprem-*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
 
                         }
                     }
