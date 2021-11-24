@@ -29,7 +29,8 @@ pipeline{
             }
             steps {
                 script {     
-                    if ( params.PRODUCT == 'XL Release' ) {                    
+                    if ( params.PRODUCT == 'XL Release' ) {
+                            sh "rm -rf /var/lib/jenkins/workspace/XL Operator"                    
                             sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"     
                             dir("xl-release-kubernetes-operator") {
                                 sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
@@ -38,6 +39,7 @@ pipeline{
                             echo "Git check out successful !!!"
                        
                     }else {
+                            sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
                             sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git"     
                             dir("xl-deploy-kubernetes-operator") {
                                 sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
