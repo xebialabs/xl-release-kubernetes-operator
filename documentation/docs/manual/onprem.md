@@ -218,6 +218,6 @@ kubctl logs --follow <pod name>
 
 ## Uninstall
 
-* Perform undeploy of operator in Deploy
+* Perform undeploy of operator in Digital.ai Deploy
 * Remove manually all other CIs left in Deploy
 * Clean PVCs manually
