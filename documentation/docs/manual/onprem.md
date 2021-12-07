@@ -51,7 +51,6 @@ Add the ip and host in /etc/hosts with the hostname provided in the dairelease_c
 To find the ip check with `minikube ip`
 ```
 
-* Go through the process of [scaffolding](pics/scaffolding.md).
 * Create some folder where you can copy and configure the setup. For example `xlr-operator-setup`.
 * Copy `config` folder to `xlr-operator-setup`. You need only the next 11 files, the rest you can remove:
 
