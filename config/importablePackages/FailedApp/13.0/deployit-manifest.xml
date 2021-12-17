@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="13.0" application="FailedApp">
+  <deployables>
+    <yak.YakFail name="failed.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

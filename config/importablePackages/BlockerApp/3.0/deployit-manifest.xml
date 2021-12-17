@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="BlockerApp">
+    <application/>
+    <orchestrator>
+        <value>sequential-by-dependency</value>
+    </orchestrator>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+    <deployables>
+        <yak.YakBlocker name="/yakBlocker">
+            <tags/>
+        </yak.YakBlocker>
+    </deployables>
+    <applicationDependencies>
+        <entry key="GrazingApp">[4.0,4.0]</entry>
+    </applicationDependencies>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.DeploymentPackage>

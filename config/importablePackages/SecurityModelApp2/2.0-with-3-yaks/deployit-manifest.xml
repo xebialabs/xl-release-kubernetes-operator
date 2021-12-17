@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="2.0-with-3-yaks" application="SecurityModelApp2">
+  <deployables>
+    <yak.YakFile name="yak3" file="yak3/test3.yak"/>
+    <yak.YakFile name="yak2" file="yak2/test2.yak"/>
+    <yak.YakFile name="yak1" file="yak1/test1.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

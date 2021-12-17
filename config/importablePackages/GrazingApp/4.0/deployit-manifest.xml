@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="4.0" application="GrazingApp">
+  <application />
+  <orchestrator />
+  <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+  <deployables>
+    <yak.YakHerdWithIntermediateCheckpoints name="/yakCheckPoints">
+      <tags />
+      <yaks>
+        <value>Betty-1</value>
+      </yaks>
+    </yak.YakHerdWithIntermediateCheckpoints>
+  </deployables>
+  <applicationDependencies />
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+</udm.DeploymentPackage>

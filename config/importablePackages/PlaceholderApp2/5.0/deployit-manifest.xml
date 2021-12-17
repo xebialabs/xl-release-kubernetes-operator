@@ -1,0 +1,19 @@
+<test-v3.DummyProvisioningPackage application="PlaceholderApp2" version="5.0">
+
+    <deployables>
+    </deployables>
+    <templates>
+        <template.test-v3.BoundTemplate name="mysql-host">
+            <address>{{%publicip%}}</address>
+            <username>{{bar}}</username>
+            <instanceId>{{baz}}</instanceId>
+            <toBeIgnored>{{foo}}</toBeIgnored>
+        </template.test-v3.BoundTemplate>
+        <template.test-v3.BoundTemplate name="puppet-host-with-no-instance-id">
+            <address>{{'literal-placeholder'}}</address>
+            <username>{{bar}}</username>
+            <toBeIgnored>foo</toBeIgnored>
+        </template.test-v3.BoundTemplate>
+    </templates>
+
+</test-v3.DummyProvisioningPackage>

@@ -1,0 +1,10 @@
+some dummy content ${config1.first.placeholder}. other context on same line ${config1.second.placeholder}
+some dummy content ${config1.third.placeholder}. other context on same line ${config1.duplicate.placeholder}
+some dummy content ${config1.duplicate.placeholder}. other context on same line ${config1.last.placeholder}
+
+no need to count! There are in total 5 unique placeholders:
+config1.first.placeholder
+config1.second.placeholder
+config1.third.placeholder
+config1.duplicate.placeholder
+config1.last.placeholder

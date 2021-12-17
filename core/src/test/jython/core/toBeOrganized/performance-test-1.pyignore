@@ -1,0 +1,111 @@
+from com.xebialabs.deployit.core.api.dto import Archetype
+from com.xebialabs.deployit.core.api.dto import ConfigurationItem
+import time
+
+host = ConfigurationItem()
+host.configurationItemTypeName = "com.xebialabs.deployit.ci.Host"
+host.values = {"address":"localhost","username":"deployit","password":"admin"}
+
+host1Id = "Infrastructure/host1"
+host2Id = "Infrastructure/host2"
+host3Id = "Infrastructure/host3"
+
+proxies.repository.create(host1Id, host)
+proxies.repository.create(host2Id, host)
+proxies.repository.create(host3Id, host)
+
+environment = ConfigurationItem()
+environment.configurationItemTypeName = "com.xebialabs.deployit.ci.Environment"
+environment.values = {"members":[host1Id, host2Id]}
+
+updatedEnvironment = ConfigurationItem()
+updatedEnvironment.configurationItemTypeName = "com.xebialabs.deployit.ci.Environment"
+updatedEnvironment.values = {"members":[host1Id, host3Id]}
+
+totalNrOfCis = 10
+reportingInterval = 1000
+cisPerFolder = reportingInterval
+
+totalT1 = time.time()
+t1 = time.time()
+iAtT1 = 0
+print "Creating CIs..."
+for i in range(0,totalNrOfCis-1) :
+    id = "folder" + str(i/cisPerFolder) + "/environment_" + str(i)
+    proxies.repository.create(id, environment)
+    if i > 0 and (i % reportingInterval) == 0:
+        t2 = time.time()
+        print "Creating another " + str(i - iAtT1) + " CIs took " + str(t2 - t1) + " seconds."
+        iAtT1 = i
+        
+        readT1 = time.time()
+        print "Reading all CIs just created..."
+        for j in range(0, i):
+            idToRead = "folder" + str(j/cisPerFolder) + "/environment_" + str(j)
+            proxies.repository.read(idToRead)
+        readT2 = time.time()
+        print "Reading " + str(i) + " took " + str(readT2 - readT1) + " seconds (" + str((readT2 - readT1) / i) + " seconds per CI)"
+            
+        readT2 = time.time()
+
+        t1 = time.time()
+
+totalT2 = time.time()
+print "Creating a total " + str(totalNrOfCis) + " CIs took " + str(totalT2 - totalT1) + " seconds."
+
+
+totalT1 = time.time()
+t1 = time.time()
+iAtT1 = 0
+print "Updating CIs..."
+for i in range(0,totalNrOfCis-1) :
+    id = "folder" + str(i/cisPerFolder) + "/environment_" + str(i)
+    proxies.repository.update(id, updatedEnvironment)
+    if i > 0 and (i % reportingInterval) == 0:
+        t2 = time.time()
+        print "Updating another " + str(i - iAtT1) + " CIs took " + str(t2 - t1) + " seconds."
+        iAtT1 = i
+        t1 = time.time()
+
+totalT2 = time.time()
+print "Updating a total " + str(totalNrOfCis) + " CIs took " + str(totalT2 - totalT1) + " seconds."
+
+
+
+totalT1 = time.time()
+t1 = time.time()
+iAtT1 = 0
+print "Reading CIs..."
+for i in range(0,totalNrOfCis-1) :
+    id = "folder" + str(i/cisPerFolder) + "/environment_" + str(i)
+    proxies.repository.read(id)
+    if i > 0 and (i % reportingInterval) == 0:
+        t2 = time.time()
+        print "Reading another " + str(i - iAtT1) + " CIs took " + str(t2 - t1) + " seconds."
+        iAtT1 = i
+        t1 = time.time()
+
+totalT2 = time.time()
+print "Reading a total " + str(totalNrOfCis) + " CIs took " + str(totalT2 - totalT1) + " seconds."
+
+
+
+totalT1 = time.time()
+t1 = time.time()
+iAtT1 = 0
+print "Deleting CIs..."
+for i in range(0,totalNrOfCis-1) :
+    id = "folder" + str(i/cisPerFolder) + "/environment_" + str(i)
+    proxies.repository.delete(id)
+    if i > 0 and (i % reportingInterval) == 0:
+        t2 = time.time()
+        print "Deleting another " + str(i - iAtT1) + " CIs took " + str(t2 - t1) + " seconds."
+        iAtT1 = i
+        t1 = time.time()
+
+totalT2 = time.time()
+print "Deleting a total " + str(totalNrOfCis) + " CIs took " + str(totalT2 - totalT1) + " seconds."
+
+proxies.repository.delete(host1Id)
+proxies.repository.delete(host2Id)
+proxies.repository.delete(host3Id)

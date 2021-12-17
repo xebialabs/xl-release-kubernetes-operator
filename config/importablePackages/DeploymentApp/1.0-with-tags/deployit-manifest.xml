@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0-with-tags" application="DeploymentApp">
+  <deployables>
+    <yak.YakFile name="tag1.yak" file="tag1.yak/tag1.yak">
+      <tags>
+        <value>tag1</value>
+      </tags>
+    </yak.YakFile>
+    <yak.YakFile name="tag2.yak" file="tag2.yak/tag2.yak">
+      <tags>
+        <value>tag2</value>
+      </tags>
+    </yak.YakFile>
+    <yak.YakFile name="tag1and2.yak" file="tag1and2.yak/tag1and2.yak">
+      <tags>
+        <value>tag2</value>
+        <value>tag1</value>
+      </tags>
+    </yak.YakFile>
+    <yak.YakFile name="untagged.yak" file="untagged.yak/untagged.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

@@ -1,0 +1,2 @@
+This file should be copied to a temporarydirectory for the deployment integration test to succeed!
+<EOM>

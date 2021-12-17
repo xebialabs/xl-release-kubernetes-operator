@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="GrazingApp">
+<deployables>
+  <yak.YakFile name="test.yak1" file="test/test.yak1"/>
+</deployables>
+</udm.DeploymentPackage>

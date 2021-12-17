@@ -1,0 +1,10 @@
+package = deployit.importPackage("src/test/resources/testfiles/test-package-with-config.dar")
+
+mappings = deployit.generateMappings(["Applications/SampleDar/1.0/conf"], realEnv.id)
+
+kvps = mappings[0].values["keyValuePairs"]
+
+if not len(kvps) > 0:
+    raise Exception("No KeyValuePairs found in mapping")
+
+repository.delete(package.values["application"])

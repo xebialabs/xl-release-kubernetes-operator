@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="DeploymentApp">
+  <deployables>
+    <yak.PlaceholdersYakFile name="placeholders.txt" file="placeholders.txt/placeholders.txt"/>
+  </deployables>
+</udm.DeploymentPackage>

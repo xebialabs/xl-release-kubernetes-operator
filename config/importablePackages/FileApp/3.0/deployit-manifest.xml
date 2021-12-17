@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="FileApp">
+  <deployables>
+    <file.File name="file1.txt" file="file1/file1.txt">
+      <targetPath>/tmp</targetPath>
+    </file.File>
+    <file.File name="file2.txt" file="file2/file2.txt">
+      <targetPath>/tmp</targetPath>
+    </file.File>
+  </deployables>
+</udm.DeploymentPackage>

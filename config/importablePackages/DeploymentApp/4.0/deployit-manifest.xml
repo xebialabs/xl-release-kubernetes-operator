@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="4.0" application="DeploymentApp">
+  <deployables>
+    <yak.YakFile name="test.yak" file="test.yak/test.yak"/>
+    <yak.YakFile name="yak2.yak" file="yak2.yak/yak2.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

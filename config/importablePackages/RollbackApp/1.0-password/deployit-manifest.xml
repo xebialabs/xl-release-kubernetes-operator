@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="RollbackApp">
+  <deployables>
+    <yak.YakDeployablePasswords name="passwords">
+      <password>password</password>
+      <passwordList>
+        <value>item1</value>
+        <value>item2</value>
+      </passwordList>
+      <passwordMap>
+        <entry key="key1">value1</entry>
+        <entry key="key2">value2</entry>
+      </passwordMap>
+    </yak.YakDeployablePasswords>
+  </deployables>
+</udm.DeploymentPackage>

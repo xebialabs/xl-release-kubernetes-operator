@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="DeploymentAppWithProvisionables">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.BucketSpec name="yakBucket">
+            <cardinality>2</cardinality>
+        </yak.BucketSpec>
+        <yak.YakFile name="file1" file="artifact/file.yak">
+        </yak.YakFile>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.DeploymentPackage>

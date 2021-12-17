@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="DeployedAppWithTemplates">
+<application />
+<orchestrator />
+<satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+<deployables>
+    <yak.NameSpaceSpec name="/yakNameSpace">
+        <boundTemplates>
+            <ci ref="/yakdictionary" />
+        </boundTemplates>
+        <tags />
+    </yak.NameSpaceSpec>
+</deployables>
+<applicationDependencies />
+<dependencyResolution>LATEST</dependencyResolution>
+<undeployDependencies>false</undeployDependencies>
+<templates>
+    <template.udm.Dictionary name="/yakdictionary">
+        <childTemplates />
+        <entries>
+            <entry key="foo">bar</entry>
+        </entries>
+        <encryptedEntries />
+        <restrictToContainers />
+        <restrictToApplications />
+    </template.udm.Dictionary>
+</templates>
+<boundTemplates />
+</udm.DeploymentPackage>

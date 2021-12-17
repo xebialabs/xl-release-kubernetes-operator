@@ -1,0 +1,33 @@
+switchUser('security-model-user')
+
+host = factory.configurationItem("Host", {"address":"localhost","username":"deployit","password":"admin","operatingSystemFamily":"UNIX","accessMethod":"SSH_SUDO"})
+host.id="Infrastructure/host at localhost"
+
+try:
+	repository.create(host)
+except:
+	switchUser('admin')
+else:
+	raise Exception('Should not be allowed to add Infrastructure yet without discovery perms.')
+
+security.grant('discovery', 'security-model-user')
+security.grant('repo#edit', 'security-model-user')
+
+switchUser('security-model-user')
+
+repository.create(host.id, host)
+
+dmEntity = factory.configurationItem("DummyWasDeploymentManager", {"host":host.id})
+dmEntity.id = "dmngr1"
+
+discovered = deployit.discover(dmEntity)
+
+saved = repository.create(discovered)
+
+switchUser('admin')
+
+security.revoke('discovery', 'security-model-user')
+security.revoke('repo#edit', 'security-model-user')
+
+repository.delete(saved.objects[0].id)
+repository.delete(host.id)

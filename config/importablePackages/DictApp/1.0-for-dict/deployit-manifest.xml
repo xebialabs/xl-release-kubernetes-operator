@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="DictApp">
+  <deployables>
+    <test-v3.DummyEarWithAllProperties name="dummyEar" file="dummyEar/allproperties.ci"/>
+  </deployables>
+</udm.DeploymentPackage>

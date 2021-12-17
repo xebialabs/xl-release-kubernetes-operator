@@ -1,0 +1,2 @@
+first line with {{art-first.placeholder}}
+second line with {{art-SECOND_PLACEHOLDER}}

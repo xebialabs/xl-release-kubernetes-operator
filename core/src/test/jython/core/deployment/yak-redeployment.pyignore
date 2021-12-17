@@ -1,0 +1,66 @@
+from time import sleep
+from java.util import HashMap, ArrayList, HashSet
+from java.util.concurrent import TimeUnit
+from com.xebialabs.deployit.core.api.dto import ConfigurationItem
+from com.xebialabs.deployit.integration.test.support import TemporaryDirectoryHolder
+
+# Setup
+tempDir = TemporaryDirectoryHolder.getTemporaryDirectory()
+if len(tempDir.listFiles()) > 0:
+    raise Exception("No files should be present!")
+
+source = proxies.importablePackage.importPackage('PetClinic-ear/1.0').entity
+applicationId = source.values['application']
+serverCi = ConfigurationItem("com.xebialabs.deployit.plugin.test.DummyJeeServer")
+serverCi.values = {'name':'localhost', 'numberOfSteps': '1', 'amountOfKBLogFiles':'1', 'stepDelayTimeInMilliSeconds':'2000'}
+serverId = proxies.repository.create("Infrastructure/dummy1", serverCi).entity.id
+
+environmentCi = ConfigurationItem("com.xebialabs.deployit.ci.Environment")
+valueMap = HashMap()
+memberSet = HashSet()
+memberSet.add(serverId)
+valueMap.put('members', memberSet)
+environmentCi.values = valueMap
+targetId = proxies.repository.create("Environments/env1", environmentCi).entity.id
+print "Created environment"
+
+# Do initial deployment of 1.0
+mappings = proxies.deployment.generateMappings(source.getId(), targetId).entity
+steps = proxies.deployment.prepare(source.getId(), targetId, mappings).entity
+taskid = steps.getTaskId()
+proxies.taskRegistry.start(taskid)
+lastModified = None
+while True:
+    taskinfo = proxies.taskRegistry.getTaskInfo(taskid).entity
+    state = taskinfo.state
+    if state == "DONE":
+        print "Task is", state,", done waiting"
+        break
+    print "Task is", state,", current step # is", taskinfo.currentStepNr
+    sleep(1)
+
+# Assert after completion
+taskinfoAfterCompletion = proxies.taskRegistry.getTaskInfo(taskid).entity
+assertEquals("DONE", taskinfoAfterCompletion.state)
+print "Initial deployment done"
+deploymentLabel = targetId + "/PetClinic-ear"
+
+# Modify ONLY the mappings
+assertEquals(1, len(mappings.objects))
+earMapping = mappings.objects[0]
+earMapping.values['virtualHost'] = 'modified-virtual-host:8080';
+
+# Generate steps for a "soft redeploy" with modified mappings
+upgradeSteps = proxies.deployment.prepare(source.getId(), deploymentLabel, mappings).entity
+# FIXME: We'd rather write that the number of steps should be bigger than 0 but the IntegrationTestRunBook will always contribute 2 steps, ragardless of what's in the mappings.
+foundVirtualHostStep = False
+for step in upgradeSteps.steps:
+    if step.description.find('Creating Virtual Host') != -1:
+        foundVirtualHostStep = True
+assertTrue(foundVirtualHostStep);
+
+# Teardown
+proxies.repository.delete(deploymentLabel)
+proxies.repository.delete(targetId)
+proxies.repository.delete(serverId)
+proxies.repository.delete(applicationId)

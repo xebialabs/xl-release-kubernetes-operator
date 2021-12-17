@@ -1,0 +1,10 @@
+yakServer = repository.create(factory.configurationItem("Infrastructure/reports-yak1", "yak.YakServer", {}))
+yakEnv = repository.create(factory.configurationItem("Environments/reports-env1", "udm.Environment", {"members": [yakServer.id]}))
+yakEnv2 = repository.create(factory.configurationItem("Environments/reports-env2", "udm.Environment", {"members": [yakServer.id]}))
+yakEnv3 = repository.create(factory.configurationItem("Environments/reports-env3", "udm.Environment", {"members": [yakServer.id]}))
+yakPackage = deployit.importPackage('DeploymentApp-ForReporting/1.0')
+yakPackage2_0 = deployit.importPackage('DeploymentApp-ForReporting/2.0')
+yakPackage3_0 = deployit.importPackage('DeploymentApp-ForReporting/3.0')
+
+reportsBackendApp = repository.create(factory.configurationItem('Applications/reportsBackend', 'udm.Application', {}))
+reportsFrontendApp = repository.create(factory.configurationItem('Applications/reportsFrontend', 'udm.Application', {}))

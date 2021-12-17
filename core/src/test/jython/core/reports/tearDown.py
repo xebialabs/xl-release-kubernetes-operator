@@ -1,0 +1,7 @@
+repository.delete(yakEnv.id)
+repository.delete(yakEnv2.id)
+repository.delete(yakEnv3.id)
+repository.delete(yakServer.id)
+repository.delete('Applications/DeploymentApp-ForReporting')
+repository.delete('Applications/reportsBackend')
+repository.delete('Applications/reportsFrontend')

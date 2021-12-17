@@ -1,0 +1,34 @@
+from time import sleep
+from com.xebialabs.deployit.engine.api.execution import TaskExecutionState
+# This test doesn't really assert anything, but simply runs the garbagecollector
+# to make sure it still works. :)
+
+deployit.runGarbageCollector()
+
+taskList = tasks.myCurrentTaskSummaries
+assertEquals(1, len(taskList))
+
+task = taskList[0]
+iterations = 0
+
+states = [TaskExecutionState.DONE, TaskExecutionState.EXECUTED, TaskExecutionState.STOPPED]
+
+while task is not None and task.state not in states:
+  sleep(5)
+  iterations = iterations + 1
+  try:
+    task = tasks.get(task.id)
+  except:
+    # Task cannot be found anymore, this is ok!
+    task = None
+    pass
+  if iterations > 5:
+    raise Exception("Still not finished, task %s with state %s" %(task.id, task.state))
+
+try:
+  task = tasks.get(task.id)
+except:
+  # ok
+  pass
+else:
+  raise Exception("Task %s should have been cleaned after finish (state %s)" %(task.id, task.state))

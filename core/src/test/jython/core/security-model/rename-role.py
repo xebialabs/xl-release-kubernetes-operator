@@ -1,0 +1,6 @@
+security.assignRole('security-model-senior-dude',['security-model-dude'])
+assertTrue('security-model-senior-dude' in security.getRoleNames())
+security.renameRole('security-model-senior-dude','security-model-a-dude')
+assertTrue('security-model-a-dude' in security.getRoleNames())
+assertTrue('security-model-dude' in security.getRoleAssignments('security-model-a-dude'))
+security.removeRole('security-model-a-dude')

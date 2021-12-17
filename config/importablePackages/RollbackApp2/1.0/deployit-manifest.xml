@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="3.0" application="RollbackApp2">
+  <deployables>
+    <yak.YakHerdWithIntermediateCheckpoints name="herd">
+      <yaks>
+        <value>Betty-1</value>
+        <value>Betty-2</value>
+        <value>Betty-3</value>
+      </yaks>
+    </yak.YakHerdWithIntermediateCheckpoints>
+  </deployables>
+</udm.DeploymentPackage>

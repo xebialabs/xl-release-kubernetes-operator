@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="BarApp">
+  <deployables>
+    <test-v3.FileWithProperties name="Bar.ear" file="Bar.ear">
+      <stringProp>Works</stringProp>
+    </test-v3.FileWithProperties>
+    <test-v3.DeployableWithInternalReference name="referencingResource">
+      <file ref="Bar.ear" />
+    </test-v3.DeployableWithInternalReference>
+  </deployables>
+</udm.DeploymentPackage>

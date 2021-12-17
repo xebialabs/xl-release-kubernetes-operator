@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="ImportApp4">
+  <deployables>
+    <test-v3.FileWithProperties name="foo" file="foo/foo.txt">
+      <stringProp>string</stringProp>
+    </test-v3.FileWithProperties>
+    <test-v3.DeployableWithInternalReference name="reference">
+      <file ref="foo" />
+    </test-v3.DeployableWithInternalReference>
+  </deployables>
+</udm.DeploymentPackage>

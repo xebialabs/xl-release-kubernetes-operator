@@ -1,0 +1,28 @@
+appDir = repository.create(factory.configurationItem('Applications/issues-dir','core.Directory',{}))
+envDir = repository.create(factory.configurationItem('Environments/issues-dir','core.Directory',{}))
+
+app = repository.create(factory.configurationItem('Applications/issues-dir/tinyApp', 'udm.Application', {}))
+server = repository.create(factory.configurationItem('Infrastructure/issues-host', 'yak.YakServer'))
+env = repository.create(factory.configurationItem('Environments/issues-dir/0hostEnv0', 'udm.Environment', {"members":[server.id]}))
+
+security.createUser("issues-user-test", DEFAULT_PASSWORD)
+security.assignRole("issues-user-test", ["issues-user-test"])
+security.grant("login", "issues-user-test")
+security.grant("read", "issues-user-test", [ appDir.id ])
+security.grant("read", "issues-user-test", [ envDir.id ])
+security.logout()
+security.login("issues-user-test", DEFAULT_PASSWORD)
+assertEquals(1, len(repository.search('udm.Application')))
+assertEquals(1, len(repository.search('udm.Environment')))
+
+security.logout()
+security.login('admin', 'admin')
+
+security.revoke("read", "issues-user-test", [ appDir.id ])
+security.revoke("read", "issues-user-test", [ envDir.id ])
+security.revoke("login", "issues-user-test")
+repository.delete(appDir.id)
+repository.delete(envDir.id)
+repository.delete(server.id)
+security.deleteUser('issues-user-test')
+security.removeRole("issues-user-test")

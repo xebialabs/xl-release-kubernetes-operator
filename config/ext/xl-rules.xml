@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<rules xmlns="http://www.xebialabs.com/xl-deploy/xl-rules">
+    <!--Script Rules -->
+    <rule name="itest.myPrePlan" scope="pre-plan">
+        <planning-script-path>planning-scripts/itest.myPrePlan.py</planning-script-path>
+    </rule>
+
+    <rule name="itest.myScriptDeployed" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <operation>MODIFY</operation>
+            <expression>"rules-ScriptPlanEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <planning-script-path>planning-scripts/itest.myScriptDeployed.py</planning-script-path>
+    </rule>
+
+    <rule name="itest.myScriptPlan" scope="plan">
+        <planning-script-path>planning-scripts/itest.myScriptPlan.py</planning-script-path>
+    </rule>
+
+    <rule name="itest.myPostRule" scope="post-plan">
+        <planning-script-path>planning-scripts/itest.myPostRule.py</planning-script-path>
+    </rule>
+
+    <!--XML RULES -->
+
+    <rule name="itest.XmlPrePlan" scope="pre-plan">
+        <conditions>
+            <expression>len(specification.deltas) != 0
+                and specification.deltas[0].deployedOrPrevious.type == "yak.DeployedYakXmlRule"
+                and "rules-XmlPlanEnv" in deployedApplication.environment.name
+            </expression>
+        </conditions>
+        <steps>
+            <rule-pre-step>
+                <pre-param>My Global xml step</pre-param>
+            </rule-pre-step>
+        </steps>
+    </rule>
+
+    <rule name="itest.XmlDeployedRule_CM" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakXmlRule</type>
+            <operation>CREATE</operation>
+            <operation>MODIFY</operation>
+            <expression>"XmlPlanEnv" in deployedApplication.environment.name
+                and "rules-ScriptPlanEnv" not in deployedApplication.environment.name
+                and deployed.type == "yak.DeployedYakXmlRule"
+            </expression>
+        </conditions>
+
+        <steps>
+            <rule-deployed-xml-step>
+                <order>40</order>
+                <test-param>My deployed XML step</test-param>
+                <description expression="true">deployed.name</description>
+            </rule-deployed-xml-step>
+
+            <rule-plan-step/>
+        </steps>
+    </rule>
+
+    <rule name="itest.XmlDeployedRule_D" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakXmlRule</type>
+            <operation>DESTROY</operation>
+            <expression>"rules-XmlPlanEnv" in previousDeployedApplication.environment.name
+                and "rules-ScriptPlanEnv" not in previousDeployedApplication.environment.name
+                and previousDeployed.type == "yak.DeployedYakXmlRule"
+            </expression>
+        </conditions>
+
+        <steps>
+            <rule-deployed-xml-step>
+                <order>40</order>
+                <test-param>My deployed XML step</test-param>
+                <description expression="true">previousDeployed.name</description>
+            </rule-deployed-xml-step>
+
+            <rule-plan-step/>
+        </steps>
+    </rule>
+
+
+    <!--XMl Deployed Step primitive -->
+    <!-- no test for Copy-step primitive  and Checkk point has been written -->
+
+    <rule name="itest.myWaitStep" scope="pre-plan">
+        <conditions>
+            <expression>len(specification.deltas) != 0 and specification.deltas[0].deployedOrPrevious.type ==
+                "yak.DeployedYakRule"
+            </expression>
+        </conditions>
+        <steps>
+            <wait>
+                <order>50</order>
+                <description>Waiting for 1 second</description>
+                <seconds>1</seconds>
+            </wait>
+        </steps>
+    </rule>
+
+    <rule name="itest.myExecuteStep" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <operation>MODIFY</operation>
+            <expression>"rules-StepPlanEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <os-script>
+                <target-host expression="true">deployed.container.host</target-host>
+                <script>tests/deploy-artifact</script>
+            </os-script>
+        </steps>
+    </rule>
+
+    <rule name="itest.myResolveTemplateStep" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <operation>MODIFY</operation>
+            <expression>"rules-StepPlanEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <template>
+                <order>50</order>
+                <description expression="true">"Deploy resolve template " + deployed.name + " to " +
+                    deployed.container.name
+                </description>
+                <target-path>/tmp/yak.datasource.xml</target-path>
+                <target-host expression="true">deployed.container.host</target-host>
+                <template-path>tests/datasource.ftl</template-path>
+                <freemarker-context>
+                    <prop>myProp</prop>
+                </freemarker-context>
+            </template>
+        </steps>
+    </rule>
+
+    <rule name="itest.myDestroyStep" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>DESTROY</operation>
+            <expression>"rules-StepPlanEnv" in previousDeployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <delete>
+                <description expression="true">"Delete Resource " + previousDeployed.name</description>
+                <order>50</order>
+                <target-host expression="true">previousDeployed.container.host</target-host>
+                <target-path expression="true">"/tmp/" + previousDeployed.file.name</target-path>
+            </delete>
+        </steps>
+    </rule>
+
+    <rule name="itest.myLocalPython" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <expression>"rules-StepPlanEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <jython>
+                <description>Run the 'welcome_user1.py' script</description>
+                <!--if no order is defined "70" should be defined automatically to this step -->
+                <script-path>tests/welcome_user1.py</script-path>
+                <jython-context>
+                    <user>XebiaLabs user1</user>
+                </jython-context>
+            </jython>
+
+            <jython>
+                <order>80</order>
+                <description>Run the 'welcome_user2.py' script</description>
+                <script-path>tests/welcome_user2.py</script-path>
+                <jython-context>
+                    <user>XebiaLabs user1</user>
+                    <!-- must be the same as in the step above for the test to work -->
+                </jython-context>
+            </jython>
+        </steps>
+    </rule>
+
+    <rule name="itest.rollbackRule" scope="plan">
+        <conditions>
+            <expression>context.rollback</expression>
+        </conditions>
+        <steps>
+            <noop>
+                <order>80</order>
+                <description>Roll me back NOOP!</description>
+            </noop>
+        </steps>
+    </rule>
+
+    <step-macro name="my-simple-step">
+        <steps>
+            <noop>
+                <description>first noop step</description>
+                <order>60</order>
+            </noop>
+        </steps>
+    </step-macro>
+
+    <step-macro name="my-simple-step-with-parameters">
+        <parameters>
+            <parameter name="custom-step-description" type="string" description="Custom step description"/>
+        </parameters>
+        <steps>
+            <noop>
+                <description expression="true">macro['custom-step-description']</description>
+                <order>60</order>
+            </noop>
+        </steps>
+    </step-macro>
+
+    <rule name="itest.stepmacroNoopSteps" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <expression>"StepMacroNoopEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <my-simple-step/>
+        </steps>
+    </rule>
+
+    <rule name="itest.stepmacroNoopStepsWithParameter" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <expression>"rules-StepMacroNoopWithParametersEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <my-simple-step-with-parameters>
+                <custom-step-description>Custom step description</custom-step-description>
+            </my-simple-step-with-parameters>
+        </steps>
+    </rule>
+
+    <step-macro name="puppet-apply">
+        <parameters>
+            <parameter name="manifest-file" type="string" description="The manifest file to apply" />
+        </parameters>
+        <steps>
+            <jython>
+                <script>puppet/apply.py</script>
+                <order>65</order>
+                <jython-context>
+                    <manifest expression="true">macro['manifest-file']</manifest>
+                </jython-context>
+            </jython>
+        </steps>
+    </step-macro>
+
+    <rule name="itest.puppet-rule" scope="deployed">
+        <conditions>
+            <type>test.PuppetManifest</type>
+            <operation>CREATE</operation>
+            <expression>"rules-StepMacroPuppetApplyStepEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <puppet-apply>
+                <manifest-file expression="true">deployed.manifestFile</manifest-file>
+            </puppet-apply>
+        </steps>
+    </rule>
+
+    <disable-rule name="test.MyExecutedScripts.executeCreate_CREATE" />
+    <rule name="itest.MyExecutedScripts" scope="deployed">
+        <conditions>
+            <type>test.MyExecutedScripts</type>
+            <operation>CREATE</operation>
+        </conditions>
+        <steps>
+            <reference-check-step>
+                <deployed expression="true">deployed</deployed>
+                <deployed-application expression="true">deployedApplication</deployed-application>
+            </reference-check-step>
+        </steps>
+    </rule>
+
+    <rule name="test.StepLogTestDeployed_CREATE" scope="deployed">
+      <conditions>
+          <type>test.StepLogTestDeployed</type>
+          <operation>CREATE</operation>
+      </conditions>
+      <steps>
+          <jython>
+              <description>Print some invalid XML characters.</description>
+              <script-path>tests/print-invalid-xml.py</script-path>
+          </jython>
+      </steps>
+    </rule>
+    <rule name="itest.customRETRY_STEP" scope="deployed">
+        <conditions>
+            <type>yak.DeployedYakRule</type>
+            <operation>CREATE</operation>
+            <expression>"rules-RetryStepEnv" in deployedApplication.environment.name</expression>
+        </conditions>
+        <steps>
+            <jython>
+                <order expression="true">9</order>
+                <description>Run the 'test_retry_step.py' script</description>
+                <!--if no order is defined "70" should be defined automatically to this step -->
+                <script-path>tests/test_retry_step.py</script-path>
+                <jython-context>
+                    <user>XebiaLabs user1</user>
+                </jython-context>
+            </jython>
+        </steps>
+    </rule>
+</rules>

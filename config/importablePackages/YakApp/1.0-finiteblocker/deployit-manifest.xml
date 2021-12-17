@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0-finiteblocker" application="YakBlockingApp">
+  <deployables>
+    <yak.YakFiniteBlocker name="yakFiniteBlocker"/>
+  </deployables>
+  <applicationDependencies>
+    <entry key="YakApp">[1.0,1.0]</entry>
+  </applicationDependencies>
+</udm.DeploymentPackage>

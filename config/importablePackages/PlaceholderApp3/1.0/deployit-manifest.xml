@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="PlaceholderApp3">
+    <orchestrator/>
+    <deployables>
+        <yak.PlaceholdersYakFile name="yak.tar" file="yak.tar">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.tar.gz" file="yak.tar.gz">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.tar.bz2" file="yak.tar.bz2">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.zip" file="yak.zip">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.jar" file="yak.jar">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.war" file="yak.war">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+        <yak.PlaceholdersYakFile name="yak.ear" file="yak.ear">
+            <tags/>
+            <scanPlaceholders>true</scanPlaceholders>
+        </yak.PlaceholdersYakFile>
+    </deployables>
+</udm.DeploymentPackage>

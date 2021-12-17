@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="5.0" application="DeploymentApp-ForReporting-Charlie">
+  <orchestrator>
+    <value>parallel-by-container</value>
+  </orchestrator>
+  <deployables>
+    <yak.YakFail name="failed.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

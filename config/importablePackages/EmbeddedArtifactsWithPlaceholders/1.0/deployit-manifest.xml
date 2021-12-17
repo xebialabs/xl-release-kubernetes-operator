@@ -1,0 +1,10 @@
+<udm.DeploymentPackage version="1.0" application="EmbeddedArtifactsWithPlaceholders">
+    <deployables>
+        <yak.CiWithEmbeddedArtifacts name="nested">
+            <artifactSet>
+                <yak.EmbeddedFileArtifact name="file1" file="/config/config1.txt"/>
+                <yak.EmbeddedFileArtifact name="file2" file="/config/config2.txt"/>
+            </artifactSet>
+        </yak.CiWithEmbeddedArtifacts>
+    </deployables>
+</udm.DeploymentPackage>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="6.0" application="YakApp">
+  <deployables>
+      <test-v3.DummyDataSource name="ds1">
+          <driver>oracle.odbc.jdbc.OdbcJdbcProvider</driver>
+          <username>scott</username>
+          <password>tiger</password>
+          <url></url>
+      </test-v3.DummyDataSource>
+      <test-v3.JdbcProvider>
+
+      </test-v3.JdbcProvider>
+  </deployables>
+</udm.DeploymentPackage>

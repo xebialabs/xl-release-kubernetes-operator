@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="1.0" application="TaskBlockNoopStepContributingApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+    <deployables>
+        <yak.NoopSpec name="NoOpSpec">
+            <tags/>
+        </yak.NoopSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.ProvisioningPackage>

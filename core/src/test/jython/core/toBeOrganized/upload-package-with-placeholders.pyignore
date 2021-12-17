@@ -1,0 +1,30 @@
+from java.util import Set, HashSet
+
+importPackage = deployit.importPackage("src/test/resources/testfiles/test-package-with-config.dar")
+
+#read the imported package from repository
+assertTrue(importPackage.values['version'] == "1.0");
+
+artifacts = importPackage.values['deployableArtifacts']
+print 'artifacts in package:',artifacts;
+
+config=repository.read('Applications/SampleDar/1.0/conf')
+placeholders = config.values['placeholders'];
+print 'palceholders found:',placeholders
+assertEquals(10, len(placeholders))
+placeholderSet = HashSet(placeholders);
+
+assertTrue(placeholderSet.contains('config1.first.placeholder'));
+assertTrue(placeholderSet.contains('config1.second.placeholder'));
+assertTrue(placeholderSet.contains('config1.third.placeholder'));
+assertTrue(placeholderSet.contains('config1.duplicate.placeholder'));
+assertTrue(placeholderSet.contains('config1.last.placeholder'));
+
+assertTrue(placeholderSet.contains('config2.first.placeholder'));
+assertTrue(placeholderSet.contains('config2.second.placeholder'));
+assertTrue(placeholderSet.contains('config2.third.placeholder'));
+assertTrue(placeholderSet.contains('config2.duplicate.placeholder'));
+assertTrue(placeholderSet.contains('config2.last.placeholder'));
+
+# Cleanup the imported package
+proxies.repository.delete(importPackage.values['application'])

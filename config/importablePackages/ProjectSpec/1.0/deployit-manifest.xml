@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="1.0" application="ProjectSpec">
+  <application />
+  <orchestrator />
+  <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+  <deployables>
+    <test.ProjectSpec name="/ProjectSpec">
+      <containerTags />
+      <tags />
+    </test.ProjectSpec>
+  </deployables>
+  <applicationDependencies />
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+  <templates />
+  <boundTemplates />
+</udm.ProvisioningPackage>

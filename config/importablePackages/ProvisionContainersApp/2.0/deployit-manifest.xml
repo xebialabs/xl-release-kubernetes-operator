@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="2.0" application="ProvisionContainersApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+    <deployables>
+        <yak.BucketSpec name="yakBucket">
+            <tags/>
+            <cardinality>1</cardinality>
+        </yak.BucketSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.ProvisioningPackage>

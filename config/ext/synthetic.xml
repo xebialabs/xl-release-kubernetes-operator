@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Note: If you modify this file, you must restart the XL Deploy server.
+-->
+<!--
+    Note: For integration test, this file MUST be in the 'conf' folder instead of the normal 'ext' folder.
+    This is because the definitions in here OVERWRITE some definitions that are loaded from the classpath.
+-->
+<synthetic xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd"
+           xmlns="http://www.xebialabs.com/deployit/synthetic" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <type type="test.EmbeddedServer" extends="udm.BaseContainer">
+        <property name="host" kind="ci" referenced-type="overthere.Host" as-containment="true"/>
+    </type>
+
+    <type type="test.ParentModule" deployable-type="test.ParentDeployable" extends="udm.BaseDeployed"
+          container-type="my.Server">
+        <generate-deployable type="test.ParentDeployable" extends="udm.BaseDeployable"/>
+        <property name="bindings" kind="list_of_ci" referenced-type="test.ChildEmbeddedDeployedArtifact"
+                  as-containment="true" required="true"/>
+    </type>
+
+    <type type="test.ChildEmbeddedDeployedArtifact" deployable-type="test.ChildEmbeddedDeployable"
+          container-type="my.BaseModule" extends="udm.EmbeddedDeployedArtifact">
+        <generate-deployable type="test.ChildEmbeddedDeployable" extends="udm.EmbeddedDeployableArtifact"/>
+    </type>
+
+    <type-modification type="test.ParentDeployable">
+        <property name="bindings" kind="list_of_ci" referenced-type="test.ChildEmbeddedDeployable" as-containment="true"
+                  required="true"/>
+    </type-modification>
+
+    <type type="template.overthere.DummySshHost" extends="udm.Template">
+        <property name="address" required="true" description="Address of the host"/>
+        <property name="username" required="true" description="Username to connect with"/>
+        <property name="password" required="true" description="Password to connect with"/>
+    </type>
+
+    <type type="test.PuppetManifest" extends="udm.BaseDeployedArtifact" deployable-type="test.PuppetManifestSpec" container-type="yak.YakServer" description="Puppet manifest folder applied on the host.">
+        <generate-deployable type="test.PuppetManifestSpec" extends="udm.BaseDeployableFolderArtifact" description="Puppet manifest folder applied on the host."/>
+        <property name="manifestFile" description="Manifest file name."/>
+
+    </type>
+
+
+    <type-modification type="udm.Application">
+        <property name="verifyChecklistPermissionsOnCreate" kind="boolean" hidden="false" required="false" description="If true, permissions for changing checklist requirements will be checked on import"/>
+    </type-modification>
+
+
+    <type-modification type="udm.Environment">
+        <property name="requiresReleaseNotes" kind="boolean" required="false" category="Checks"/>
+    </type-modification>
+
+    <type-modification type="udm.Version">
+        <property name="satisfiesReleaseNotes" kind="boolean" required="false" category="Checks" label="Has release notes" />
+        <property name="rolesReleaseNotes" kind="set_of_string" required="false" hidden="true" default="admin" />
+    </type-modification>
+
+    <type type="test.MyScripts" extends="generic.Folder">
+    </type>
+
+    <type type="test.MyExecutedScripts" extends="generic.ExecutedFolder" deployable-type="test.MyScripts" container-type="overthere.LocalHost">
+        <property name="createVerb" hidden="true" default="Run" />
+        <property name="destroyVerb" hidden="true" default="Rollback" />
+        <property name="executorScript" hidden="true" default="${deployed.container.clientWrapperScript}" />
+        <property name="scriptRecognitionRegex" hidden="true" default="(?!.*-rollback\.sql)([0-9]*-.*)\.sql" />
+        <property name="rollbackScriptRecognitionRegex" hidden="true" default="([0-9]*-.*-rollback)\.sql" />
+        <property name="rollbackScriptPostfix" hidden="true" default="-rollback.sql" />
+    </type>
+
+    <type type="test.StepLogTestDeployed" deployable-type="test.StepLogTest" extends="udm.BaseDeployed" container-type="overthere.LocalHost" description="Type for step log test.">
+        <generate-deployable type="test.StepLogTest" extends="udm.BaseDeployable" description="Type for step log test." />
+    </type>
+
+    <type type="test.Cluster" extends="udm.BaseContainer" root="Infrastructure">
+    </type>
+
+    <type type="test.Project" extends="udm.BaseDeployedContainer" deployable-type="test.ProjectSpec" container-type="test.Cluster" description="Test Project">
+        <generate-deployable type="test.ProjectSpec" extends="udm.BaseDeployableContainer" copy-default-values="true" description="Specification for a project."/>
+    </type>
+
+    <type type="test.Resources" extends="udm.BaseDeployedArtifact" deployable-type="test.ResourcesFile" container-type="test.Project" description="Generic Resource Template">
+        <generate-deployable type="test.ResourcesFile" extends="udm.BaseDeployableArtifact"/>
+    </type>
+
+    <type type="demo.DemoDeployed" extends="udm.BaseDeployed" deployable-type="demo.DemoDeployable" container-type="overthere.Host">
+        <generate-deployable type="demo.DemoDeployable" extends="udm.BaseDeployable" />
+        <property name="DemoProperty" />
+    </type>
+
+</synthetic>

@@ -1,0 +1,15 @@
+
+from time import sleep
+from com.xebialabs.deployit.core.api.dto import ConfigurationItem
+
+# create configuration item
+dummyServer = ConfigurationItem("com.xebialabs.deployit.integration.test.DummyJeeServer")
+dummyServer.values = {"name":"dummyJeeServer"}
+proxies.repository.create("Infrastructure/dummyServer", dummyServer)
+
+# check reality of dummyServer
+discovered = proxies.discovery.realityCheck("Infrastructure/dummyServer").entity
+assertNotNone(discovered)
+assertEquals("actualName", discovered.values.get('name'));
+
+proxies.repository.delete("Infrastructure/dummyServer")

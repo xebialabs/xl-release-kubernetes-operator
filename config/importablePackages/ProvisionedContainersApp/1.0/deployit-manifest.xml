@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="1.0" application="ProvisionedContainersApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.BucketSpec name="yakBucket">
+            <boundTemplates>
+                <ci ref="/udmdic" />
+            </boundTemplates>
+            <tags/>
+            <cardinality>3</cardinality>
+        </yak.BucketSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+    <templates>
+        <template.udm.Dictionary name="/udmdic">
+            <entries>
+                <entry key="foo">bar</entry>
+            </entries>
+        </template.udm.Dictionary>
+    </templates>
+</udm.ProvisioningPackage>

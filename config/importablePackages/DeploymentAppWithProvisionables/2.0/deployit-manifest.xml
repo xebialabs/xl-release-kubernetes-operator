@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="2.0" application="DeploymentAppWithProvisionables">
+    <orchestrator>
+        <value>sequential-by-deployed</value>
+    </orchestrator>
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.BucketSpec name="bucket1">
+            <cardinality>2</cardinality>
+        </yak.BucketSpec>
+        <yak.YakFile name="file1" file="artifact/file.yak">
+        </yak.YakFile>
+        <yak.BucketSpec name="bucket2">
+            <cardinality>2</cardinality>
+        </yak.BucketSpec>
+        <yak.YakFile name="file2" file="artifact/file.yak">
+        </yak.YakFile>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.DeploymentPackage>

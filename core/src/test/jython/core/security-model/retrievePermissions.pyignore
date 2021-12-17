@@ -1,0 +1,46 @@
+newHost = repository.create(factory.configurationItem("Infrastructure/host", "test-v3.DummyJeeServer", {'hostName':'localhost'}))
+security.createUser("permitted-user", DEFAULT_PASSWORD)
+security.createUser("other-permitted-user", DEFAULT_PASSWORD)
+
+security.grant("login", "permitted-user")
+security.grant("login", "other-permitted-user")
+security.grant("read", "permitted-user", ["Environments", "Infrastructure"])
+security.grant("discovery", "other-permitted-user")
+security.grant("repo#edit", "other-permitted-user", ["Infrastructure/host"])
+
+permissions = security.getPermissions("permitted-user")
+assertNotNone(permissions)
+assertTrue(permissions.hasPermissions())
+assertEquals(2, len(permissions.getPermissions()))
+for permission in permissions.getPermissions():
+    assertTrue(permission in ["login", "read"])
+for target in permissions.getPermissionTargets("login"):
+    assertTrue(target in [""])
+for target in permissions.getPermissionTargets("read"):
+    assertTrue(target in ["Environments", "Infrastructure"])
+assertNone(permissions.getPermissionTargets("discovery"))
+
+permissions = security.getPermissions("other-permitted-user")
+assertNotNone(permissions)
+assertTrue(permissions.hasPermissions())
+assertEquals(3, len(permissions.getPermissions()))
+for permission in permissions.getPermissions():
+    assertTrue(permission in ["login", "discovery", "repo#edit"])
+for target in permissions.getPermissionTargets("login"):
+    assertTrue(target in [""])
+for target in permissions.getPermissionTargets("discovery"):
+    assertTrue(target in [""])
+for target in permissions.getPermissionTargets("repo#edit"):
+    assertTrue(target in ["Infrastructure/host"])
+assertTrue(permissions.isPermissionGlobal("discovery"))
+assertNone(permissions.getPermissionTargets("read"))
+
+security.revoke("login", "permitted-user")
+security.revoke("login", "other-permitted-user")
+security.revoke("read", "permitted-user", ["Environments", "Infrastructure"])
+security.revoke("discovery", "other-permitted-user")
+security.revoke("repo#edit", "other-permitted-user", ["Infrastructure/host"])
+
+security.deleteUser("permitted-user")
+security.deleteUser("other-permitted-user")
+repository.delete(newHost.id)

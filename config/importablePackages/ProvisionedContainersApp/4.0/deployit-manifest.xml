@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="4.0" application="ProvisionedContainersApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.BucketSpec name="yakBucket-mapOutput">
+            <boundTemplates>
+                <ci ref="/mydict" />
+            </boundTemplates>
+            <mapOutput>
+                    <entry key="foo">bar</entry>
+                    <entry key="fiz">buz</entry>
+            </mapOutput>
+        </yak.BucketSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+    <templates>
+        <template.udm.Dictionary name="/mydict">
+            <entries>
+                <entry key="foo">{{%mapOutput.foo%}}</entry>
+                <entry key="fiz">{{%mapOutput.fiz%}}</entry>
+            </entries>
+        </template.udm.Dictionary>
+    </templates>
+</udm.ProvisioningPackage>

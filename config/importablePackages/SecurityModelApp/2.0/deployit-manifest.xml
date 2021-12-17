@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="2.0" application="SecurityModelApp">
+  <deployables>
+    <jee.Ear name="PetClinic" file="PetClinic/PetClinic-2.0.ear"/>
+  </deployables>
+</udm.DeploymentPackage>

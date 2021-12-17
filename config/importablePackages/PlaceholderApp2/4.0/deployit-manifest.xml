@@ -1,0 +1,17 @@
+<test-v3.DummyProvisioningPackage application="PlaceholderApp2" version="4.0">
+
+    <deployables>
+        <test-v3.DummyDeployableWithBoundTemplate name="d2">
+            <stringProperty>{{foo}}</stringProperty>
+        </test-v3.DummyDeployableWithBoundTemplate>
+    </deployables>
+    <templates>
+        <template.test-v3.BoundTemplate name="mysql-host">
+            <address>{{%publicip%}}</address>
+            <username>{{bar}}</username>
+            <instanceId>{{baz}}</instanceId>
+            <toBeIgnored>{{toBeIgnored}}</toBeIgnored>
+        </template.test-v3.BoundTemplate>
+    </templates>
+
+</test-v3.DummyProvisioningPackage>

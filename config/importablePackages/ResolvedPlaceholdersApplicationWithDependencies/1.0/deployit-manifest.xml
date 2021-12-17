@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="ResolvedPlaceholdersApplicationWithDependencies">
+  <application />
+  <orchestrator />
+  <deployables />
+  <applicationDependencies>
+    <entry key="ResolvedPlaceholdersApplication">1.0</entry>
+  </applicationDependencies>
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+  <templates />
+  <boundTemplates />
+</udm.DeploymentPackage>

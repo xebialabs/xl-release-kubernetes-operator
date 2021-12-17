@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0.0" application="StepLogApp">
+  <deployables>
+    <test.StepLogTest name="stepLogTest"/>
+  </deployables>
+</udm.DeploymentPackage>

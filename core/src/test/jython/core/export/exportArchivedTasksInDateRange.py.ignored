@@ -1,0 +1,56 @@
+#
+from java.lang.System import getProperty
+from java.io import File, FileNotFoundException
+from java.text import SimpleDateFormat
+from javax.xml.parsers import DocumentBuilderFactory
+
+testSalt = UUID.randomUUID().toString()
+
+archivedTasks = repository.getArchivedTaskList()
+assertNotNone(archivedTasks)
+taskList = sorted([task for task in archivedTasks if 'application' in task.metadata and str(task.metadata["application"]).find('Export') > 0], key = lambda task: task.startDate.millis)
+assertNotNone(taskList)
+assertTrue(len(taskList) >= 1)
+
+formatter = SimpleDateFormat("MM/dd/yyyy")
+today = taskList[0].startDate
+yesterday = today.minusDays(1)
+tomorrow = today.plusDays(1)
+dateRanges = [formatter.format(yesterday.toDate()), formatter.format(today.toDate()), formatter.format(tomorrow.toDate())]
+
+tempdir = getProperty('java.io.tmpdir')
+if (tempdir.endswith('/') or (tempdir.endswith('\\'))):
+    filename = tempdir + testSalt + 'archived-tasks-in-date-range.xml'
+else:
+    filename = tempdir + getProperty('file.separator') + testSalt + 'archived-tasks-in-date-range.xml'
+print filename
+
+for dateRange in dateRanges:
+    repository.exportArchivedTasks(filename, dateRange, dateRange)
+    xmlFile = File(filename)
+    if xmlFile.exists():
+        domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+        try:
+            document = domBuilder.parse(filename)
+            element = document.getDocumentElement()
+            assertEquals('list', element.getTagName())
+            if dateRange == dateRanges[1]:
+                assertTrue(element.hasChildNodes())
+                nodeList = element.getElementsByTagName('task')
+                assertTrue(nodeList.getLength() >= 4)
+                for taskNr in xrange(nodeList.getLength()):
+                    task = nodeList.item(taskNr)
+                    assertNotNone(task)
+                    assertTrue(task.hasChildNodes())
+                    childTagNames = [task.getChildNodes().item(childNr).getNodeName() for childNr in xrange(task.getChildNodes().getLength())]
+                    for tagName in [u'description',u'startDate',u'completionDate',u'steps',u'metadata']:
+                        assertTrue(tagName in childTagNames)
+            else:
+                assertFalse(element.hasChildNodes())
+            xmlFile.delete()
+        except FileNotFoundException, detail:
+            raise Exception("XML file %s could not be found and may therefore not have been generated!" % filename)
+        except Exception, detail:
+            raise Exception("An error occurred while processing XML file %s with exported tasks; detail: %s" % (filename,detail))
+    else:
+        raise Exception("XML file %s could not be found and may therefore not have been generated!" % filename)

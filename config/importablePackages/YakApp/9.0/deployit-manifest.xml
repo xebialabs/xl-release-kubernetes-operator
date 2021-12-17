@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="9.0" application="YakApp">
+  <orchestrator>
+    <value>default</value>
+    <value>container-by-container</value>
+  </orchestrator>
+  <deployables>
+    <yak.YakFile name="App1" file="App1/App1.yak">
+      <tags>
+        <value>tag1</value>
+      </tags>
+    </yak.YakFile>
+  </deployables>
+</udm.DeploymentPackage>

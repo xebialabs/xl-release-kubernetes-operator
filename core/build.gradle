@@ -1,0 +1,82 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+apply plugin: "integration.server"
+apply plugin: "java"
+apply plugin: "scala"
+
+apply from: "$rootDir/setups/base-test-configuration.gradle"
+
+buildscript {
+    apply from: "$rootDir/gradle/repositories.gradle"
+    repositories.addAll(externalRepositories)
+}
+
+def projectProperties = new Properties()
+file("${rootDir}/gradle.properties").withInputStream { InputStream s ->
+    projectProperties.load(s)
+}
+
+sourceCompatibility = projectProperties['languageLevel']
+targetCompatibility = projectProperties['languageLevel']
+
+sourceSets {
+    test {
+        scala {
+            srcDir "src/test/java"
+            srcDir "src/test/scala"
+        }
+        resources {
+            srcDir "src/test/jython"
+        }
+    }
+}
+
+configurations.all {
+    exclude(group: 'com.xebialabs.deployit', module: 'appserver-api-impl')
+}
+
+dependencies {
+    implementation "ai.digital.deploy.engine:export-cis"
+    implementation "com.google.guava:guava"
+    implementation "com.xebialabs.deployit:appserver-core"
+    implementation "com.xebialabs.restito:restito"
+    implementation "com.xebialabs.xl-platform:maven-resolver"
+    implementation "de.schlichtherle.truezip:truezip-driver-file"
+    implementation "de.schlichtherle.truezip:truezip-driver-tar"
+    implementation "de.schlichtherle.truezip:truezip-driver-zip"
+    implementation "de.schlichtherle.truezip:truezip-file"
+    implementation "de.schlichtherle.truezip:truezip-kernel"
+    implementation "junit:junit"
+    implementation "org.hamcrest:hamcrest-core"
+    implementation "org.scala-lang:scala-library"
+    implementation "org.springframework:spring-core"
+    implementation "org.testng:testng"
+    implementation "ai.digital.deploy:deploy-cli:$deployCliVersion"
+
+    runtimeOnly "org.javassist:javassist"
+
+    testImplementation fileTree(dir: "$rootDir/core/build/integration-server/xl-deploy-${deployCliVersion}-cli/lib", include: '*.jar')
+    testImplementation "com.xebialabs.xl-platform.test-utils:py-modules:$testUtilsVersion"
+    testImplementation "com.xebialabs.deployit:xld-db-anonymizer:$xlDeployVersion"
+    testImplementation "ai.digital.deploy.xld-core:xld-utils"
+    testImplementation "com.oracle.database.jdbc:ojdbc11:21.1.0.0"
+}
+
+def testsToRunRegExpPattern = hasProperty("testsToRunRegExpPattern") ? testsToRunRegExpPattern : ".*\\.py"
+
+afterEvaluate {
+    tasks.withType(Test) { task ->
+        task.configure {
+            testLogging {
+                exceptionFormat = "full"
+                showExceptions = true
+                showCauses = true
+                events = [TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.STARTED]
+            }
+
+            inputs.dir(project.file("${projectDir}/src/test/jython"))
+            maxHeapSize = "1024m"
+            systemProperties["DeployitIntegrationTest.testsToRunRegExpPattern"] = testsToRunRegExpPattern
+        }
+    }
+}

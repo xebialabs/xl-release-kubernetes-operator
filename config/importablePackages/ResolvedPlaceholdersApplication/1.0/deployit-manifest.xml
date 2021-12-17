@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="ResolvedPlaceholdersApplication">
+  <application />
+  <orchestrator />
+  <deployables>
+    <file.File name="/deployedfile.com" file="/deployedfile.com/file.conf">
+      <tags />
+      <scanPlaceholders>true</scanPlaceholders>
+      <preScannedPlaceholders>true</preScannedPlaceholders>
+      <placeholders>
+        <value>foo</value>
+        <value>bar</value>
+      </placeholders>
+      <checksum>993f314b4afd27c714859ed743632fa623f81404</checksum>
+      <targetPath>{{TARGET_PATH}}</targetPath>
+    </file.File>
+  </deployables>
+  <applicationDependencies />
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+  <templates />
+  <boundTemplates />
+</udm.DeploymentPackage>

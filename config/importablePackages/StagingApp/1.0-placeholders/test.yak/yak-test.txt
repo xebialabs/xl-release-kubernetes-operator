@@ -1,0 +1,1 @@
+A Sample yak 2.0 file with a {{PLACEHOLDER}}... yay!

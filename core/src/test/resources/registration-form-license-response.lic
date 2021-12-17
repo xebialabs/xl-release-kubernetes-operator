@@ -1,0 +1,14 @@
+--- License ---
+License version: 3
+Product: XL Deploy
+Licensed to: Test Company
+Contact: Test User <test.user@email.com>
+Expires after: 2020-01-01
+Licensed number of CIs: udm.Application=2
+Licensed number of CIs: overthere.Host=25
+Licensed number of CIs: xl.Satellite=0
+Edition: Community
+--- Signature (SHA1withDSA) ---
+302d02147f0537b35ed040051ed76778a6613f140ab4bca90215008d6b2c8d8f703c384d95c6ca87
+2e2b9c445735bc
+--- End of Signature ---

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="DummyApp">
+  <deployables>
+    <test-v3.DummyEar name="Artifact" file="Artifact/artifact.ci"/>
+  </deployables>
+</udm.DeploymentPackage>

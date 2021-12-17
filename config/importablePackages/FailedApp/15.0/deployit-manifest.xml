@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="14.0" application="FailedApp">
+  <orchestrator>
+    <value>sequential-by-dependency</value>
+  </orchestrator>
+  <deployables>
+    <yak.YakFail name="failed.yak"/>
+  </deployables>
+  <applicationDependencies>
+    <entry key="GrazingApp">[5.0,5.0]</entry>
+  </applicationDependencies>
+</udm.DeploymentPackage>

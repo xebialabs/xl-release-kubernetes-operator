@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.ProvisioningPackage version="3.0" application="ProvisionedContainersApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.BucketSpec name="yakBucket-{{%cisuffix%}}">
+            <cardinality>2</cardinality>
+            <boundTemplates>
+                <ci ref="/dic-{{%cisuffix%}}" />
+            </boundTemplates>
+            <cisuffix>a</cisuffix>
+        </yak.BucketSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+    <templates>
+        <template.udm.Dictionary name="/dic-{{%cisuffix%}}">
+            <entries>
+                <entry key="foo">{{%ordinal%}}</entry>
+            </entries>
+        </template.udm.Dictionary>
+    </templates>
+</udm.ProvisioningPackage>

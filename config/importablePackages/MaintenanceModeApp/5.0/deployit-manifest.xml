@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="5.0" application="MaintenanceModeApp">
+  <deployables>
+    <yak.YakFolder name="yakFolderCi" file="yakFolderCi/yakFolder"/>
+  </deployables>
+</udm.DeploymentPackage>

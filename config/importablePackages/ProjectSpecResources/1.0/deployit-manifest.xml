@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="ProjectSpecResources">
+  <application />
+  <orchestrator />
+  <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+  <deployables>
+    <test.ResourcesFile name="/ProjectSpecResources" file="/ProjectSpecResources/shrug.md">
+      <tags />
+      <scanPlaceholders>true</scanPlaceholders>
+      <preScannedPlaceholders>true</preScannedPlaceholders>
+      <placeholders />
+      <checksum>6c7282de3c1f60c99e69f17ae2c9e9aa0bb207a1</checksum>
+    </test.ResourcesFile>
+  </deployables>
+  <applicationDependencies />
+  <dependencyResolution>LATEST</dependencyResolution>
+  <undeployDependencies>false</undeployDependencies>
+  <templates />
+  <boundTemplates />
+</udm.DeploymentPackage>

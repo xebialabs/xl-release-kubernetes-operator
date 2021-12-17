@@ -1,0 +1,48 @@
+#
+# The getArchivedTasks() function always returns an empty task list if there are no tasks in repository
+# in the specified range. If there is a task, this task will always return at least an empty step list
+# Finally, the test data has been setup to contain at least 4 tasks
+from java.text import SimpleDateFormat
+from java.util import GregorianCalendar
+
+archivedTasks = repository.getArchivedTaskList()
+assertNotNone(archivedTasks)
+taskList = sorted([task for task in archivedTasks if 'application' in task.metadata and str(task.metadata['application']).find('Export') > 0], key = lambda task: task.startDate.toDate().getTime())
+assertNotNone(taskList)
+assertTrue(len(taskList) >= 4)
+
+milliSecondsInWeek = 86400000 * 7
+formatter = SimpleDateFormat("MM/dd/yyyy")
+today = taskList[0].startDate
+weekBefore = GregorianCalendar()
+weekBefore.setTimeInMillis(today.toDate().getTime() - milliSecondsInWeek)
+weekAfter = GregorianCalendar()
+weekAfter.setTimeInMillis(today.toDate().getTime() + milliSecondsInWeek)
+
+assertEquals(0, len(repository.getArchivedTasksList(formatter.format(weekBefore.getTime()),formatter.format(weekBefore.getTime()))))
+assertEquals(0, len(repository.getArchivedTasksList(formatter.format(weekAfter.getTime()),formatter.format(weekAfter.getTime()))))
+
+archivedTasks = repository.getArchivedTasksList(formatter.format(today.toDate()),formatter.format(today.toDate()))
+assertNotNone(archivedTasks)
+taskList = [task for task in archivedTasks if 'application' in task.metadata and str(task.metadata['application']).find('Export') > 0]
+
+taskListForThisTest = []
+for t in taskList:
+    if t.id in archiveTaskIds:
+        taskListForThisTest.append(t)
+
+assertTrue(len(taskListForThisTest) >= 4)
+for t in taskListForThisTest:
+    assertTrue(t.metadata['application'] in ['export-tinyExportApp', 'export-smallExportApp'])
+
+    step_blocks = t.get_step_blocks()
+    assertNotNone(step_blocks)
+    assertEquals(2, len(step_blocks))
+
+    for step_block in step_blocks:
+        # checks for the application or the last step of any application (RepositoryUpdateStep)
+        if t.metadata['application'] == 'export-tinyExportApp' or step_block == step_blocks[-1]:
+            assertEquals(1, len(step_block.getSteps()))
+        else:
+            assertEquals(2, len(step_block.getSteps()))
+        assertEquals("DONE", str(step_block.getState()))

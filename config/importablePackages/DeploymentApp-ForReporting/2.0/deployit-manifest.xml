@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="2.0" application="DeploymentApp-ForReporting">
+  <orchestrator>
+    <value>parallel-by-container</value>
+  </orchestrator>
+  <deployables>
+    <yak.YakFile name="test.yak" file="test.yak/test.yak"/>
+  </deployables>
+</udm.DeploymentPackage>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="PlaceholderApp2">
+  <deployables>
+    <yak.YakFile name="testFor{{ENV_NAME}}" file="testFor{{ENV_NAME}}/test.yak"/>
+    <yak.YakConfigurationSpec name="resourceFor{{ENV_NAME}}"/>
+  </deployables>
+</udm.DeploymentPackage>

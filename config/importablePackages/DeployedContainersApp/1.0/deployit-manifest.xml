@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="DeployedContainersApp">
+    <application/>
+    <satisfiesReleaseNotes>false</satisfiesReleaseNotes>
+
+    <deployables>
+        <yak.NameSpaceSpec name="yakNameSpace">
+            <tags>
+                <value>wrong</value>
+            </tags>
+            <containerTags>
+                <value>correct</value>
+            </containerTags>
+        </yak.NameSpaceSpec>
+    </deployables>
+    <dependencyResolution>LATEST</dependencyResolution>
+    <undeployDependencies>false</undeployDependencies>
+</udm.DeploymentPackage>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.DeploymentPackage version="1.0" application="PlaceholderArtifactApp">
+  <deployables>
+    <file.File name="file-placeholders.txt" file="file-placeholders/file-placeholders.txt">
+      <scanPlaceholders>true</scanPlaceholders>
+      <preScannedPlaceholders>true</preScannedPlaceholders>
+      <placeholders>
+        <value>foo</value>
+      </placeholders>
+      <targetPath>/tmp</targetPath>
+    </file.File>
+  </deployables>
+</udm.DeploymentPackage>

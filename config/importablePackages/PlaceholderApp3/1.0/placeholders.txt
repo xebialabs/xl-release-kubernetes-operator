@@ -1,0 +1,4 @@
+My username is {{DB_USERNAME}}
+My password is {{DB_USERNAME}}
+My name is {{NAME}}
+My companyName is {{COM}}

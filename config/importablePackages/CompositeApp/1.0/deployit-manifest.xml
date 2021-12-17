@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<udm.CompositePackage version="1.0" application="CompositeApp">
+    <application />
+    <orchestrator />
+    <packages>
+        <ci ref="Applications/GrazingApp/3.0" />
+        <ci ref="Applications/RepoApp/1.0" />
+    </packages>
+</udm.CompositePackage>
