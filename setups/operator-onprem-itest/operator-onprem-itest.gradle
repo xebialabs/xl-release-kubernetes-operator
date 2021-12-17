@@ -1,0 +1,11 @@
+releaseIntegrationServer {
+    servers {
+        controlPlane { // The name of the section, you can name it as you wish
+            dockerImage = "xebialabs/xl-release"
+            httpPort = 5516
+            pingRetrySleepTime = 5
+            pingTotalTries = 60
+            version = '10.3.2'
+        }
+    }
+}

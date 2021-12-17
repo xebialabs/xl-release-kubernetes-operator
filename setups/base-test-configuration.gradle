@@ -1,0 +1,3 @@
+if (project.hasProperty("operatorOnpremItest")) {
+    apply from: "${rootDir}/setups/operator-onprem-itest/operator-onprem-itest.gradle"
+}

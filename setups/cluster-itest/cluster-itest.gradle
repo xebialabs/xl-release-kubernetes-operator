@@ -1,0 +1,63 @@
+releaseIntegrationServer {
+    cli {
+        filesToExecute = [file("$rootDir/setups/cluster-itest/provision.py")]
+        overlays = [
+                ext: [
+                        fileTree(dir: "$rootDir/config/cli", includes: ["**/*.py"])
+                ],
+                lib: [
+                        "com.xebialabs.xl-platform.test-utils:py-modules:${testUtilsVersion}@jar"
+                ]
+        ]
+    }
+    cluster {
+        enable = true
+        publicPort = 1000
+    }
+    servers {
+        server01 {
+            dockerImage = "xebialabsunsupported/xl-deploy"
+            pingRetrySleepTime = 10
+            pingTotalTries = 120
+            version = "${xlDeployTrialVersion}"
+        }
+        server02 {
+
+        }
+    }
+    workers {
+        worker01 {
+            dockerImage = "xebialabsunsupported/deploy-task-engine"
+        }
+        worker02 {
+        }
+    }
+}
+
+['ClusterTestGroup'].each {
+    String groupName ->
+        tasks.create name: "parallelTests$groupName", type: Test, {
+            useTestNG()
+            def processors = (Runtime.runtime.availableProcessors()).intValue()
+            def numberOfThreads = project.hasProperty("itestNumberOfThreads") ? Integer.valueOf(project.itestNumberOfThreads) : Math.max(processors.intdiv(2), 3)
+            testClassesDirs = sourceSets.test.output.classesDirs.plus(sourceSets.main.output.classesDirs)
+            maxParallelForks = numberOfThreads
+            forkEvery = 1
+            includes = ["**/$groupName*"]
+        }
+}
+
+afterEvaluate {
+
+    def parallelTests = []
+    ['ClusterTestGroup'].each {
+        String groupName -> parallelTests.add(tasks["parallelTests$groupName"])
+    }
+
+    [parallelTests].flatten().each {
+        if (!project.hasProperty("keepServerRunning")) {
+            it.dependsOn startDeployIntegrationServer
+            it.finalizedBy shutdownDeployIntegrationServer
+        }
+    }
+}

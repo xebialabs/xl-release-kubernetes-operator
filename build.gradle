@@ -1,0 +1,50 @@
+buildscript {
+    apply from: "${rootDir}/gradle/repositories.gradle"
+    repositories.addAll(externalRepositories)
+
+    dependencies {
+        classpath "com.xebialabs.gradle.plugins:integration-server-gradle-plugin:$integrationServerGradlePluginVersion"
+        classpath "com.xebialabs.gradle.plugins:gradle-xl-defaults-plugin:${xlDefaultsPluginVersion}"
+        classpath "com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${xlPluginsPluginVersion}"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarQubePluginVersion}"
+        classpath "gradle.plugin.com.github.maiflai:gradle-scalatest:${gradleScalatestVersion}"
+    }
+}
+
+apply plugin: 'xebialabs.root.opinions'
+apply plugin: 'xebialabs.opinions'
+apply plugin: 'com.xebialabs.dependency'
+
+dependencyManagement {
+    importConf "com.xebialabs.xl-platform:xl-reference:${xlPlatformVersion}"
+    importConf "ai.digital.deploy.task-engine:deploy-task-engine-reference:${deployTaskEngineVersion}"
+    importConf "com.xebialabs.deployit:xld-reference:${xlDeployVersion}"
+}
+
+allprojects {
+    group = 'com.xebialabs.deployit'
+
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+}
+
+apply plugin: 'org.sonarqube'
+
+configure(subprojects) {
+    apply plugin: 'java'
+    apply plugin: 'xebialabs.opinions'
+    apply from: "${rootDir}/gradle/codeAnalysis.gradle"
+
+    dependencies {
+        compile 'org.slf4j:jcl-over-slf4j'
+        compile 'org.slf4j:log4j-over-slf4j'
+        implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")) {
+            exclude group: 'com.nimbusds', module: 'nimbus-jose-jwt'
+        }
+        implementation platform("org.springframework.cloud:spring-cloud-config-dependencies:${springCloudConfigVersion}")
+
+        runtime 'ch.qos.logback:logback-classic'
+    }
+
+    assemble.mustRunAfter(test)
+}
