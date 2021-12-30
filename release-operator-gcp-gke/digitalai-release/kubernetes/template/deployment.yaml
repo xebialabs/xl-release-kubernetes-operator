@@ -31,7 +31,7 @@ spec:
         - "--metrics-bind-address=127.0.0.1:8080"
         - "--leader-elect"
         - "--leader-election-id=xlr-operator-controller-manager"
-        image: xebialabs/release-operator:1.2.0
+        image: xldevdocker/release-operator:1.3.0
         livenessProbe:
           httpGet:
             path: /readyz
