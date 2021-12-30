@@ -1150,7 +1150,7 @@ spec:
       existingClaim: ""
       mountPath: /bitnami/postgresql
       selector: {}
-      size: 50Gi
+      size: 8Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
       storageClass: <Provode Storage Class to be defined for PostgreSQL>
       subPath: ""
