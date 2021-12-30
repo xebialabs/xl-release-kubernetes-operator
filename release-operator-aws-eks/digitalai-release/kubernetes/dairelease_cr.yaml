@@ -237,7 +237,7 @@ spec:
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-    - <Provode DNS name for accessing UI of Digital.ai Release>
+    - <Provode DNS name for accessing UI of Keycloak>
     path: /
   keycloak:
     affinity: |
@@ -370,7 +370,7 @@ spec:
       ingressClassName: ""
       labels: {}
       rules:
-      - host: keycloak.digitalai-testing.com
+      - host: keycloak.example.com
         paths:
         - path: /
           pathType: Prefix
