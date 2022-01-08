@@ -1,0 +1,31 @@
+deployIntegrationServer {
+    cluster {
+        enable = true
+        profile = 'operator'
+        publicPort = 10001
+    }
+    clusterProfiles {
+        operator {
+            activeProviderName = "azure-aks"
+            azureAks {
+                name = 'azure-aks-test-cluster'
+                clusterNodeCount = 3
+                location = 'northcentralus'
+            }
+        }
+    }
+    servers {
+        deployServer {
+            dockerImage = "xebialabsunsupported/xl-deploy"
+            pingRetrySleepTime = 10
+            pingTotalTries = 120
+            version = "${xlDeployTrialVersion}"
+            overlays = [conf: [fileTree(dir: "$rootDir/config/conf", includes: ["*.*"])],]
+        }
+        server01 {
+            dockerImage = "xebialabsunsupported/xl-release"
+            version = "${xlReleaseTrialVersion}"
+        }
+        server02 {}
+    }
+}

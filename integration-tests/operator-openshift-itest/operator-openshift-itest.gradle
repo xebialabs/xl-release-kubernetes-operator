@@ -1,0 +1,34 @@
+deployIntegrationServer {
+    cluster {
+        enable = true
+        profile = 'operator'
+        publicPort = 10001
+    }
+    clusterProfiles {
+        operator {
+            activeProviderName = "aws-openshift"
+            awsOpenshift {
+                apiServerURL = 'https://api.acierto.lnfl.p1.openshiftapps.com:6443'
+                host = 'router-default.apps.acierto.lnfl.p1.openshiftapps.com'
+                name = 'aws-openshift-test-cluster'
+                oauthHostName = "oauth-openshift.apps.acierto.lnfl.p1.openshiftapps.com"
+                operatorImage = 'acierto/deploy-operator:1.0.6-openshift'
+                operatorPackageVersion = "1.0.1"
+            }
+        }
+    }
+    servers {
+        deployServer {
+            dockerImage = "xebialabsunsupported/xl-deploy"
+            pingRetrySleepTime = 10
+            pingTotalTries = 120
+            version = "${xlDeployTrialVersion}"
+            overlays = [conf: [fileTree(dir: "$rootDir/config/conf", includes: ["*.*"])],]
+        }
+        server01 {
+            dockerImage = "xebialabsunsupported/xl-release"
+            version = "${xlReleaseTrialVersion}"
+        }
+        server02 {}
+    }
+}

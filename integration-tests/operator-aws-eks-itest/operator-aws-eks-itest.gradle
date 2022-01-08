@@ -1,0 +1,39 @@
+releaseIntegrationServer {
+    cluster {
+        enable = true
+        profile = 'operator'
+        publicPort = 10001
+    }
+    clusterProfiles {
+        operator {
+            activeProviderName = "aws-eks"
+            awsEks {
+                name = 'aws-eks-test-cluster'
+                region = 'us-east-1'
+            }
+        }
+    }
+    servers {
+        deployServer {
+            dockerImage = "xebialabsunsupported/xl-deploy"
+            pingRetrySleepTime = 10
+            pingTotalTries = 120
+            version = "${xlDeployTrialVersion}"
+            defaultOfficialPluginsToExclude = ["xld-kubernetes-plugin-${xlDeployTrialVersion}"]
+            overlays = [
+                    conf                  : [
+                            fileTree(dir: "$rootDir/config/conf", includes: ["*.*"])
+                    ],
+                    'plugins/xld-official': [
+                            "com.xebialabs.deployit.plugins:xld-kubernetes-plugin:10.3.0@xldp"
+                    ]
+            ]
+        }
+        server01 {
+            dockerImage = "xebialabsunsupported/xl-release"
+            version = "${xlReleaseTrialVersion}"
+        }
+        server02 {
+        }
+    }
+}

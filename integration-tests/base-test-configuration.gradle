@@ -1,0 +1,11 @@
+if (project.hasProperty("operatorOpenshiftItest")) {
+    apply from: "${rootDir}/setups/operator-openshift-itest/operator-openshift-itest.gradle"
+} else if (project.hasProperty("operatorAzureAksItest")) {
+    apply from: "${rootDir}/setups/operator-azure-aks-itest/operator-azure-aks-itest.gradle"
+}  else if (project.hasProperty("operatorAwsEksItest")) {
+    apply from: "${rootDir}/setups/operator-aws-eks-itest/operator-aws-eks-itest.gradle"
+} else if (project.hasProperty("operatorGcpGkeItest")) {
+    apply from: "${rootDir}/setups/operator-gcp-gke-itest/operator-gcp-gke-itest.gradle"
+} else if (project.hasProperty("operatorOnPremItest")) {
+    apply from: "${rootDir}/setups/operator-on-prem-itest/operator-on-prem-itest.gradle"
+}
