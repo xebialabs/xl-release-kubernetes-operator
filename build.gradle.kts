@@ -1,11 +1,38 @@
 import com.github.gradle.node.yarn.task.YarnTask
 
+buildscript {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        arrayOf("releases", "public").forEach { r ->
+            maven {
+                url = uri("${project.property("nexusBaseUrl")}/repositories/${r}")
+                credentials {
+                    username = project.property("nexusUserName").toString()
+                    password = project.property("nexusPassword").toString()
+                }
+            }
+        }
+    }
+
+    dependencies {
+        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:${properties["integrationServerGradlePluginVersion"]}")
+        classpath("com.xebialabs.gradle.plugins:gradle-xl-defaults-plugin:${properties["xlDefaultsPluginVersion"]}")
+        classpath("com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${properties["xlPluginsPluginVersion"]}")
+    }
+}
+
 plugins {
     kotlin("jvm") version "1.4.20"
 
     id("com.github.node-gradle.node") version "3.1.0"
     id("idea")
 }
+
+apply(plugin = "integration.server")
+apply(plugin = "com.xebialabs.dependency")
+
+apply(from = "$rootDir/integration-tests/base-test-configuration.gradle")
 
 project.defaultTasks = listOf("build")
 

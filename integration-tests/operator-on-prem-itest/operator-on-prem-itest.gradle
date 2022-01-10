@@ -1,4 +1,4 @@
-deployIntegrationServer {
+releaseIntegrationServer {
     cluster {
         enable = true
         profile = 'operator'

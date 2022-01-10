@@ -10,5 +10,5 @@ if [[ $# -eq 1 ]] ; then
 fi
 
 rm -rf core/build && \
-./gradlew :core:shutdownIntegrationServer -PserverHttpPort=4516 -PoperatorOnPremItest=true --stacktrace \
-&& ./gradlew clean -PserverHttpPort=4516 :core:startIntegrationServer --stacktrace -PkeepServerRunning=true -PoperatorOnPremItest=true $EXTRA
+./gradlew :shutdownIntegrationServer -PserverHttpPort=4516 -PoperatorOnPremItest=true --stacktrace $EXTRA \
+&& ./gradlew clean -PserverHttpPort=4516 :startIntegrationServer --stacktrace -PkeepServerRunning=true -PoperatorOnPremItest=true $EXTRA
