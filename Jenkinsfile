@@ -2,8 +2,8 @@ pipeline {
     agent none
     parameters {
         choice(name: 'PRODUCT', choices: ['XL Release', 'XL Deploy'], description: 'Select the product to package')
-        choice(name: 'PUSH_TO_NEXUS', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to Nexus?')
-        choice(name: 'PUSH_TO_NEXUS_TO_XEBIALABS_DIST', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs dist server?')
+        choice(name: 'PUSH_TO_NEXUS', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs Nexus?')
+        choice(name: 'PUSH_TO_DIST', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs dist?')
         string(name: 'OPERATOR_VERSION', defaultValue: '', description: 'Specify the version of the operator to be released.')
     }
     environment {
@@ -93,8 +93,8 @@ pipeline {
         stage('Nexus to dist server') {
             when {
                 anyOf {
-                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'Yes' && params.PRODUCT == 'XL Deploy' }
-                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'Yes' && params.PRODUCT == 'XL Release'}
+                    expression { params.PUSH_TO_DIST == 'Yes' && params.PRODUCT == 'XL Deploy' }
+                    expression { params.PUSH_TO_DIST == 'Yes' && params.PRODUCT == 'XL Release'}
 
                 }
             }
