@@ -5,6 +5,7 @@ pipeline {
         choice(name: 'PUSH_TO_NEXUS', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs Nexus?')
         choice(name: 'PUSH_TO_DIST', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs dist?')
         string(name: 'OPERATOR_VERSION', defaultValue: '', description: 'Specify the version of the operator to be released.')
+        string(name: 'BRANCH', defaultValue: 'main', description: 'Specify the branch from which the release will be performed.')
     }
     environment {
         NEXUS_VERSION = "nexus3"
@@ -33,7 +34,7 @@ pipeline {
                 script {
                     if ( params.PRODUCT == 'XL Release' ) {
                         //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
-                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"
+                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git -b $BRANCH"
                         dir("xl-release-kubernetes-operator") {
                             sh 'for r in */; do zip -r "${r%/}-$OPERATOR_VERSION.zip" "$r"; done'
                             sh "ls -lah"
@@ -41,7 +42,7 @@ pipeline {
                         echo "Repository `xl-release-kubernetes-operator` has been successfully checked out"
                     } else {
                         //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
-                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git"
+                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git -b $BRANCH"
                         dir("xl-deploy-kubernetes-operator") {
                             sh 'for r in */; do zip -r "${r%/}-$OPERATOR_VERSION.zip" "$r"; done'
                             sh "ls -lah"
