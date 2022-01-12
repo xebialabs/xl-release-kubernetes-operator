@@ -875,7 +875,7 @@ spec:
     clustering:
       addressType: hostname
       enabled: true
-      forceBoot: false
+      forceBoot: true
       partitionHandling: autoheal
       rebalance: false
     command: []
@@ -1107,7 +1107,7 @@ spec:
     podAnnotations: {}
     podAntiAffinityPreset: soft
     podLabels: {}
-    podManagementPolicy: OrderedReady
+    podManagementPolicy: Parallel
     podSecurityContext:
       enabled: true
       fsGroup: 1001
