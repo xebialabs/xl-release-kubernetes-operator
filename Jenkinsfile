@@ -1,10 +1,10 @@
-pipeline{
+pipeline {
     agent none
     parameters {
         choice(name: 'PRODUCT', choices: ['XL Release', 'XL Deploy'], description: 'Select the product to package')
-        choice(name: 'PUSH_TO_NEXUS', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus?')
-        choice(name: 'PUSH_TO_NEXUS_TO_XEBIALABS_DIST', choices: ['NO', 'YES'], description: 'Do you want to push the zip file to nexus to xebialans dist server?')        
-        string(name: 'PRODUCT_RELEASE_VERSION', defaultValue: '', description: 'Product release version number for Operator artifacts')
+        choice(name: 'PUSH_TO_NEXUS', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to Nexus?')
+        choice(name: 'PUSH_TO_NEXUS_TO_XEBIALABS_DIST', choices: ['No', 'Yes'], description: 'Do you want to push artifacts to XebiaLabs dist server?')
+        string(name: 'OPERATOR_VERSION', defaultValue: '', description: 'Specify the version of the operator to be released.')
     }
     environment {
         NEXUS_VERSION = "nexus3"
@@ -19,109 +19,103 @@ pipeline{
             when {
                 anyOf {
                     expression { params.PRODUCT == 'XL Deploy' }
-                    expression { params.PRODUCT == 'XL Release'}
+                    expression { params.PRODUCT == 'XL Release' }
                 }
             }
             agent {
                 node {
                     label "xlp-helm"
-            }
+                }
             }
             steps {
                 step([$class: 'WsCleanup'])
                 checkout scm
-                script {     
+                script {
                     if ( params.PRODUCT == 'XL Release' ) {
-                            //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"                    
-                            sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"     
-                            dir("xl-release-kubernetes-operator") {
-                                sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
-                                sh "ls -lah"
-                            }
-                            echo "Git check out successful !!!"
-                       
-                    }else {
-                            //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
-                            sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git"     
-                            dir("xl-deploy-kubernetes-operator") {
-                                sh 'for r in */; do zip -r "${r%/}-$PRODUCT_RELEASE_VERSION.zip" "$r"; done'
-                                sh "ls -lah"
-                            }
-                            echo "Git check out successful !!!"
-                     
-                    }                                      
+                        //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
+                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-release-kubernetes-operator.git"
+                        dir("xl-release-kubernetes-operator") {
+                            sh 'for r in */; do zip -r "${r%/}-$OPERATOR_VERSION.zip" "$r"; done'
+                            sh "ls -lah"
+                        }
+                        echo "Repository `xl-release-kubernetes-operator` has been successfully checked out"
+                    } else {
+                        //sh "rm -rf /var/lib/jenkins/workspace/XL Operator"
+                        sh "git clone http://$GitHubUser_USR:$GitHubUser_PSW@github.com/xebialabs/xl-deploy-kubernetes-operator.git"
+                        dir("xl-deploy-kubernetes-operator") {
+                            sh 'for r in */; do zip -r "${r%/}-$OPERATOR_VERSION.zip" "$r"; done'
+                            sh "ls -lah"
+                        }
+                        echo "Repository `xl-deploy-kubernetes-operator` has been successfully checked out"
+                    }
                 }
             }
         }
         stage('Push to Nexus repository') {
             when {
                 anyOf {
-                    expression { params.PUSH_TO_NEXUS == 'YES' && params.PRODUCT == 'XL Deploy' }
-                    expression { params.PUSH_TO_NEXUS == 'YES' && params.PRODUCT == 'XL Release'}
+                    expression { params.PUSH_TO_NEXUS == 'Yes' && params.PRODUCT == 'XL Deploy' }
+                    expression { params.PUSH_TO_NEXUS == 'Yes' && params.PRODUCT == 'XL Release' }
                 }
             }
             agent {
                 node {
                     label "xlp-helm"
-            }
+                }
             }
             steps {
-                script {     
-                    if ( params.PRODUCT == 'XL Release' ) {
-                            dir("xl-release-kubernetes-operator") {
-                                 echo "Pushing nexus build to nexus"
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-aws-ek*.zip ${NEXUS_URL}/Release/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-az*.zip ${NEXUS_URL}/Release/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-open*.zip ${NEXUS_URL}/Release/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-onpr*.zip ${NEXUS_URL}/Release/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-gcp-gk*.zip ${NEXUS_URL}/Release/'
-                                
-                                echo "Push successful"
-                            }
-                           
-                    }else {
-                            dir("xl-deploy-kubernetes-operator") {
-                                echo "Pushing nexus build to nexus"
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-aws-ek*.zip ${NEXUS_URL}/Deploy/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-az*.zip ${NEXUS_URL}/Deploy/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-open*.zip ${NEXUS_URL}/Deploy/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-onpr*.zip ${NEXUS_URL}/Deploy/'
-                                sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-gcp-gk*.zip ${NEXUS_URL}/Deploy/'
-                                echo "Push successful"
-                            }
-                    }                                      
+                script {
+                    if (params.PRODUCT == 'XL Release') {
+                        dir("xl-release-kubernetes-operator") {
+                            echo "Pushing the Release Operator artifacts to Nexus"
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-aws-ek*.zip ${NEXUS_URL}/Release/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-az*.zip ${NEXUS_URL}/Release/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-open*.zip ${NEXUS_URL}/Release/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-onpr*.zip ${NEXUS_URL}/Release/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file release-operator-gcp-gk*.zip ${NEXUS_URL}/Release/'
+
+                            echo "Push successful"
+                        }
+                    } else {
+                        dir("xl-deploy-kubernetes-operator") {
+                            echo "Pushing Deploy Operator artifacts to Nexus"
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-aws-ek*.zip ${NEXUS_URL}/Deploy/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-az*.zip ${NEXUS_URL}/Deploy/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-open*.zip ${NEXUS_URL}/Deploy/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-onpr*.zip ${NEXUS_URL}/Deploy/'
+                            sh  'curl -v -k -u ${NEXUS_PASSWORD} --upload-file deploy-operator-gcp-gk*.zip ${NEXUS_URL}/Deploy/'
+                            echo "Push successful"
+                        }
+                    }
                 }
             }
         }
         stage('Nexus to dist server') {
             when {
                 anyOf {
-                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'YES' && params.PRODUCT == 'XL Deploy' }
-                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'YES' && params.PRODUCT == 'XL Release'}
-                   
+                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'Yes' && params.PRODUCT == 'XL Deploy' }
+                    expression { params.PUSH_TO_NEXUS_TO_XEBIALABS_DIST == 'Yes' && params.PRODUCT == 'XL Release'}
+
                 }
             }
             agent {
                 node {
                     label "xlp-helm"
-            }
+                }
             }
             steps {
-                script { 
-                     if ( params.PRODUCT == 'XL Release' ) {
+                script {
+                     if (params.PRODUCT == 'XL Release') {
                         dir("xl-release-kubernetes-operator") {
-                           echo "Pushing Nexus build to xebialabs distribution"
+                           echo "Pushing Release Operator artifacts to XebiaLabs distribution"
                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aws-eks-*.zip' --include='release-operator-azure-aks-*.zip' --include='release-operator-openshift-*.zip' --include='release-operator-onprem-*.zip' --include='release-operator-gcp-gke-*.zip'  --exclude='*'  /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Release/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
-                         }
-                    }else {
-                            dir("xl-deploy-kubernetes-operator") {
-                            echo "Pushing Nexus build to xebialabs distribution"
+                        }
+                    } else {
+                        dir("xl-deploy-kubernetes-operator") {
+                            echo "Pushing Deploy Operator artifacts to XebiaLabs distribution"
                             sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks-*.zip' --include='deploy-operator-azure-aks-*.zip' --include='deploy-operator-openshift-*.zip' --include='deploy-operator-onprem-*.zip' --include='deploy-operator-gcp-gke-*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
-
                         }
                     }
-                            
-                       
                 }
             }
         }
