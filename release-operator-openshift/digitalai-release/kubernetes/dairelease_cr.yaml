@@ -13,6 +13,9 @@ spec:
   ImageRepository: xebialabs/xl-release
   ImageTag: "10.3.5"
   KeystorePassphrase: <Provide store pass for the keystore>
+  GenerateXlConfig: true
+  MetricsEnabled: false
+  UseIpAsHostname: false
   Persistence:
     AccessMode: ReadWriteOnce
     Annotations: {}
