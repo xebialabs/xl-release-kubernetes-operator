@@ -17,6 +17,9 @@ spec:
   K8sSetup:
     Platform: PlainK8s
   KeystorePassphrase: <Provide store pass for the keystore>
+  GenerateXlConfig: true
+  MetricsEnabled: false
+  UseIpAsHostname: false
   Persistence:
     AccessMode: ReadWriteOnce
     Annotations: {}
