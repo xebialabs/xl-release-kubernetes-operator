@@ -183,7 +183,7 @@ spec:
       - hosts:
         - keycloak.example.com
         secretName: ""
-    install: true
+    install: false
     lifecycleHooks: ""
     livenessProbe: |
       httpGet:
@@ -535,7 +535,7 @@ spec:
     topologySpreadConstraints: null
   nodeSelector: {}
   oidc:
-    enabled: true
+    enabled: false
     external: false
     accessTokenUri: null
     clientId: null

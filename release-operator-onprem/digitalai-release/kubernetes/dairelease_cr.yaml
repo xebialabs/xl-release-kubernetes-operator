@@ -379,7 +379,7 @@ spec:
           pathType: Prefix
       servicePort: http
       tls: []
-    install: true
+    install: false
     lifecycleHooks: ""
     livenessProbe: |
       httpGet:
@@ -989,7 +989,7 @@ spec:
     watchIngressWithoutClass: false
   nodeSelector: {}
   oidc:
-    enabled: true
+    enabled: false
     accessTokenUri: null
     clientId: null
     clientSecret: null
