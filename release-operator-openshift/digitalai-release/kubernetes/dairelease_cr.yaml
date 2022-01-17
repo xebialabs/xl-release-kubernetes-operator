@@ -13,6 +13,9 @@ spec:
   ImageRepository: xebialabs/xl-release
   ImageTag: "10.3.5"
   KeystorePassphrase: <Provide store pass for the keystore>
+  GenerateXlConfig: true
+  MetricsEnabled: false
+  UseIpAsHostname: false
   Persistence:
     AccessMode: ReadWriteOnce
     Annotations: {}
@@ -180,7 +183,7 @@ spec:
       - hosts:
         - keycloak.example.com
         secretName: ""
-    install: true
+    install: false
     lifecycleHooks: ""
     livenessProbe: |
       httpGet:
@@ -532,7 +535,7 @@ spec:
     topologySpreadConstraints: null
   nodeSelector: {}
   oidc:
-    enabled: true
+    enabled: false
     external: false
     accessTokenUri: null
     clientId: null
@@ -875,7 +878,7 @@ spec:
     clustering:
       addressType: hostname
       enabled: true
-      forceBoot: false
+      forceBoot: true
       partitionHandling: autoheal
       rebalance: false
     command: []
@@ -951,6 +954,7 @@ spec:
       enabled: false
     extraConfiguration: |
       load_definitions = /app/xlr-load_definition.json
+      raft.wal_max_size_bytes = 1048576
     extraContainerPorts: []
     extraDeploy: []
     extraEnvVars: []
@@ -1107,7 +1111,7 @@ spec:
     podAnnotations: {}
     podAntiAffinityPreset: soft
     podLabels: {}
-    podManagementPolicy: OrderedReady
+    podManagementPolicy: Parallel
     podSecurityContext:
       enabled: true
       fsGroup: 1001
