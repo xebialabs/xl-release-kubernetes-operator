@@ -14,16 +14,16 @@ releaseIntegrationServer {
             }
         }
     }
+    operatorServer {
+        dockerImage = "xebialabsunsupported/xl-deploy"
+        overlays = [conf: [fileTree(dir: "$rootDir/config/conf", includes: ["*.*"])]]
+        version = "${xlDeployTrialVersion}"
+    }
     servers {
-        deployServer {
-            dockerImage = "xebialabsunsupported/xl-deploy"
-            pingRetrySleepTime = 10
-            pingTotalTries = 120
-            version = "${xlDeployTrialVersion}"
-            overlays = [conf: [fileTree(dir: "$rootDir/config/conf", includes: ["*.*"])],]
-        }
         server01 {
             dockerImage = "xebialabsunsupported/xl-release"
+            pingRetrySleepTime = 10
+            pingTotalTries = 120
             version = "${xlReleaseTrialVersion}"
         }
         server02 {}
