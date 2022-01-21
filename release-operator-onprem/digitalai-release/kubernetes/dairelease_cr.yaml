@@ -20,6 +20,7 @@ spec:
   GenerateXlConfig: true
   MetricsEnabled: false
   UseIpAsHostname: false
+  ForceRemoveMissingTypes: false
   Persistence:
     AccessMode: ReadWriteOnce
     Annotations: {}
