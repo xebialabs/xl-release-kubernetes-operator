@@ -1,4 +1,6 @@
 import com.github.gradle.node.yarn.task.YarnTask
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 buildscript {
     repositories {
@@ -16,9 +18,10 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:${properties["integrationServerGradlePluginVersion"]}")
+        classpath("com.xebialabs.gradle.plugins:gradle-commit:${properties["gradleCommitPluginVersion"]}")
         classpath("com.xebialabs.gradle.plugins:gradle-xl-defaults-plugin:${properties["xlDefaultsPluginVersion"]}")
         classpath("com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${properties["xlPluginsPluginVersion"]}")
+        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:${properties["integrationServerGradlePluginVersion"]}")
     }
 }
 
@@ -27,14 +30,22 @@ plugins {
 
     id("com.github.node-gradle.node") version "3.1.0"
     id("idea")
+    id("nebula.release") version "15.3.1"
+    id("maven-publish")
 }
 
 apply(plugin = "integration.server")
-apply(plugin = "com.xebialabs.dependency")
+apply(plugin = "ai.digital.gradle-commit")
 
 apply(from = "$rootDir/integration-tests/base-test-configuration.gradle")
 
+group = "ai.digital.release.operator"
 project.defaultTasks = listOf("build")
+
+val definedOperatorVersion = System.getenv()["OPERATOR_VERSION"]
+
+val releasedVersion = "22.0.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
+project.extra.set("releasedVersion", definedOperatorVersion ?: releasedVersion)
 
 repositories {
     mavenLocal()
@@ -60,8 +71,6 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-    withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.named<Test>("test") {
@@ -72,6 +81,16 @@ tasks {
     named<YarnTask>("yarn_install") {
         args.set(listOf("--mutex", "network"))
         workingDir.set(file("${rootDir}/documentation"))
+    }
+
+    for (suffix in listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")) {
+        register<Zip>("operatorArchives${suffix.capitalize().replace("-", "")}") {
+            from("release-operator-$suffix") {
+                include("**/*")
+                archiveBaseName.set("release-operator-${suffix}")
+                archiveVersion.set(releasedVersion)
+            }
+        }
     }
 
     register<YarnTask>("yarnRunStart") {
@@ -99,6 +118,18 @@ tasks {
         into(file("${rootDir}/docs"))
     }
 
+    register<GenerateDocumentation>("updateDocs") {
+        dependsOn(named("docBuild"))
+    }
+
+    register<NebulaRelease>("nebulaRelease") {
+        dependsOn(named("updateDocs"))
+    }
+
+    named<Upload>("uploadArchives") {
+        dependsOn(named("publish"))
+    }
+
     compileKotlin {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     }
@@ -106,10 +137,35 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     }
+
+    withType<PublishToMavenRepository> {
+        dependsOn("operatorArchivesAwseks")
+    }
+}
+
+publishing {
+    publications {
+        for (suffix in listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")) {
+            register<MavenPublication>("dist-$suffix") {
+                artifact(tasks["operatorArchives${suffix.capitalize().replace("-", "")}"])
+                artifactId = "release-operator-$suffix"
+                version = releasedVersion
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri("${project.property("nexusBaseUrl")}/repositories/releases")
+            credentials {
+                username = project.property("nexusUserName").toString()
+                password = project.property("nexusPassword").toString()
+            }
+        }
+    }
 }
 
 node {
-    version.set("14.17.5")
-    yarnVersion.set("1.22.11")
+    version.set("16.13.2")
+    yarnVersion.set("1.22.17")
     download.set(true)
 }
