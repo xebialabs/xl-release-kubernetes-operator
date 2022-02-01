@@ -27,6 +27,7 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.4.20"
+    java
 
     id("com.github.node-gradle.node") version "3.1.0"
     id("idea")
@@ -44,8 +45,6 @@ group = "ai.digital.release.operator"
 project.defaultTasks = listOf("build")
 
 val definedOperatorVersion = System.getenv()["OPERATOR_VERSION"]
-val nexusPassword = System.getenv()["NEXUS_PASSWORD"]
-val nexusUrl = "https://nexus.xebialabs.com/nexus/content/repositories/releases/com/xebialabs/operator-based-installer"
 
 val releasedVersion = "22.0.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
 project.extra.set("releasedVersion", definedOperatorVersion ?: releasedVersion)
@@ -143,48 +142,24 @@ tasks {
         dependsOn(named("dumpVersion"))
     }
 
-    task<Exec>("publishZips") {
-        for (provider in providers) {
-            dependsOn(named(toOperatorArchiveTaskName(provider)))
-        }
-
-        for (provider in providers) {
-            commandLine(
-                "curl",
-                "-v",
-                "-k",
-                "-u",
-                System.getenv()["NEXUS_PASSWORD"],
-                "--upload-file",
-                "${buildDir}/distributions/release-operator-${provider}-${releasedVersion}.zip",
-                "${nexusUrl}/Release/")
-
-        }
-    }
-
     named<Upload>("uploadArchives") {
-        dependsOn(named("publishZips"))
-    }
-
-    compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
+        dependsOn(named("publish"))
     }
 }
 
 publishing {
     publications {
-        for (suffix in listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")) {
-            register<MavenPublication>("dist-$suffix") {
-                artifact(tasks["operatorArchives${suffix.capitalize().replace("-", "")}"])
-                artifactId = "release-operator-$suffix"
-                version = releasedVersion
+        for (provider in providers) {
+            register("operator-archive-$provider", MavenPublication::class) {
+                from(components["java"])
+                artifact(tasks[toOperatorArchiveTaskName(provider)]) {
+                    artifactId = "release-operator-$provider"
+                    version = releasedVersion
+                }
             }
         }
     }
+
     repositories {
         maven {
             url = uri("${project.property("nexusBaseUrl")}/repositories/releases")
