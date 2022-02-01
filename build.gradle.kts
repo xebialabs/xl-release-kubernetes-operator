@@ -44,6 +44,8 @@ group = "ai.digital.release.operator"
 project.defaultTasks = listOf("build")
 
 val definedOperatorVersion = System.getenv()["OPERATOR_VERSION"]
+val nexusPassword = System.getenv()["NEXUS_PASSWORD"]
+val nexusUrl = "https://nexus.xebialabs.com/nexus/content/repositories/releases/com/xebialabs/operator-based-installer"
 
 val releasedVersion = "22.0.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
 project.extra.set("releasedVersion", definedOperatorVersion ?: releasedVersion)
@@ -78,6 +80,12 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+val providers = listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")
+
+fun toOperatorArchiveTaskName(providerName: String): String {
+    return "operatorArchives${providerName.capitalize().replace("-", "")}"
+}
+
 tasks {
     register("dumpVersion") {
         doLast {
@@ -91,11 +99,11 @@ tasks {
         workingDir.set(file("${rootDir}/documentation"))
     }
 
-    for (suffix in listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")) {
-        register<Zip>("operatorArchives${suffix.capitalize().replace("-", "")}") {
-            from("release-operator-$suffix") {
+    for (provider in providers) {
+        register<Zip>(toOperatorArchiveTaskName(provider)) {
+            from("release-operator-$provider") {
                 include("**/*")
-                archiveBaseName.set("release-operator-${suffix}")
+                archiveBaseName.set("release-operator-${provider}")
                 archiveVersion.set(releasedVersion)
             }
         }
@@ -135,8 +143,27 @@ tasks {
         dependsOn(named("dumpVersion"))
     }
 
+    task<Exec>("publishZips") {
+        for (provider in providers) {
+            dependsOn(named(toOperatorArchiveTaskName(provider)))
+        }
+
+        for (provider in providers) {
+            commandLine(
+                "curl",
+                "-v",
+                "-k",
+                "-u",
+                System.getenv()["NEXUS_PASSWORD"],
+                "--upload-file",
+                "${buildDir}/distributions/release-operator-${provider}-${releasedVersion}.zip",
+                "${nexusUrl}/Release/")
+
+        }
+    }
+
     named<Upload>("uploadArchives") {
-        dependsOn(named("publish"))
+        dependsOn(named("publishZips"))
     }
 
     compileKotlin {
