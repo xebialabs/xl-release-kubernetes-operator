@@ -132,6 +132,7 @@ tasks {
 
     register<NebulaRelease>("nebulaRelease") {
         dependsOn(named("updateDocs"))
+        dependsOn(named("dumpVersion"))
     }
 
     named<Upload>("uploadArchives") {
