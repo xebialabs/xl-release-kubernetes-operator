@@ -137,10 +137,6 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     }
-
-    withType<PublishToMavenRepository> {
-        dependsOn("operatorArchivesAwseks")
-    }
 }
 
 publishing {
