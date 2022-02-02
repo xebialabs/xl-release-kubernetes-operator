@@ -27,7 +27,6 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.4.20"
-    java
 
     id("com.github.node-gradle.node") version "3.1.0"
     id("idea")
@@ -83,6 +82,10 @@ val providers = listOf("aws-eks", "azure-aks", "gcp-gke", "onprem", "openshift")
 
 fun toOperatorArchiveTaskName(providerName: String): String {
     return "operatorArchives${providerName.capitalize().replace("-", "")}"
+}
+
+fun toOperatorSyncTaskName(providerName: String): String {
+    return "sync${providerName.capitalize().replace("-", "")}"
 }
 
 tasks {
@@ -142,8 +145,40 @@ tasks {
         dependsOn(named("dumpVersion"))
     }
 
+    val syncTasks = mutableListOf<String>()
+
+    for (provider in providers) {
+        val taskName = toOperatorSyncTaskName(provider)
+        syncTasks.add(taskName)
+        register<Exec>(taskName) {
+            dependsOn(toOperatorArchiveTaskName(provider))
+
+            if (project.hasProperty("versionToSync")) {
+                val versionToSync = project.property("versionToSync")
+                val command =
+                    "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='*.zip' " +
+                            "--exclude='*' /opt/sonatype-work/nexus/storage/releases/ai/digital/release/operator/release-operator-${provider}/$versionToSync/ " +
+                            "xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                commandLine(command.split(" "))
+            } else {
+                commandLine("echo",
+                    "You have to specify which version you want to sync, ex. ./gradlew syncToDistServer -PversionToSync=22.0.0")
+            }
+        }
+    }
+
+    register<Exec>("syncToDistServer") {
+        dependsOn(syncTasks)
+    }
+
     named<Upload>("uploadArchives") {
         dependsOn(named("publish"))
+    }
+
+    register("buildOperators") {
+        for (provider in providers) {
+            dependsOn(toOperatorArchiveTaskName(provider))
+        }
     }
 }
 
@@ -151,7 +186,6 @@ publishing {
     publications {
         for (provider in providers) {
             register("operator-archive-$provider", MavenPublication::class) {
-                from(components["java"])
                 artifact(tasks[toOperatorArchiveTaskName(provider)]) {
                     artifactId = "release-operator-$provider"
                     version = releasedVersion
