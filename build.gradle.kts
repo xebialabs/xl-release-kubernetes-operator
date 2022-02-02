@@ -142,7 +142,6 @@ tasks {
 
     register<NebulaRelease>("nebulaRelease") {
         dependsOn(named("updateDocs"))
-        dependsOn(named("dumpVersion"))
     }
 
     val syncTasks = mutableListOf<String>()
@@ -172,6 +171,7 @@ tasks {
     }
 
     named<Upload>("uploadArchives") {
+        dependsOn(named("dumpVersion"))
         dependsOn(named("publish"))
     }
 
