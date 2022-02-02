@@ -180,6 +180,10 @@ tasks {
             dependsOn(toOperatorArchiveTaskName(provider))
         }
     }
+
+    register("checkDependencyVersions") {
+        // a placeholder to unify with release in jenkins-job
+    }
 }
 
 publishing {
