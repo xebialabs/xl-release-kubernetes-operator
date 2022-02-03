@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.5"
+  ImageTag: "22.0"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   K8sSetup:
