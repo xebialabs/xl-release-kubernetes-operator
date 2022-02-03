@@ -43,7 +43,7 @@ apply(from = "$rootDir/integration-tests/base-test-configuration.gradle")
 group = "ai.digital.release.operator"
 project.defaultTasks = listOf("build")
 
-val explicitVersion = System.getenv()["RELEASE_EXPLICIT"]
+val explicitVersion = if (project.hasProperty("release.version")) project.property("release.version") else null
 
 val releasedVersion = "22.0.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
 project.extra.set("releasedVersion", explicitVersion ?: releasedVersion)
