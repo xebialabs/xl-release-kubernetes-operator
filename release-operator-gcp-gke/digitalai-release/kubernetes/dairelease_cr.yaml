@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.5"
+  ImageTag: "22.0"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   K8sSetup:
@@ -241,7 +241,7 @@ spec:
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-    - <Provode DNS name for accessing UI of Keycloak>
+    - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
   keycloak:
     affinity: |
@@ -1166,7 +1166,7 @@ spec:
     postgresqlExtendedConf: {}
     postgresqlInitdbArgs: ""
     postgresqlInitdbWalDir: ""
-    postgresqlMaxConnections: ""
+    postgresqlMaxConnections: "150"
     postgresqlPassword: postgres
     postgresqlPghbaRemoveFilters: ""
     postgresqlPostgresConnectionLimit: ""
