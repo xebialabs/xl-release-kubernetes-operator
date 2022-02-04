@@ -366,7 +366,7 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-        - host: '{{ .Release.Name }}.keycloak.example.com'
+        - host: 'keycloak.example.com'
           paths:
           - path: /auth/admin/
             pathType: Prefix
@@ -380,7 +380,7 @@ spec:
           pathType: Prefix
       servicePort: http
       tls: []
-    install: false
+    install: true
     lifecycleHooks: ""
     livenessProbe: |
       httpGet:
@@ -990,7 +990,7 @@ spec:
     watchIngressWithoutClass: false
   nodeSelector: {}
   oidc:
-    enabled: false
+    enabled: true
     accessTokenUri: null
     clientId: null
     clientSecret: null
