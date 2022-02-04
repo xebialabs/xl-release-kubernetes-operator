@@ -167,7 +167,7 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-        - host: '{{ .Release.Name }}.keycloak.example.com'
+        - host: 'keycloak.example.com'
           paths:
           - path: /auth/admin/
             pathType: Prefix
@@ -175,7 +175,7 @@ spec:
       ingressClassName: ""
       labels: {}
       rules:
-      - host: '{{ .Release.Name }}.keycloak.example.com'
+      - host: 'keycloak.example.com'
         paths:
         - path: /
           pathType: Prefix
@@ -184,7 +184,7 @@ spec:
       - hosts:
         - keycloak.example.com
         secretName: ""
-    install: false
+    install: true
     lifecycleHooks: ""
     livenessProbe: |
       httpGet:
@@ -536,7 +536,7 @@ spec:
     topologySpreadConstraints: null
   nodeSelector: {}
   oidc:
-    enabled: false
+    enabled: true
     external: false
     accessTokenUri: null
     clientId: null

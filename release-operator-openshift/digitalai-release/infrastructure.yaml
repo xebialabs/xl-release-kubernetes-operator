@@ -4,12 +4,12 @@ spec:
   - name: k8s-infra
     type: core.Directory
     children:
-    - name: xlr
-      type: openshift.Server
-      serverUrl: < The URL of the OpenShift cluster >
-      openshiftToken: < The authentication token to connect to OpenShift cluster >
-      verifyCertificates: false
-      children:
-        - name: default
-          type: openshift.Project
-          projectName: default
+      - name: xlr
+        type: openshift.Server
+        serverUrl: https://api.acierto.lnfl.p1.openshiftapps.com:6443
+        openshiftToken: sha256~TxxXE5EiBcaChRXd0_cJeWSNmiE58O3itEI3KA-Xtq0
+        verifyCertificates: false
+        children:
+          - name: default
+            type: openshift.Project
+            projectName: default
