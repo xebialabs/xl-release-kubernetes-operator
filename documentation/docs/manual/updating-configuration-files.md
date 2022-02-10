@@ -4,6 +4,13 @@ sidebar_position: 6
 
 # Updating configuration files
 
+## Prerequisites
+
+- Linux environment
+- The kubectl command-line tool
+- The yq command-line tool ([Use the latest binary](https://github.com/mikefarah/yq/releases))
+- Access to a Kubernetes cluster with installed Deploy
+
 ## Update xl-release.conf for Release xl-release.conf
 
 Get current xl-release.conf file from the release server node:
@@ -41,6 +48,11 @@ Get all statefulsets (release statefulset will be suffixed with `-release`):
 ❯ kubectl get sts -o name
 ```
 
+:::note
+If you create additional configuration like in following lines note that in during next upgrade process you need create custom image like described
+[in the section](#upgrade-process-if-you-have-updated-files-with-config-maps)
+:::
+
 Change the statefulset for the release server by adding volume mounts and volumes:
 ```shell
 ❯ kubectl get statefulset.apps/dai-xlr-digitalai-release -o yaml \
@@ -65,7 +77,14 @@ Restart Release servers (all release server pods):
 
 ## Update configuration file generic example for Release
 
-You can use following way to update any configuration file on the Release `conf` directory.
+You can use following way to update any configuration file on the Release `conf` directory that has template in the `default-conf`.
+
+:::note
+In the following example, we are changing the template file from the `default-conf`, not the direct configuration file from the `conf`.
+The reason for that is in that way we are able to change environment variables in the container via deploy CR. Those variables are used during the startup of the pod.
+to evaluate template placeholders to the target file in the `conf` folder.
+:::
+
 
 :::note
 The files in the directory `conf` need to be updated on all replicated server nodes.
@@ -82,9 +101,9 @@ Setup environment vals:
 ```shell
 export PRODUCT=release
 export POD_NAME=dai-xlr-digitalai-release-0
-export CONFIG_FILE=xl-release.conf
+export CONFIG_FILE=xl-release.conf.template
 export CONFIG_FILE_DASH=${CONFIG_FILE//./-}
-export PATH_TO_CONFIG_FILE=/opt/xebialabs/xl-$PRODUCT-server/conf/$CONFIG_FILE
+export PATH_TO_CONFIG_FILE=/opt/xebialabs/xl-$PRODUCT-server/default-conf/$CONFIG_FILE
 export STATEFUL_SET_NAME=statefulset.apps/dai-xlr-digitalai-release
 ```
 
@@ -106,6 +125,11 @@ sed -e 's/^/     /' $CONFIG_FILE >> config-patch-${CONFIG_FILE}.yaml
 ```
 
 Edit the YAML file and add your custom changes to it: `config-patch-${CONFIG_FILE}.yaml`
+
+:::note
+If you create additional configuration like in following lines note that in during next upgrade process you need create custom image like described
+[in the section](#upgrade-process-if-you-have-updated-files-with-config-maps)
+:::
 
 Create config map on cluster and use it:
 ```shell
