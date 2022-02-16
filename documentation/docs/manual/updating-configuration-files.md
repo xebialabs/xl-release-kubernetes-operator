@@ -9,7 +9,7 @@ sidebar_position: 6
 - Linux environment
 - The kubectl command-line tool
 - The yq command-line tool ([Use the latest binary](https://github.com/mikefarah/yq/releases))
-- Access to a Kubernetes cluster with installed Deploy
+- Access to a Kubernetes cluster with installed Release
 
 ## Update xl-release.conf for Release xl-release.conf
 
@@ -81,7 +81,7 @@ You can use following way to update any configuration file on the Release `conf`
 
 :::note
 In the following example, we are changing the template file from the `default-conf`, not the direct configuration file from the `conf`.
-The reason for that is in that way we are able to change environment variables in the container via deploy CR. Those variables are used during the startup of the pod.
+The reason for that is in that way we are able to change environment variables in the container via release CR. Those variables are used during the startup of the pod.
 to evaluate template placeholders to the target file in the `conf` folder.
 :::
 
@@ -90,7 +90,7 @@ to evaluate template placeholders to the target file in the `conf` folder.
 The files in the directory `conf` need to be updated on all replicated server nodes.
 :::
 
-Get info to list deploy master and worker pod names and statefulsets:
+Get info to list release pod names and statefulsets:
 ```shell
 kubectl get pod -o name
 kubectl get sts -o name
