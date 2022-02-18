@@ -15,7 +15,7 @@ spec:
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   K8sSetup:
-    Platform: PlainK8s
+    Platform: GoogleGKE
   KeystorePassphrase: <Provide store pass for the keystore>
   GenerateXlConfig: true
   MetricsEnabled: false
