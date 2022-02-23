@@ -11,7 +11,9 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: 22.1.0-222.113
+  ImageTag: "22.1.0-222.113"
+  # Secrets must be manually created in the namespace
+  # ImagePullSecret: xlRelease
   K8sSetup:
     Platform: AWSEKS
   KeystorePassphrase: <Provide store pass for the keystore>
@@ -24,12 +26,30 @@ spec:
     Annotations: {}
     Enabled: true
     Size: 8Gi
+    # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
     StorageClass: < provide the storageClass for DAI-Release>
+  # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
+  # Convert repository-keystore.jceks files content to base64
+  # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
   RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
   UseExistingDB:
     Enabled: false
+    # If you want to use a existing database, change 'postgresql.install' to 'false'.
+    # Set 'UseExistingDB.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # XLR_DB_URL:
+    # XLR_DB_USER:
+    # XLR_DB_PASS:
+    # XLR_REPORT_DB_URL:
+    # XLR_REPORT_DB_USER:
+    # XLR_REPORT_DB_PASS:
   UseExistingMQ:
     Enabled: false
+    # If you want to use a existing Message Queue, change 'rabbitmq.install' to 'false'.
+    # Set 'UseExistingMQ.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # XLR_TASK_QUEUE_USERNAME:
+    # XLR_TASK_QUEUE_PASSWORD:
+    # XLR_TASK_QUEUE_NAME:
+    # XLR_TASK_QUEUE_URL:
   affinity: {}
   haproxy-ingress:
     controller:
@@ -174,7 +194,7 @@ spec:
       image:
         pullPolicy: IfNotPresent
         repository: k8s.gcr.io/defaultbackend-amd64
-        tag: 1.5
+        tag: "1.5"
       minAvailable: 1
       name: default-backend
       nodeSelector: {}
@@ -214,9 +234,9 @@ spec:
     annotations:
       kubernetes.io/ingress.class: nginx
       nginx.ingress.kubernetes.io/affinity: cookie
-      nginx.ingress.kubernetes.io/proxy-connect-timeout: 60
-      nginx.ingress.kubernetes.io/proxy-read-timeout: 60
-      nginx.ingress.kubernetes.io/proxy-send-timeout: 60
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -346,7 +366,7 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-        - host: keycloak.example.com
+        - host: 'keycloak.example.com'
           paths:
           - path: /auth/admin/
             pathType: Prefix
@@ -482,7 +502,7 @@ spec:
           runAsUser: 1001
         service:
           annotations:
-            prometheus.io/port: 9187
+            prometheus.io/port: "9187"
             prometheus.io/scrape: "true"
           loadBalancerIP: null
           type: ClusterIP
@@ -619,7 +639,7 @@ spec:
           pullPolicy: Always
           registry: docker.io
           repository: bitnami/bitnami-shell
-          tag: 10
+          tag: "10"
         securityContext:
           runAsUser: 0
     priorityClassName: ""
@@ -815,7 +835,7 @@ spec:
         location /healthz {
           return 200;
         }
-
+  
         location / {
           return 404;
         }
@@ -877,7 +897,7 @@ spec:
         rules: []
       service:
         annotations:
-          prometheus.io/port: "{{ .Values.metrics.service.port }}"
+          prometheus.io/port: '{{ .Values.metrics.service.port }}'
           prometheus.io/scrape: "true"
         port: 9913
         type: ClusterIP
@@ -1109,7 +1129,7 @@ spec:
         runAsUser: 1001
       service:
         annotations:
-          prometheus.io/port: 9187
+          prometheus.io/port: "9187"
           prometheus.io/scrape: "true"
         loadBalancerIP: ""
         type: ClusterIP
@@ -1135,6 +1155,7 @@ spec:
       mountPath: /bitnami/postgresql
       selector: {}
       size: 8Gi
+      # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
       storageClass: <Provode Storage Class to be defined for PostgreSQL>
       subPath: ""
     pgHbaConfiguration: ""
@@ -1145,7 +1166,7 @@ spec:
     postgresqlExtendedConf: {}
     postgresqlInitdbArgs: ""
     postgresqlInitdbWalDir: ""
-    postgresqlMaxConnections: 150
+    postgresqlMaxConnections: "150"
     postgresqlPassword: postgres
     postgresqlPghbaRemoveFilters: ""
     postgresqlPostgresConnectionLimit: ""
@@ -1474,11 +1495,11 @@ spec:
     kubeVersion: ""
     ldap:
       enabled: false
-      port: 389
+      port: "389"
       servers: []
       tls:
         enabled: false
-      user_dn_pattern: "cn=${username},dc=example,dc=org"
+      user_dn_pattern: cn=${username},dc=example,dc=org
     livenessProbe:
       enabled: true
       failureThreshold: 6
@@ -1499,7 +1520,7 @@ spec:
       enabled: false
       plugins: rabbitmq_prometheus
       podAnnotations:
-        prometheus.io/port: "{{ .Values.service.metricsPort }}"
+        prometheus.io/port: '{{ .Values.service.metricsPort }}'
         prometheus.io/scrape: "true"
       prometheusRule:
         additionalLabels: {}
@@ -1539,6 +1560,7 @@ spec:
       existingClaim: ""
       selector: {}
       size: 8Gi
+      # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
       storageClass: <Storage Class to be defined for RabbitMQ>
       volumes: []
     plugins: rabbitmq_management rabbitmq_peer_discovery_k8s
@@ -1604,7 +1626,7 @@ spec:
     terminationGracePeriodSeconds: 120
     tolerations: []
     topologySpreadConstraints: []
-    ulimitNofiles: 65536
+    ulimitNofiles: "65536"
     updateStrategyType: RollingUpdate
     volumePermissions:
       enabled: true
@@ -1620,5 +1642,5 @@ spec:
   replicaCount: 3
   resources: {}
   tolerations: []
-  xlrLicense: <Provide license file for Digital.ai Release should be converted to
-    the base64 form>
+  # Convert xl-release.lic files content to base64 ( cat xl-release.lic | base64 -w 0 ) and put the output here
+  xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
