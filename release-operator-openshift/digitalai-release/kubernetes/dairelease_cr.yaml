@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: 22.1.0-222.113
+  ImageTag: "22.1.0-222.113"
   KeystorePassphrase: <Provide store pass for the keystore>
   GenerateXlConfig: true
   MetricsEnabled: false
@@ -23,11 +23,28 @@ spec:
     Enabled: true
     Size: 8Gi
     StorageClass: < provide the storageClass for DAI-Release>
+  # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
+  # Convert repository-keystore.jceks files content to base64
+  # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
   RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
   UseExistingDB:
     Enabled: false
+    # If you want to use a existing database, change 'postgresql.install' to 'false'.
+    # Set 'UseExistingDB.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # XLR_DB_URL:
+    # XLR_DB_USER:
+    # XLR_DB_PASS:
+    # XLR_REPORT_DB_URL:
+    # XLR_REPORT_DB_USER:
+    # XLR_REPORT_DB_PASS:
   UseExistingMQ:
     Enabled: false
+    # If you want to use a existing Message Queue, change 'rabbitmq.install' to 'false'.
+    # Set 'UseExistingMQ.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # XLR_TASK_QUEUE_USERNAME:
+    # XLR_TASK_QUEUE_PASSWORD:
+    # XLR_TASK_QUEUE_NAME:
+    # XLR_TASK_QUEUE_URL
   affinity: {}
   keycloak:
     affinity: |
@@ -150,7 +167,7 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-        - host: keycloak.example.com
+        - host: 'keycloak.example.com'
           paths:
           - path: /auth/admin/
             pathType: Prefix
@@ -158,7 +175,7 @@ spec:
       ingressClassName: ""
       labels: {}
       rules:
-      - host: keycloak.example.com
+      - host: 'keycloak.example.com'
         paths:
         - path: /
           pathType: Prefix
@@ -289,7 +306,7 @@ spec:
           runAsUser: 1001
         service:
           annotations:
-            prometheus.io/port: 9187
+            prometheus.io/port: "9187"
             prometheus.io/scrape: "true"
           loadBalancerIP: null
           type: ClusterIP
@@ -426,7 +443,7 @@ spec:
           pullPolicy: Always
           registry: docker.io
           repository: bitnami/bitnami-shell
-          tag: 10
+          tag: "10"
         securityContext:
           runAsUser: 0
     priorityClassName: ""
@@ -658,7 +675,7 @@ spec:
         runAsUser: 1001
       service:
         annotations:
-          prometheus.io/port: 9187
+          prometheus.io/port: "9187"
           prometheus.io/scrape: "true"
         loadBalancerIP: ""
         type: ClusterIP
@@ -694,7 +711,7 @@ spec:
     postgresqlExtendedConf: {}
     postgresqlInitdbArgs: ""
     postgresqlInitdbWalDir: ""
-    postgresqlMaxConnections: 150
+    postgresqlMaxConnections: "150"
     postgresqlPassword: postgres
     postgresqlPghbaRemoveFilters: ""
     postgresqlPostgresConnectionLimit: ""
@@ -1023,11 +1040,11 @@ spec:
     kubeVersion: ""
     ldap:
       enabled: false
-      port: 389
+      port: "389"
       servers: []
       tls:
         enabled: false
-      user_dn_pattern: "cn=${username},dc=example,dc=org"
+      user_dn_pattern: cn=${username},dc=example,dc=org
     livenessProbe:
       enabled: true
       failureThreshold: 6
@@ -1048,7 +1065,7 @@ spec:
       enabled: false
       plugins: rabbitmq_prometheus
       podAnnotations:
-        prometheus.io/port: "{{ .Values.service.metricsPort }}"
+        prometheus.io/port: '{{ .Values.service.metricsPort }}'
         prometheus.io/scrape: "true"
       prometheusRule:
         additionalLabels: {}
@@ -1153,7 +1170,7 @@ spec:
     terminationGracePeriodSeconds: 120
     tolerations: []
     topologySpreadConstraints: []
-    ulimitNofiles: 65536
+    ulimitNofiles: "65536"
     updateStrategyType: RollingUpdate
     volumePermissions:
       enabled: true
@@ -1178,5 +1195,4 @@ spec:
     - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
-  xlrLicense: <Provide license file for Digital.ai Release should be converted to
-    the base64 form>
+  xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
