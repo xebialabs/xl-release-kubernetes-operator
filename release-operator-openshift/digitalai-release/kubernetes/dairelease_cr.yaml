@@ -76,20 +76,20 @@ spec:
       behavior:
         scaleDown:
           policies:
-          - periodSeconds: 300
-            type: Pods
-            value: 1
+            - periodSeconds: 300
+              type: Pods
+              value: 1
           stabilizationWindowSeconds: 300
       enabled: false
       labels: {}
       maxReplicas: 10
       metrics:
-      - resource:
-          name: cpu
-          target:
-            averageUtilization: 80
-            type: Utilization
-        type: Resource
+        - resource:
+            name: cpu
+            target:
+              averageUtilization: 80
+              type: Utilization
+          type: Resource
       minReplicas: 3
     clusterDomain: cluster.local
     command: []
@@ -167,23 +167,23 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-        - host: 'keycloak.example.com'
-          paths:
-          - path: /auth/admin/
-            pathType: Prefix
+          - host: 'keycloak.example.com'
+            paths:
+              - path: /auth/admin/
+                pathType: Prefix
       enabled: false
       ingressClassName: ""
       labels: {}
       rules:
-      - host: 'keycloak.example.com'
-        paths:
-        - path: /
-          pathType: Prefix
+        - host: 'keycloak.example.com'
+          paths:
+            - path: /
+              pathType: Prefix
       servicePort: http
       tls:
-      - hosts:
-        - keycloak.example.com
-        secretName: ""
+        - hosts:
+            - keycloak.example.com
+          secretName: ""
     install: true
     lifecycleHooks: ""
     livenessProbe: |
@@ -319,7 +319,7 @@ spec:
         explicitNamespacesSelector: {}
       persistence:
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         annotations: {}
         enabled: true
         mountPath: /bitnami/postgresql
@@ -584,9 +584,9 @@ spec:
     customStartupProbe: {}
     diagnosticMode:
       args:
-      - infinity
+        - infinity
       command:
-      - sleep
+        - sleep
       enabled: false
     existingSecret: ""
     extendedConfConfigMap: ""
@@ -694,7 +694,7 @@ spec:
       explicitNamespacesSelector: {}
     persistence:
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       annotations: {}
       enabled: true
       existingClaim: ""
@@ -949,9 +949,9 @@ spec:
     customStartupProbe: {}
     diagnosticMode:
       args:
-      - infinity
+        - infinity
       command:
-      - sleep
+        - sleep
       enabled: false
     extraConfiguration: |
       load_definitions = /app/xlr-load_definition.json
@@ -1192,7 +1192,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-    - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
