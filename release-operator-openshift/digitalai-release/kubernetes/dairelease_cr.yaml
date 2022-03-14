@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: "22.2.0-311.113"
+  ImageTag: "22.2.0-314.113"
   KeystorePassphrase: <Provide store pass for the keystore>
   GenerateXlConfig: true
   MetricsEnabled: false
