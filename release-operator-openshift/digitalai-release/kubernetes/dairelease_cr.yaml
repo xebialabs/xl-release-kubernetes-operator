@@ -10,8 +10,8 @@ spec:
   HealthProbesLivenessTimeout: 60
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
-  ImageRepository: xebialabs/xl-release
-  ImageTag: "22.0"
+  ImageRepository: xebialabsunsupported/xl-release
+  ImageTag: "22.0.0-314.400"
   KeystorePassphrase: <Provide store pass for the keystore>
   GenerateXlConfig: true
   MetricsEnabled: false
@@ -96,9 +96,9 @@ spec:
     customStartupProbe: {}
     diagnosticMode:
       args:
-      - infinity
+        - infinity
       command:
-      - sleep
+        - sleep
       enabled: false
     existingSecret: ""
     extendedConfConfigMap: ""
@@ -206,7 +206,7 @@ spec:
       explicitNamespacesSelector: {}
     persistence:
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       annotations: {}
       enabled: true
       existingClaim: ""
@@ -461,9 +461,9 @@ spec:
     customStartupProbe: {}
     diagnosticMode:
       args:
-      - infinity
+        - infinity
       command:
-      - sleep
+        - sleep
       enabled: false
     extraConfiguration: |
       load_definitions = /app/xlr-load_definition.json
@@ -704,7 +704,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-    - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
