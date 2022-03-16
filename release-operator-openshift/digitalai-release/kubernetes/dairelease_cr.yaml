@@ -14,8 +14,8 @@ spec:
   ImageTag: "22.2.0-314.113"
   ## xebialabs/tiny-tools image version
   ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
-  TinyToolsImageRepository: "xebialabsunsupported/tiny-tools"
-  TinyToolsImageTag: "22.1"
+  TinyToolsImageRepository: "xebialabs/tiny-tools"
+  TinyToolsImageTag: "22.2.0"
   KeystorePassphrase: <Provide store pass for the keystore>
   GenerateXlConfig: true
   MetricsEnabled: false
