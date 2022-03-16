@@ -1,18 +1,22 @@
 def getTestProperties() {
     def activeProviderName = project.hasProperty("activeProviderName") ? project.activeProviderName : null
-    def destroyClusterOnShutdown = project.hasProperty("destroyClusterOnShutdown") ? Boolean.valueOf(project.destroyClusterOnShutdown) : false
+    def destroyClusterOnShutdown = project.hasProperty("destroyClusterOnShutdown") ? Boolean.valueOf(project.destroyClusterOnShutdown as String) : false
     def xlReleaseStartDockerRepository = project.hasProperty("xlReleaseStartDockerRepository") ? project.xlReleaseStartDockerRepository : "xebialabsunsupported"
     def xlReleaseWorkerStartDockerRepository = project.hasProperty("xlReleaseWorkerStartDockerRepository") ? project.xlReleaseWorkerStartDockerRepository : xlReleaseStartDockerRepository
     def xlReleaseUpgradeDockerRepository = project.hasProperty("xlReleaseUpgradeDockerRepository") ? project.xlReleaseUpgradeDockerRepository : "xebialabsunsupported"
-    def xlReleaseStartVersion = project.hasProperty("xlReleaseStartVersion") ? project.xlReleaseStartVersion : xlReleaseTrialVersion
-    def xlReleaseUpgradeVersion = project.hasProperty("xlReleaseUpgradeVersion") ? project.xlReleaseUpgradeVersion : null
+    def xlReleaseStartVersion = project.hasProperty("xlReleaseStartVersion") ? project.xlReleaseStartVersion : xlReleaseVersion
+    def xlReleaseUpgradeVersion = project.hasProperty("xlReleaseUpgradeVersion") ? project.xlReleaseUpgradeVersion : xlReleaseVersion
     def operatorImage = project.hasProperty("operatorImage") ? project.operatorImage : null
     def operatorPackageVersion = project.hasProperty("operatorPackageVersion") ? project.operatorPackageVersion : null
     def operatorStartBranch = project.hasProperty("operatorStartBranch") ? project.operatorStartBranch : null
+    def operatorUpgradeUseZip = project.hasProperty("operatorUpgradeUseZip") ? Boolean.valueOf(project.operatorUpgradeUseZip as String) : true
     def operatorUpgradeBranch = project.hasProperty("operatorUpgradeBranch") ? project.operatorUpgradeBranch : null
     def opBlueprintBranch = project.hasProperty("opBlueprintBranch") ? project.opBlueprintBranch as String : null
     def xlCliVersion = project.hasProperty("xlCliVersion") ? project.xlCliVersion as String : null
     def xlCliPath = project.hasProperty("xlCliPath") ? project.xlCliPath as String : null
+    def cliNightly = project.hasProperty("cliNightly") ? Boolean.valueOf(project.cliNightly as String) : true
+    def deployUpgraderVersion = project.hasProperty("deployUpgraderVersion") ? project.deployUpgraderVersion as String : null
+    def keycloakUrl = project.hasProperty("keycloakUrl") ? project.keycloakUrl as String : null
 
     [
         activeProviderName                  : activeProviderName,
@@ -21,14 +25,18 @@ def getTestProperties() {
         operatorImage                       : operatorImage,
         operatorPackageVersion              : operatorPackageVersion,
         operatorStartBranch                 : operatorStartBranch,
+        operatorUpgradeUseZip               : operatorUpgradeUseZip,
         operatorUpgradeBranch               : operatorUpgradeBranch,
         xlReleaseStartDockerRepository      : xlReleaseStartDockerRepository,
         xlReleaseWorkerStartDockerRepository: xlReleaseWorkerStartDockerRepository,
         xlReleaseStartVersion               : xlReleaseStartVersion,
         xlReleaseUpgradeDockerRepository    : xlReleaseUpgradeDockerRepository,
         xlReleaseUpgradeVersion             : xlReleaseUpgradeVersion,
-        xlCliVersion                       : xlCliVersion,
-        xlCliPath                          : xlCliPath,
+        xlCliVersion                        : xlCliVersion,
+        xlCliPath                           : xlCliPath,
+        cliNightly                          : cliNightly,
+        deployUpgraderVersion               : deployUpgraderVersion,
+        keycloakUrl                         : keycloakUrl,
     ]
 }
 
@@ -66,6 +74,12 @@ releaseIntegrationServer {
                 if (testProperties.xlCliVersion) {
                     xlCliVersion = testProperties.xlCliVersion
                 }
+                if (testProperties.xlCliVersion) {
+                    xlCliVersion = testProperties.xlCliVersion
+                }
+                if (testProperties.cliNightly) {
+                    cliNightly = testProperties.cliNightly
+                }
                 if (testProperties.xlCliPath) {
                     xlCliPath = testProperties.xlCliPath
                 }
@@ -79,7 +93,6 @@ releaseIntegrationServer {
                     host = 'router-default.apps.acierto.lnfl.p1.openshiftapps.com'
                     name = 'aws-openshift-test-cluster'
                     oauthHostName = "oauth-openshift.apps.acierto.lnfl.p1.openshiftapps.com"
-                    operatorPackageVersion = "1.0.1"
                     setupTestProperties(it, testProperties)
                 }
                 azureAks {
@@ -130,8 +143,19 @@ afterEvaluate {
         operatorBasedUpgradeReleaseCluster {
             imageRepositoryName = testProperties.xlReleaseUpgradeDockerRepository
             imageTargetVersion = testProperties.xlReleaseUpgradeVersion
-            operatorBranch = testProperties.operatorUpgradeBranch
-            opBlueprintBranch = testProperties.opBlueprintBranch
+            useOperatorZip = testProperties.operatorUpgradeUseZip
+            if (testProperties.deployUpgraderVersion) {
+                deployUpgraderVersion = testProperties.deployUpgraderVersion
+            }
+            if (testProperties.operatorUpgradeBranch) {
+                operatorBranch = testProperties.operatorUpgradeBranch
+            }
+            if (testProperties.opBlueprintBranch) {
+                opBlueprintBranch = testProperties.opBlueprintBranch
+            }
+            if (testProperties.keycloakUrl) {
+                keycloakUrl = testProperties.keycloakUrl
+            }
         }
     }
 }
