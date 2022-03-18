@@ -28,7 +28,7 @@ sidebar_position: 7
      ```
 * By editing STS, create volumemount and volumes for the created secret in above step.
   ```shell
-     kubectl edit statefulset.apps/dai-xlr-digitalai-release -o yaml > release.yaml
+     kubectl get statefulset.apps/dai-xlr-digitalai-release -o yaml > release.yaml
      ```
   * update the volume mount and volume for secret.
     * volume mount
@@ -109,7 +109,7 @@ sidebar_position: 7
   ![Before volume mount](pics/before_secret_mount.png)
      
    * ```shell
-     kubectl edit statefulset.apps/dai-xlr-digitalai-release -o yaml > release.yaml
+     kubectl get statefulset.apps/dai-xlr-digitalai-release -o yaml > release.yaml
      ```
      * update the volume mount and volume for secret.
          * volume mount
@@ -138,7 +138,7 @@ sidebar_position: 7
    *
   ![ Post edit of STS](pics/after_secret_mount.png) 
        
-### Update xlr-wrapper-linux.conf/xlr-wrapper-win.conf, depending on your system. 
+## Update xlr-wrapper-linux.conf/xlr-wrapper-win.conf, depending on your system. 
 
 *  Configure Release to use the truststore.
 
