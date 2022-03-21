@@ -24,7 +24,7 @@ sidebar_position: 7
      name: xlr-secret-store
      namespace: default
      data:
-       XLRTruststore.jks: "<base 64 from previous command here 'cat XLRKeystore.jks | base64'>"       
+       XLRTruststore.jks: "<base 64 from previous command here 'cat XLRTruststore.jks | base64'>"       
     ```
   * ```shell
      kubectl apply -f xlr-trust-store_secret.yaml
@@ -54,6 +54,8 @@ sidebar_position: 7
                   path: XLDKeystore.jks
       ```
     * ```shell
+        kubectl apply -f release.yaml
+        ```
 
 * Update the xlr-wrapper-linux.conf/xlr-wrapper-win.conf as mentioned [in the section](#update-xlr-wrapper-linuxconfxlr-wrapper-winconf-depending-on-your-system)
 
@@ -175,9 +177,9 @@ sidebar_position: 7
     wrapper.java.additional.X+1=-Djavax.net.ssl.trustStorePassword=changeit
     ```
 
-* Create the config map with `config-patch-xl-release-conf.yaml`:
+* Create the config map with `config-patch-xl-release-wrapper.yaml`:
     ```shell
-    ❯ kubectl create -f config-patch-xl-release-conf.yaml
+    ❯ kubectl create -f config-patch-xl-release-wrapper.yaml
     ```
 
 * Get all statefulsets (release statefulset will be suffixed with `-release`):
