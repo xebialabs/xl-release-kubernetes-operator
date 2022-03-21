@@ -13,6 +13,9 @@ sidebar_position: 7
 
 ## Adding truststore file generic example for Release.
 * Add certificate to truststore (XLRTruststore.jks)
+  * ```shell
+     keytool -import -alias exampleCert -file exampleCert.cer -keystore XLRTruststore.jks
+     ```
 * Create secret yaml "xlr-trust-store_secret.yaml"
   * ```yaml
      apiVersion: v1
@@ -54,7 +57,7 @@ sidebar_position: 7
 
 * Update the xlr-wrapper-linux.conf/xlr-wrapper-win.conf as mentioned [in the section](#update-xlr-wrapper-linuxconfxlr-wrapper-winconf-depending-on-your-system)
 
-## Trust an Deploy server's certificate
+## Trust an Deploy server's certificate in Release
 * If you configured your Deploy server to use a self-signed certificate and then added the server to Release, you will notice that testing the connection fails. with the following error: Can't connect to XL Deploy Server.
 * To instruct Release to trust the Deploy server certificate, you must configure a truststore for Release.
 
