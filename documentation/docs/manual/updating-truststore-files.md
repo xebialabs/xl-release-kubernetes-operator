@@ -17,6 +17,7 @@ sidebar_position: 7
      keytool -import -alias exampleCert -file exampleCert.cer -keystore XLRTruststore.jks
      ```
 * Create secret yaml "xlr-trust-store_secret.yaml"
+  * cat XLRTruststore.jsk | base64
   * ```yaml
      apiVersion: v1
      kind: Secret
@@ -137,8 +138,7 @@ sidebar_position: 7
                        path: XLDKeystore.jks
            ```
          * ```shell
-               [sishwarya@localhost xl-release-kubernetes-operator] (ENG-9190) $ kubectl edit statefulset.apps/dai-xlr-digitalai-release
-                statefulset.apps/dai-xlr-digitalai-release edited
+               kubectl apply -f release.yaml
            ```
    *
   ![ Post edit of STS](pics/after_secret_mount.png) 
