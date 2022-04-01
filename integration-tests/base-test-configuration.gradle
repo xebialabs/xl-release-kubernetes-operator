@@ -1,5 +1,7 @@
 def getTestProperties() {
     def activeProviderName = project.hasProperty("activeProviderName") ? project.activeProviderName : null
+    def namespace = project.hasProperty("namespace") ? project.namespace : null
+    def doCleanup = project.hasProperty("doCleanup") ? Boolean.valueOf(project.doCleanup as String) : true
     def destroyClusterOnShutdown = project.hasProperty("destroyClusterOnShutdown") ? Boolean.valueOf(project.destroyClusterOnShutdown as String) : false
     def xlReleaseStartDockerRepository = project.hasProperty("xlReleaseStartDockerRepository") ? project.xlReleaseStartDockerRepository : "xebialabsunsupported"
     def xlReleaseWorkerStartDockerRepository = project.hasProperty("xlReleaseWorkerStartDockerRepository") ? project.xlReleaseWorkerStartDockerRepository : xlReleaseStartDockerRepository
@@ -17,9 +19,12 @@ def getTestProperties() {
     def cliNightly = project.hasProperty("cliNightly") ? Boolean.valueOf(project.cliNightly as String) : true
     def deployUpgraderVersion = project.hasProperty("deployUpgraderVersion") ? project.deployUpgraderVersion as String : null
     def keycloakUrl = project.hasProperty("keycloakUrl") ? project.keycloakUrl as String : null
+    def ingressType = project.hasProperty("ingressType") ? project.ingressType as String : null
 
     [
         activeProviderName                  : activeProviderName,
+        namespace                           : namespace,
+        doCleanup                           : doCleanup,
         destroyClusterOnShutdown            : destroyClusterOnShutdown,
         opBlueprintBranch                   : opBlueprintBranch,
         operatorImage                       : operatorImage,
@@ -37,6 +42,7 @@ def getTestProperties() {
         cliNightly                          : cliNightly,
         deployUpgraderVersion               : deployUpgraderVersion,
         keycloakUrl                         : keycloakUrl,
+        ingressType                         : ingressType,
     ]
 }
 
@@ -71,6 +77,7 @@ releaseIntegrationServer {
         clusterProfiles {
             operator {
                 activeProviderName = testProperties.activeProviderName
+                doCleanup = testProperties.doCleanup
                 if (testProperties.xlCliVersion) {
                     xlCliVersion = testProperties.xlCliVersion
                 }
@@ -82,6 +89,12 @@ releaseIntegrationServer {
                 }
                 if (testProperties.xlCliPath) {
                     xlCliPath = testProperties.xlCliPath
+                }
+                if (testProperties.namespace) {
+                    namespace = testProperties.namespace
+                }
+                if (testProperties.ingressType) {
+                    ingressType = testProperties.ingressType
                 }
                 awsEks {
                     name = 'aws-eks-test-cluster'
@@ -96,9 +109,9 @@ releaseIntegrationServer {
                     setupTestProperties(it, testProperties)
                 }
                 azureAks {
-                    name = 'azure-aks-test-cluster'
+                    name = 'vp-azure-aks-test-cluster'
                     clusterNodeCount = 3
-                    location = 'northcentralus'
+                    location = 'westeurope'
                     setupTestProperties(it, testProperties)
                 }
                 gcpGke {
@@ -133,8 +146,8 @@ releaseIntegrationServer {
             version = testProperties.xlReleaseStartVersion
             overlays = serverOverlays
         }
-        server02 {
-        }
+//        server02 {
+//        }
     }
 }
 
