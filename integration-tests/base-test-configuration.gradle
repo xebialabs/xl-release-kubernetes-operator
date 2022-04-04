@@ -109,9 +109,9 @@ releaseIntegrationServer {
                     setupTestProperties(it, testProperties)
                 }
                 azureAks {
-                    name = 'vp-azure-aks-test-cluster'
+                    name = 'azure-aks-test-cluster'
                     clusterNodeCount = 3
-                    location = 'westeurope'
+                    location = 'northcentralus'
                     setupTestProperties(it, testProperties)
                 }
                 gcpGke {
@@ -146,8 +146,8 @@ releaseIntegrationServer {
             version = testProperties.xlReleaseStartVersion
             overlays = serverOverlays
         }
-//        server02 {
-//        }
+        server02 {
+        }
     }
 }
 

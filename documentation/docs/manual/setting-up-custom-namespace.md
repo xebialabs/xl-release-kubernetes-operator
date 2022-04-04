@@ -19,7 +19,7 @@ Setup custom namespace on Kubernetes cluster, `custom-namespace-1` for example:
 ❯ kubectl kubectl create namespace custom-namespace-1
 ```
 
-### Update release operator package
+### Update the release operator package to support custom namespace
 
 Update following files (relative to the provider's directory) with custom namespace name:
 
@@ -38,16 +38,32 @@ Update following files (relative to the provider's directory) with custom namesp
 | digitalai-release/kubernetes/template/proxy-rolebinding.yaml               | metadata.name                                                      | custom-namespace-1-xlr-operator-proxy-rolebinding   |
 | digitalai-release/kubernetes/template/proxy-rolebinding.yaml               | roleRef.name                                                       | custom-namespace-1-xlr-operator-proxy-role          |
 | digitalai-release/kubernetes/template/proxy-rolebinding.yaml               | subjects[0].namespace                                              | custom-namespace-1                                  |
+
+
+Following changes are in case of usage nginx ingress (default behaviour):
+
+| File name                                                                  | Yaml path                                                          | Value to set                                        |
+|:---------------------------------------------------------------------------|:-------------------------------------------------------------------|:----------------------------------------------------|
 | digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.ingress.annotations.kubernetes.io/ingress.class               | nginx-custom-namespace-1-dai-xlr                    |
-| digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.keycloak.ingress.annotations.kubernetes.io/ingress.class      | nginx-custom-namespace-1-dai-xlr                    |
 | digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.nginx-ingress-controller.extraArgs.ingress-class              | nginx-custom-namespace-1-dai-xlr                    |
 | digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.nginx-ingress-controller.fullnameOverride                     | custom-namespace-1-dai-xlr-nginx-ingress-controller |
 | digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.nginx-ingress-controller.ingressClassResource.controllerClass | k8s.io/ingress-nginx-custom-namespace-1-dai-xlr     |
 | digitalai-release/kubernetes/dairelease_cr.yaml                            | spec.nginx-ingress-controller.ingressClassResource.name            | nginx-custom-namespace-1-dai-xlr                    |
 
+
+Following changes are in case of usage haproxy ingress:
+- `spec.haproxy-ingress.install = true`
+- `spec.nginx-ingress-controller.install = false`
+
+| File name                                       | Yaml path                                            | Value to set                               |
+|:------------------------------------------------|:-----------------------------------------------------|:-------------------------------------------|
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.ingress.annotations.kubernetes.io/ingress.class | haproxy-custom-namespace-1-dai-xlr         |
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.fullnameOverride                | custom-namespace-1-dai-xlr-haproxy-ingress |
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.controller.ingressClass         | haproxy-custom-namespace-1-dai-xlr         |
+
+
 :::note
 Note:
-- Disable keycloak for now, setup was yet tested with keycloak enabled.
 - This setup is not for OpenShift based provider.
 - If you are just setting up one Release on the cluster: you could omit changes related to the renaming cluster roles, but that is not recommended because 
 of consistency and if you in future will require starting additional Release on the same cluster (in other namespace) you will have problems with cluster naming collisions
@@ -86,7 +102,14 @@ Setup custom namespace on Kubernetes cluster, `custom-namespace-2` for example:
 ❯ kubectl kubectl create namespace custom-namespace-2
 ```
 
-### Update release operator package
+### Update the release operator package to support custom namespace
+
+:::note
+In case of haproxy ingress setup, you need first to setup everything what is needed for haproxy ingress:
+- `spec.haproxy-ingress.install = true`
+- `spec.nginx-ingress-controller.install = false`
+- `spec.ingress.annotations.kubernetes.io/ingress.class = haproxy`
+:::
 
 Instead of updating manually YAML files in the operator package, you can update them by running xl-cli: 
 ```shell
