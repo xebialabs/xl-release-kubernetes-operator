@@ -14,6 +14,10 @@ spec:
   ImageTag: "10.3.3"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
+  ## xebialabs/tiny-tools image version
+  ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
+  TinyToolsImageRepository: "xebialabs/tiny-tools"
+  TinyToolsImageTag: "22.2.0"
   KeystorePassphrase: <Provide store pass for the keystore>
   Persistence:
     AccessMode: ReadWriteOnce
