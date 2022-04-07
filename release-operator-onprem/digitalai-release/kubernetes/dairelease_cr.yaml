@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.3"
+  ImageTag: "10.3.9"
   ## xebialabs/tiny-tools image version
   ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
   TinyToolsImageRepository: "xebialabs/tiny-tools"
@@ -587,7 +587,7 @@ spec:
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null
     postgresqlExtendedConf:
-      listenAddresses: '''*'''
+      listenAddresses: "'*'"
       maxConnections: "500"
     postgresqlMaxConnections: null
     postgresqlPassword: postgres

@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.3"
+  ImageTag: "10.3.9"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   ## xebialabs/tiny-tools image version
@@ -189,7 +189,7 @@ spec:
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null
     postgresqlExtendedConf:
-      listenAddresses: '''*'''
+      listenAddresses: "'*'"
       maxConnections: "500"
     postgresqlMaxConnections: null
     postgresqlPassword: postgres
