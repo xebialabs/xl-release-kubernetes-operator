@@ -139,10 +139,11 @@ To setup haproxy instead of default nginx configuration that is provided in the 
 
 ### 7. Deploy to the cluster custom namespace
 
-1. Do the step 5 from the documentation [Step 5—Download and set up the XL CLI](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-6set-up-the-xl-deploy-container-instance)
-2. Do the step 6 from the documentation [Step 6—Set up the XL Deploy Container instance](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-6set-up-the-xl-deploy-container-instance-1)
-3. Do the step 7 from the documentation [Step 7—Activate the deployment process](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-7activate-the-deployment-process-1)
-4. Do the step 8 from the documentation [Step 8—Verify the deployment status](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-8verify-the-deployment-status-1)
+1. Do the step 3 from the documentation [Step 3—Update the Azure AKS Cluster Information](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-3update-the-azure-aks-cluster-information)
+2. Do the step 5 from the documentation [Step 5—Download and set up the XL CLI](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-6set-up-the-xl-deploy-container-instance)
+3. Do the step 6 from the documentation [Step 6—Set up the XL Deploy Container instance](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-6set-up-the-xl-deploy-container-instance-1)
+4. Do the step 7 from the documentation [Step 7—Activate the deployment process](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-7activate-the-deployment-process-1)
+5. Do the step 8 from the documentation [Step 8—Verify the deployment status](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-8verify-the-deployment-status-1)
 
 ### 8. Apply any custom changes
 
