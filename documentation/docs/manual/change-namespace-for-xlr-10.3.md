@@ -36,7 +36,7 @@ Replace `custom-namespace-1` name in this and following steps with your custom n
 
 ### 3. Prepare the release operator 
 
-1. Get the release operator package zip for Azure: deploy-operator-azure-aks-10.3.0-407.1129.zip (operator image is already setup in the package).
+1. Get the release operator package zip for Azure: release-operator-azure-aks-10.3.0-407.1129.zip (operator image is already setup in the package).
 2. Unzip the zip with the release operator package.
 3. Collect all custom changes that are done in the `default` namespace for XLR resources
     - StatefulSets
@@ -78,7 +78,6 @@ Update following files (relative to the provider's directory) with custom namesp
 | digitalai-release/infrastructure.yaml                                      | spec[0].children[0].children[0].name          | custom-namespace-1                                  |
 | digitalai-release/infrastructure.yaml                                      | spec[0].children[0].children[0].namespaceName | custom-namespace-1                                  |
 | digitalai-release/environment.yaml                                         | spec[0].children[0].members[0]                | ~Infrastructure/k8s-infra/xlr/custom-namespace-1    |
-| digitalai-release/applications.yaml                                        | spec[0].children[0].deployables[7].name =     | ~Infrastructure/k8s-infra/xlr/custom-namespace-1    |
 | digitalai-release/kubernetes/template/cluster-role-digital-proxy-role.yaml | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-role          |
 | digitalai-release/kubernetes/template/cluster-role-manager-role.yaml       | metadata.name                                 | custom-namespace-1-xlr-operator-manager-role        |
 | digitalai-release/kubernetes/template/cluster-role-metrics-reader.yaml     | metadata.name                                 | custom-namespace-1-xlr-operator-metrics-reader      |
@@ -92,7 +91,23 @@ Update following files (relative to the provider's directory) with custom namesp
 
 
 In the `digitalai-release/applications.yaml` delete array element from the `spec[0].children[0].deployables`, where name is `name: custom-resource-definition`.
-This will not deploy again CRD, as it already exists, when it was deployed for the first time.
+This will not deploy again CRD, as it already exists, when it was deployed for the first time. Example of the element to delete
+```yaml
+- name: custom-resource-definition
+  type: k8s.ResourcesFile
+  fileEncodings:
+    ".+\\.properties": ISO-8859-1
+  mergePatchType: strategic
+  propagationPolicy: Foreground
+  updateMethod: patch
+  createOrder: 1
+  modifyOrder: 2
+  destroyOrder: 3
+  displayResourceOnLogs: "false"
+  showContainerLogs: "false"
+  bytesToReadFromContainerLogs: 4000
+  file: !file kubernetes/template/custom-resource-definition.yaml
+```
 
 ### 6.a. Update the release operator package to support custom namespace - only in case of Nginx ingress controller
 
@@ -108,24 +123,16 @@ Following changes are in case of usage nginx ingress (default behaviour):
 
 ### 6.b. Update the release operator package to support custom namespace - only in case of Haproxy ingress controller
 
-Following changes are in case of usage haproxy ingress:
-
-| File name                                       | Yaml path                                            | Value to set                               |
-|:------------------------------------------------|:-----------------------------------------------------|:-------------------------------------------|
-| digitalai-release/kubernetes/dairelease_cr.yaml | spec.ingress.annotations.kubernetes.io/ingress.class | haproxy-custom-namespace-1-dai-xlr         |
-| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.fullnameOverride                | custom-namespace-1-dai-xlr-haproxy-ingress |
-| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.controller.ingressClass         | haproxy-custom-namespace-1-dai-xlr         |
-
-
 :::note
 Note:
-To setup haproxy instead of default nginx configuration that is provided in the operator package you need to do following changes in the 
+To setup haproxy instead of default nginx configuration that is provided in the operator package you need to do following changes in the
 `digitalai-release/kubernetes/dairelease_cr.yaml`:
 - `spec.haproxy-ingress.install = true`
 - `spec.nginx-ingress-controller.install = false`
 - `spec.ingress.path = "/xl-release/"`
 - in the `spec.ingress.annotations` replace all `nginx.` settings and put:
 ```
+      kubernetes.io/ingress.class: "haproxy"
       ingress.kubernetes.io/ssl-redirect: "false"
       ingress.kubernetes.io/rewrite-target: /
       ingress.kubernetes.io/affinity: cookie
@@ -136,6 +143,16 @@ To setup haproxy instead of default nginx configuration that is provided in the 
 ```
 
 :::
+
+Following changes are in case of usage haproxy ingress:
+
+| File name                                       | Yaml path                                            | Value to set                               |
+|:------------------------------------------------|:-----------------------------------------------------|:-------------------------------------------|
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.ingress.annotations.kubernetes.io/ingress.class | haproxy-custom-namespace-1-dai-xlr         |
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.fullnameOverride                | custom-namespace-1-dai-xlr-haproxy-ingress |
+| digitalai-release/kubernetes/dairelease_cr.yaml | spec.haproxy-ingress.controller.ingressClass         | haproxy-custom-namespace-1-dai-xlr         |
+
+
 
 ### 7. Deploy to the cluster custom namespace
 
