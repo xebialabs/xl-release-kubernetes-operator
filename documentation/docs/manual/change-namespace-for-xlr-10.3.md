@@ -25,6 +25,13 @@ package from the 10.3 branch.
 
 With following steps you will setup XLR in the custom namespace, in parallel with running current setup in the `default` namespace.
 
+:::caution
+Before doing any of the following steps backup everything:
+- database data
+- any custom configuration that was done for the operator setup
+- any volume related to release in the default namespace 
+:::
+
 ### 1. Create custom namespace
 
 Setup custom namespace on Kubernetes cluster, `custom-namespace-1` for example:
@@ -217,6 +224,7 @@ here are steps how to that:
 ❯ kubectl get clusterRoleBinding
 ❯ kubectl delete clusterRoleBinding xlr-operator-proxy-rolebinding xlr-operator-manager-rolebinding
 
+# be careful if you would like really to delete all PVC-s and related PV-s, backup before delete
 # get pvcs related to XLR on default namespace and delete them (list of the pvcs depends on what is enabled in the deployment)
 ❯ kubectl get pvc -n default
 ❯ kubectl delete -n default pvc data-dai-xlr-postgresql-0 data-dai-xlr-rabbitmq-0
