@@ -26,7 +26,8 @@ Update following files (relative to the provider's directory) with custom namesp
 | File name                                                                  | Yaml path                                     | Value to set                                        |
 |:---------------------------------------------------------------------------|:----------------------------------------------|:----------------------------------------------------|
 | digitalai-release/infrastructure.yaml                                      | spec[0].children[0].children[0].name          | custom-namespace-1                                  |
-| digitalai-release/infrastructure.yaml                                      | spec[0].children[0].children[0].namespaceName | custom-namespace-1                                  |
+| digitalai-release/infrastructure.yaml (not on OpenShift)                   | spec[0].children[0].children[0].namespaceName | custom-namespace-1                                  |
+| digitalai-deploy/infrastructure.yaml (only on OpenShift)                   | spec[0].children[0].children[0].projectName   | custom-namespace-1                                  |
 | digitalai-release/environment.yaml                                         | spec[0].children[0].members[0]                | ~Infrastructure/k8s-infra/xlr/custom-namespace-1    |
 | digitalai-release/kubernetes/template/cluster-role-digital-proxy-role.yaml | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-role          |
 | digitalai-release/kubernetes/template/cluster-role-manager-role.yaml       | metadata.name                                 | custom-namespace-1-xlr-operator-manager-role        |
