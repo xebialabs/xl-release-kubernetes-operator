@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 ---
 
 # How to change namespace in case there is release already running in the default namespace
@@ -9,7 +9,6 @@ sidebar_position: 10
 - Access to a Kubernetes cluster with installed Release in the `default` namespace
 
 Tested with:
-- xl-deploy 10.3.9
 - xl-release 10.3.9
 - xl-cli 10.3.9
 - Azure cluster
@@ -23,13 +22,15 @@ package from the 10.3 branch.
 
 ## Steps to setup operator on the custom namespace
 
-With following steps you will setup XLR in the custom namespace, in parallel with running current setup in the `default` namespace.
+With following steps you will setup XLR in the custom namespace, in **parallel** with running current setup in the `default` namespace.
 
 :::caution
 Before doing any of the following steps backup everything:
 - database data
 - any custom configuration that was done for the operator setup
-- any volume related to release in the default namespace 
+- any volume related to release in the default namespace, for example data from the mounted volumes on the release pod:
+  - /opt/xebialabs/xl-release-server/reports
+  - /opt/xebialabs/xl-release-server/ext
 :::
 
 ### 1. Create custom namespace
@@ -62,6 +63,7 @@ in the new CR in the release operator package `digitalai-release/kubernetes/dair
 :::note
 Note:
 Any data migration is out of scope of this document. For example in case of database data migration, check with your DB admins what to do in that case.
+For the external database case the best option is to migrate database to a new database schema, and use that schema on the new namespace.
 :::
 
 :::note
@@ -136,7 +138,7 @@ To setup haproxy instead of default nginx configuration that is provided in the 
 `digitalai-release/kubernetes/dairelease_cr.yaml`:
 - `spec.haproxy-ingress.install = true`
 - `spec.nginx-ingress-controller.install = false`
-- `spec.ingress.path = "/xl-release/"`
+- `spec.ingress.path = "/"`
 - in the `spec.ingress.annotations` replace all `nginx.` settings and put:
 ```
       kubernetes.io/ingress.class: "haproxy"
@@ -172,6 +174,12 @@ Following changes are in case of usage haproxy ingress:
 ### 8. Apply any custom changes
 
 If you have any custom changes that you collected previously in the step 3.3, you can apply them again in this step in the same way as before on the `default` namespace.
+
+When xl-release pod is running restore backuped folders:
+- /opt/xebialabs/xl-release-server/reports
+- /opt/xebialabs/xl-release-server/ext
+
+to the same xl-release pod folders.
 
 ### 9. Wrap-up
 
