@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 ---
 
 # How to change namespace in case there is release already running in the default namespace (parallel option)
