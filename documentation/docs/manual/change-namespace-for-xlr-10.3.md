@@ -2,7 +2,7 @@
 sidebar_position: 11
 ---
 
-# How to change namespace in case there is release already running in the default namespace (parallel option)
+# How to change namespace in case there is release already running in the default namespace
 
 ## Prerequisites
 - The kubectl command-line tool
