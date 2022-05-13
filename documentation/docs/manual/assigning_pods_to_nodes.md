@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 10
 ---
 
 # Assigning Pods to Nodes
@@ -36,7 +36,7 @@ In next sections we will display few cases that could be applied.
 
 If you need that specific node should not run any xl-release pods, you can apply taint to that node with effect `NoExecute`, for example:
 
-```
+```shell
 ❯ kubectl taint nodes node_name key1=value1:NoExecute
 ```
 
@@ -48,17 +48,17 @@ All pods that do not have that specific toleration will be immediately removed f
 If you need to have just XLR pods, and no other pod, on the specific node you need to do following, for example:
 
 1. Add to nodes specific taints that will remove all other pods without same tolerations: 
-```
+```shell
 ❯ kubectl taint nodes node_name app=dai:NoExecute
 ```
 
 2. Add label to the same nodes so XLR when deployed use just that specific nodes:
-```
+```shell
 ❯ kubectl label nodes node_name app_label=dai_label
 ```
 
 3. In the `digitalai-release/kubernetes/dairelease_cr.yaml` update all places with `tolerations`:
-```
+```yaml
 tolerations:
 - key: "app"
   operator: "Equal"
@@ -67,13 +67,13 @@ tolerations:
 ```
 
 And update all places with `nodeSelector`:
-```
+```yaml
 nodeSelector:
   app_label: dai_label
 ```
 
 4. In the `digitalai-release/kubernetes/template/deployment.yaml` add following lines under `spec.template.spec`:
-```
+```yaml
 tolerations:
 - key: "app"
   operator: "Equal"
