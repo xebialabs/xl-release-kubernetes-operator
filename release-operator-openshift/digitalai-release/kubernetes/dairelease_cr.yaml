@@ -23,7 +23,8 @@ spec:
   ForceRemoveMissingTypes: false
   Persistence:
     AccessMode: ReadWriteOnce
-    Annotations: {}
+    Annotations:
+      helm.sh/resource-policy: "keep"
     Enabled: true
     Size: 8Gi
     StorageClass: < provide the storageClass for DAI-Release>

@@ -27,7 +27,8 @@ spec:
   ForceRemoveMissingTypes: false
   Persistence:
     AccessMode: ReadWriteOnce
-    Annotations: {}
+    Annotations:
+      helm.sh/resource-policy: "keep"
     Enabled: true
     Size: 8Gi
     # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
