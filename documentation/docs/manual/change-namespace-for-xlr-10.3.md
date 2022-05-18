@@ -2,7 +2,11 @@
 sidebar_position: 11
 ---
 
-# How to change namespace in case there is release already running in the default namespace (parallel option)
+# [Deprecated] How to change namespace in case there is release already running in the default namespace (parallel option)
+
+This is deprecated article, check the next 2 links:
+- [A. How to change namespace in case there is release already running in the default namespace - parallel option](./change-namespace-for-xlr-10.3-with-parallel.md)
+- [B. How to change namespace in case there is release already running in the default namespace - with downtime](./change-namespace-for-xlr-10.3-with-downtime.md)
 
 ## Prerequisites
 - The kubectl command-line tool
@@ -13,11 +17,11 @@ Tested with:
 - xl-cli 10.3.9
 - Azure cluster
 
-If you have already setup of the XLR default namespace it is possible to move the deployment to the custom namespace. Here we will use for example 
+If you have already setup of the XLR default namespace it is possible to move the deployment to the custom namespace. Here we will use for example
 `custom-namespace-1`.
 
-In the example we will use XLR 10.3 version with latest 10.3 operator image 10.3.0-407.1129 from the 
-[https://hub.docker.com/r/xebialabsunsupported/release-operator/tags](https://hub.docker.com/r/xebialabsunsupported/release-operator/tags) and latest operator 
+In the example we will use XLR 10.3 version with latest 10.3 operator image 10.3.0-407.1129 from the
+[https://hub.docker.com/r/xebialabsunsupported/release-operator/tags](https://hub.docker.com/r/xebialabsunsupported/release-operator/tags) and latest operator
 package from the 10.3 branch.
 
 ## Steps to setup operator on the custom namespace
@@ -29,8 +33,8 @@ Before doing any of the following steps backup everything:
 - database data
 - any custom configuration that was done for the operator setup
 - any volume related to release in the default namespace, for example data from the mounted volumes on the release pod:
-  - /opt/xebialabs/xl-release-server/reports
-  - /opt/xebialabs/xl-release-server/ext
+    - /opt/xebialabs/xl-release-server/reports
+    - /opt/xebialabs/xl-release-server/ext
 :::
 
 ### 1. Create custom namespace
@@ -42,7 +46,7 @@ Setup custom namespace on Kubernetes cluster, `custom-namespace-1` for example:
 
 Replace `custom-namespace-1` name in this and following steps with your custom namespace name.
 
-### 3. Prepare the release operator 
+### 3. Prepare the release operator
 
 1. Get the release operator package zip for Azure: release-operator-azure-aks-10.3.0-407.1129.zip (operator image is already setup in the package).
 2. Unzip the zip with the release operator package.
@@ -53,12 +57,12 @@ Replace `custom-namespace-1` name in this and following steps with your custom n
     - Secrets
     - CustomResource
     - anything else that was customized
-4. Collect any other change that was done during initial setup according to the 
-[https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#installing-deploy-on-azure-kubernetes-service](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#installing-deploy-on-azure-kubernetes-service)
-5. If you are using your own database and messaging queue setup, setup it in the same way as in the `default` namespace, 
-in the new CR in the release operator package `digitalai-release/kubernetes/dairelease_cr.yaml`.
-6. Apply all collected changes from the `default` namespace to the CR in the release operator package `digitalai-release/kubernetes/dairelease_cr.yaml`. 
-(The best is to compare new CR `digitalai-release/kubernetes/dairelease_cr.yaml` with the one from the `default` namespace)
+4. Collect any other change that was done during initial setup according to the
+   [https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#installing-deploy-on-azure-kubernetes-service](https://docs.xebialabs.com/v.10.3/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#installing-deploy-on-azure-kubernetes-service)
+5. If you are using your own database and messaging queue setup, setup it in the same way as in the `default` namespace,
+   in the new CR in the release operator package `digitalai-release/kubernetes/dairelease_cr.yaml`.
+6. Apply all collected changes from the `default` namespace to the CR in the release operator package `digitalai-release/kubernetes/dairelease_cr.yaml`.
+   (The best is to compare new CR `digitalai-release/kubernetes/dairelease_cr.yaml` with the one from the `default` namespace)
 
 :::note
 Note:
@@ -68,7 +72,7 @@ For the external database case the best option is to migrate database to a new d
 
 :::note
 Note:
-Check if configuration on the new namespace is using same host as on `default` namespace. 
+Check if configuration on the new namespace is using same host as on `default` namespace.
 In that case you will need to execute step 9.a to be able to access XLR pages.
 :::
 
@@ -183,9 +187,9 @@ to the same xl-release pod folders.
 
 ### 9. Wrap-up
 
-Wait for all pods to ready and without any errors. 
+Wait for all pods to ready and without any errors.
 
-If you used same host in the new custom namespace to the one that is on the `default` namespace, in that case XLR page is still opening from the `default` 
+If you used same host in the new custom namespace to the one that is on the `default` namespace, in that case XLR page is still opening from the `default`
 namespace. You need in that case apply step 9.a, after that on the configurated host will be available XLR that is from the new custom namespace.
 
 In case of haproxy and one release pod, list of pods should look like following table:
@@ -200,7 +204,7 @@ In case of haproxy and one release pod, list of pods should look like following 
 
 #### 9.a Destroy XLR in default namespace
 
-If you are sure that everything is up and running on the new custom namespace, you can destroy previous setup on the `default` namespace, 
+If you are sure that everything is up and running on the new custom namespace, you can destroy previous setup on the `default` namespace,
 here are steps how to that:
 
 ```shell
