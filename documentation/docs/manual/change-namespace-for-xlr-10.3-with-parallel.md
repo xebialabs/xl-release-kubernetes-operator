@@ -17,7 +17,7 @@ Tested with:
 If you have already setup of the XLR default namespace it is possible to move the deployment to the custom namespace. Here we will use for example 
 `custom-namespace-1`.
 
-In the example we will use XLR 10.3 that will be upgraded to 22.1.2 version with latest 22.1.x operator image 22.1.0-517.1301 from the
+In the example we will use XLR 10.3 that will be upgraded to 22.1.2 version with latest 22.1.x operator image xebialabsunsupported/release-operator:22.1.0-519.949 from the
 [https://hub.docker.com/r/xebialabsunsupported/release-operator/tags](https://hub.docker.com/r/xebialabsunsupported/release-operator/tags) and latest operator
 package from the 22.1.x branch.
 
@@ -110,9 +110,9 @@ Here is sample of the responses:
 ? Choose the version of the XL Deploy for Upgrader setup of operator 22.1.2
 ? Use embedded keycloak? No
 ? Select the type of upgrade you want. operatorToOperator [Operator to Operator]
-? Operator image to use xebialabsunsupported/release-operator:22.1.0-517.1301
+? Operator image to use xebialabsunsupported/release-operator:22.1.0-519.949
 ? Do you want to use custom operator zip file for Release? Yes
-? Release operator zip to use (absolute path or URL to the zip) /absolute_path_to_provided_zip/release-operator-azure-aks-22.1.1-???.????.zip
+? Release operator zip to use (absolute path or URL to the zip) /absolute_path_to_provided_zip/release-operator-azure-aks-22.1.0-519.949.zip
 ? Enter the name of custom resource. dai-xlr
 ? Enter the name of custom resource definition. digitalaireleases.xlr.digital.ai
 ? Edit list of custom resource keys that will migrate to the new Release CR <Received>
