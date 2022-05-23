@@ -242,16 +242,18 @@ spec:
         claimName: dai-xlr-digitalai-release
 ```
 
-4Start the pod
+4. Start the pod
 ```shell
 ❯ kubectl apply -f pod-dai-pv-access.yaml -n default
 ```
 
 3. Copy data from one pod to 
+```shell
 kubectl exec -n default dai-pv-access -- tar cf - \
     /opt/xebialabs/xl-release-server/ext \
     /opt/xebialabs/xl-release-server/reports \
     | kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- tar xvf - -C /
+```
 
 4. Delete the pods
 ```shell
