@@ -247,7 +247,7 @@ spec:
 ❯ kubectl apply -f pod-dai-pv-access.yaml -n default
 ```
 
-3. Copy data from one pod to 
+5. Copy data from one pod to 
 ```shell
 kubectl exec -n default dai-pv-access -- tar cf - \
     /opt/xebialabs/xl-release-server/ext \
@@ -255,13 +255,13 @@ kubectl exec -n default dai-pv-access -- tar cf - \
     | kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- tar xvf - -C /
 ```
 
-4. Chmod of the moved folder
+6. Chmod of the moved folder
 ```shell
 kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- chmod -R 777 /opt/xebialabs/xl-release-server/reports/
 kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- chmod -R 777 /opt/xebialabs/xl-release-server/ext/
 ```
 
-5. Delete the pods
+7. Delete the pods
 ```shell
 ❯ kubectl delete pod dai-pv-access-custom-namespace-1 -n custom-namespace-1
 ❯ kubectl delete pod dai-pv-access -n default
