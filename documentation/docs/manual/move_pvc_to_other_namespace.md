@@ -255,7 +255,13 @@ kubectl exec -n default dai-pv-access -- tar cf - \
     | kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- tar xvf - -C /
 ```
 
-4. Delete the pods
+4. Chmod of the moved folder
+```shell
+kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- chmod -R 777 /opt/xebialabs/xl-release-server/reports/
+kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- chmod -R 777 /opt/xebialabs/xl-release-server/ext/
+```
+
+5. Delete the pods
 ```shell
 ❯ kubectl delete pod dai-pv-access-custom-namespace-1 -n custom-namespace-1
 ❯ kubectl delete pod dai-pv-access -n default
