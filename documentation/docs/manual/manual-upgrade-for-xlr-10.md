@@ -288,6 +288,10 @@ eg:
                         * create database keycloak;
                         * create user keycloak with encrypted password 'keycloak';
                         * grant all privileges on database keycloak to keycloak;
+        
+        :::
+        :::note
+        [Postgres password from previous installation](http://localhost:3000/xl-release-kubernetes-operator/docs/manual/manual-upgrade-for-xlr-10#5-take-backup-of-existing-password).
         :::
 
 ## 7. Bring up the xl-deploy in docker.
