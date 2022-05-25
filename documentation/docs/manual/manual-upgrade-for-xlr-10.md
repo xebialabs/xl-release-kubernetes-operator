@@ -125,6 +125,7 @@ eg: helm release name : xlr-prod
     NAME                            READY   STATUS    RESTARTS   AGE
     pod-dai-xlr-digitalai-release   1/1     Running   0          34s
   ```
+    * Verify the mouted path is available in newly created PV.
   ```shell
      [sishwarya@localhost docs] $ kubectl exec -it pod/pod-dai-xlr-digitalai-release -- sh
      / # cd /opt/xebialabs/xl-release-server/
@@ -141,7 +142,8 @@ eg: helm release name : xlr-prod
   ```
 ```shell
 eg:
-    [sishwarya@localhost docs] $ kubectl exec -n default xlr-prod-digitalai-release-0 -- tar cf - /opt/xebialabs/xl-release-server/reports | kubectl exec -n default -i pod-dai-xlr-digitalai-release -- tar xvf - -C /Defaulted container "digitalai-release" out of: digitalai-release, wait-for-db (init)
+    [sishwarya@localhost docs] $ kubectl exec -n default xlr-prod-digitalai-release-0 -- tar cf - /opt/xebialabs/xl-release-server/reports | kubectl exec -n default -i pod-dai-xlr-digitalai-release -- tar xvf - -C /
+    Defaulted container "digitalai-release" out of: digitalai-release, wait-for-db (init)
     tar: Removing leading `/' from member names
     opt/xebialabs/xl-release-server/reports/
     opt/xebialabs/xl-release-server/reports/testupgrade/
