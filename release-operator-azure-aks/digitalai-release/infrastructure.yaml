@@ -4,27 +4,27 @@ spec:
   - name: k8s-infra
     type: core.Directory
     children:
-    - name: xlr
-      type: k8s.Master
-      apiServerURL: < Update using server info from the kubeconfig file >
-      skipTLS: true
-      debug: true
-      caCert: |-
-        <certificate-authority-data in base64 decoded>
-        -----BEGIN CERTIFICATE-----
-        
-        -----END CERTIFICATE-------
-      tlsCert: |-
-        <client-certificate-data in base64 decoded>
-        -----BEGIN CERTIFICATE-----
-       
-        -----END CERTIFICATE-------
-      tlsPrivateKey: |-
-        <client-key-data in base64 decoded>
-        -----BEGIN RSA PRIVATE KEY-----
-        
-        -----END RSA PRIVATE KEY-----
-      children:
-        - name: default
-          type: k8s.Namespace
-          namespaceName: default
+      - name: xlr
+        type: k8s.Master
+        apiServerURL: < Update using server info from the kubeconfig file >
+        skipTLS: true
+        debug: true
+        caCert: |-
+          <certificate-authority-data in base64 decoded>
+          -----BEGIN CERTIFICATE-----
+
+          -----END CERTIFICATE-------
+        tlsCert: |-
+          <client-certificate-data in base64 decoded>
+          -----BEGIN CERTIFICATE-----
+
+          -----END CERTIFICATE-------
+        tlsPrivateKey: |-
+          <client-key-data in base64 decoded>
+          -----BEGIN RSA PRIVATE KEY-----
+
+          -----END RSA PRIVATE KEY-----
+        children:
+          - name: digitalai
+            type: k8s.Namespace
+            namespaceName: digitalai
