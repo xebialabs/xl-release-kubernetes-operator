@@ -24,16 +24,18 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
 
 ```    
 ## 3. Creating new PVC for dai-release by copying PV data.
-
-* Make the copy of the pvc-<release-name>-digitalai-release.yaml for the later reference.
+:::note
+eg: helm release name : xlr-prod
+:::
+### i. Make the copy of the pvc-xlr-prod-digitalai-release.yaml for the later reference.
    ```shell
-   > kubectl get pvc <release-name>-digitalai-release -o yaml > pvc-<release-name>-digitalai-release.yaml.
+   > kubectl get pvc xlr-prod-digitalai-release -o yaml > pvc-xlr-prod-digitalai-release.yaml.
    ```
-  
-* Manually create pvc dai-xlr-digitalai-release as mentioned below.
-  * Copy the pvc-<release-name>-digitalai-release.yaml file  to pvc-dai-xlr-digitalai-release.yaml
+
+### ii. Manually create pvc dai-xlr-digitalai-release as mentioned below.
+  * Copy the pvc-release-name-digitalai-release.yaml file  to pvc-dai-xlr-digitalai-release.yaml
     ```shell
-     cp pvc-xlr-prod-digitalai-release.yaml pvc-dai-xlr-digitalai-release.yaml
+     > cp pvc-xlr-prod-digitalai-release.yaml pvc-dai-xlr-digitalai-release.yaml
     ```
   * Delete all the lines under sections:
      ```shell
@@ -58,16 +60,16 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
     etadata.annotations:helm.sh/resource-policy: keep 
     ``` 
 
-*  Create PVC dai-xlr-digitalai-release.
-   ```shell
-    kubectl apply -f pvc-dai-xlr-digitalai-release.yaml
-    ```
-   ```shell
-    [sishwarya@localhost docs] $ kubectl apply -f pvc-dai-xlr-digitalai-release.yaml
-    persistentvolumeclaim/dai-xlr-digitalai-release created
-    ```
-   
-* Verify if PV bounded
+### iii.  Create PVC dai-xlr-digitalai-release.
+```shell
+   > kubectl apply -f pvc-dai-xlr-digitalai-release.yaml
+```
+```shell
+      [sishwarya@localhost docs] $ kubectl apply -f pvc-dai-xlr-digitalai-release.yaml
+      persistentvolumeclaim/dai-xlr-digitalai-release created
+```
+
+### iv. Verify if PV bounded
   ```shell
   [sishwarya@localhost docs] $ kubectl get pvc dai-xlr-digitalai-release
   NAME                        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE
@@ -78,7 +80,7 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
   pvc-dad9e7c3-ae1b-4b28-b595-4f4b281a0bf2   5Gi        RWO            Delete           Bound    default/dai-xlr-digitalai-release   aws-efs-provisioner            64s
   ```
   
-* Update the Reclaim policy to Retain for newly created pv for pvc dai-xlr-digitalai-release.
+### v. Update the Reclaim policy to Retain, for newly created pv of dai-xlr-digitalai-release.
   ```shell
    [sishwarya@localhost docs] $ kubectl patch pv pvc-dad9e7c3-ae1b-4b28-b595-4f4b281a0bf2 -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}';
    persistentvolume/pvc-dad9e7c3-ae1b-4b28-b595-4f4b281a0bf2 patched
@@ -87,9 +89,9 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
    pvc-dad9e7c3-ae1b-4b28-b595-4f4b281a0bf2   5Gi        RWO            Retain           Bound    default/dai-xlr-digitalai-release   aws-efs-provisioner            3m40s
   ```
 
-* Start the following pod for accessing the newly created PV [pod-dai-xlr-digitalai-release.yaml] and copy the data.
+### vi. Start the following pod for accessing the newly created PVC [dai-xlr-digitalai-release] and copy the data.
   
-  * Update the pod yaml with exact volumes which we mounted in previous installation.
+  * Update the pod [pod-dai-xlr-digitalai-release.yaml] yaml with exact volumes which we mounted in previous installation.
   
   ```shell
       apiVersion: v1
@@ -152,17 +154,18 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
     -rwxrwxrwx 1 10001 40071 2036 May 25 03:50 readme.txt
     drwxrwsrwx 2 10001 40071 6144 May 25 03:54 testupgrade
   ```
- * Delete the pod.
-   ```shell
+### vii.  Delete the pod.
+```shell
       [sishwarya@localhost docs] $ kubectl delete pod/pod-dai-xlr-digitalai-release
        pod "pod-dai-xlr-digitalai-release" deleted
-    ```
-* Run upgrade with dry run, and use custom zip options.
+```
+
+## 4. Run upgrade with dry run, with custom zip options.
   ```shell
      xl op --upgrade --dry-run
   ```
-  
-* Take backup of existing password.
+
+## 5. Take backup of existing password.
   ```shell
    ## To get the admin password for xl-release, run:
    kubectl get secret --namespace default xlr-prod-digitalai-release -o jsonpath="{.data.release-password}" | base64 --decode; echo
@@ -173,114 +176,113 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
    ## To get the password for rabbitMQ, run:
    kubectl get secret --namespace default xlr-prod-rabbitmq  -o jsonpath="{.data.rabbitmq-password}" | base64 --decode; echo
   ```
-  
-* Do following changes in the xebialabs/dai-release/dairelease_cr.yaml, based on the requirement.
- * Default  release admin password is "admin", if we need to change update the following in yaml.
+
+## 6. Do following changes in the xebialabs/dai-release/dairelease_cr.yaml, based on the requirement.
+  * Default  release admin password is "admin", if we need to change update the following in yaml.
     ```shell
     .spec.AdminPassword: <password from previous installation>
     ```
- * To setup haproxy/nginx.
-   * haproxy setup
-       ```shell
-          .spec.haproxy-ingress.install = true
-          .spec.nginx-ingress-controller.install = false
-          .spec.ingress.path = "/"
-       
-        ## in the spec.ingress.annotations replace all nginx. settings and put:
-          kubernetes.io/ingress.class: "haproxy"
-          ingress.kubernetes.io/ssl-redirect: "false"
-          ingress.kubernetes.io/rewrite-target: /
-          ingress.kubernetes.io/affinity: cookie
-          ingress.kubernetes.io/session-cookie-name: JSESSIONID
-          ingress.kubernetes.io/session-cookie-strategy: prefix
-          ingress.kubernetes.io/config-backend: |
-          option httpchk GET /ha/health HTTP/1.0
-        ```
-   * nginx controller
-       ```shell
-          spec.haproxy-ingress.install = false
-          spec.nginx-ingress-controller.install = true
-        ```
-     
- * If the release name is different from "dai-xlr" and if we are using embedded database, we need to reuse the existing Claim, for data persistence.
-   * Update the following field with existing claim.
+  * To setup haproxy/nginx.
+    * haproxy setup   
     ```shell
-       .spec.postgresql.persistence.existingClaim <release-name>-digitalai-release
-       .spec.rabbitmq.persistence.existingClaim --> not required, as we dont save any data.
+       .spec.haproxy-ingress.install = true
+       .spec.nginx-ingress-controller.install = false
+       .spec.ingress.path = "/"
+               
+       ## in the spec.ingress.annotations replace all nginx. settings and put:
+       kubernetes.io/ingress.class: "haproxy"
+       ingress.kubernetes.io/ssl-redirect: "false"
+       ingress.kubernetes.io/rewrite-target: /
+       ingress.kubernetes.io/affinity: cookie
+       ingress.kubernetes.io/session-cookie-name: JSESSIONID
+       ingress.kubernetes.io/session-cookie-strategy: prefix
+       ingress.kubernetes.io/config-backend: |
+       option httpchk GET /ha/health HTTP/1.0
     ```
-    eg:
+    * nginx controller
     ```shell
-      .spec.postgresql.persistence.existingClaim: data-xlr-prod-postgresql-0
+       .spec.haproxy-ingress.install = false
+       .spec.nginx-ingress-controller.install = true
     ```
-   
-   * Post helm uninstall, we can also edit postgres PV as follows, to create the new PVC with existing PV.
-     * Update the postgres pv.
+    
+  * If the release name is different from "dai-xlr" and if we are using embedded database, we need to reuse the existing Claim, for data persistence.
+       * Update the following field with existing claim.
         ```shell
-          claimRef:
-            apiVersion: v1
-            kind: PersistentVolumeClaim
-            name: data-dai-xlr-postgresql-0
-            namespace: default   
+            .spec.postgresql.persistence.existingClaim
+            .spec.rabbitmq.persistence.existingClaim --> not required, as we dont save any data.
         ```
-     * Remove the following from postgres PV while editing.
+      eg:
       ```shell
-         claimRef:
-          uid:
-          resourceVersion:
+            .spec.postgresql.persistence.existingClaim: data-xlr-prod-postgresql-0
       ```
- *  By default keycloak will be enabled as default oidc provider.
-   * To disable oidc and keycloak.
-   ```shell
-      .spec.keycloak.install = false
-      .spec.oidc.enabled =  false
-   ``` 
-   * To disable keycloak and enable external oidc.
-   ```shell
-      .spec.keycloak.install = false
-      .spec.oidc.enabled =  true
-      .spec.oidc.external = true
-      ##  update the below fields with external oidc configuration
-      .spec.oidc.accessTokenUri:
-      .spec.oidc.clientId:
-      .spec.oidc.clientSecret:
-      .spec.oidc.emailClaim:
-      .spec.oidc.external:
-      .spec.oidc.fullNameClaim:
-      .spec.oidc.issuer:
-      .spec.oidc.keyRetrievalUri:
-      .spec.oidc.logoutUri:
-      .spec.oidc.postLogoutRedirectUri:
-      .spec.oidc.redirectUri:
-      .spec.oidc.rolesClaim:
-      .spec.oidc.userAuthorizationUri:
-      .spec.oidc..userNameClaim:
-   ```
-   * If keycloak is enabled, then we will be using default embedded database.     
-     :::note
-        Note:
-            Post upgrade keycloak pod failed to start with below error.
-            Caused by: org.postgresql.util.PSQLException: FATAL: password authentication failed for user "keycloak"
-            We need to Connect to the pod/dai-xlr-postgresql-0 pod and create the keycloak database.
-            * kuebctl exec -it pod/dai-xlr-postgresql-0 -- bash
-            * psql -U postgres
-            * create database keycloak;
-            * create user keycloak with encrypted password 'keycloak';
-            * grant all privileges on database keycloak to keycloak;
-     :::
-     
+       
+       * Post helm uninstall, we can also edit postgres PV as follows, to create the new PVC with existing PV.
+         * Update the postgres pv with following details. 
+         ```shell
+                  claimRef:
+                    apiVersion: v1
+                    kind: PersistentVolumeClaim
+                    name: data-dai-xlr-postgresql-0
+                    namespace: default   
+         ```
+         * Remove the following from postgres PV while editing.
+         ```shell
+                 claimRef:
+                  uid:
+                  resourceVersion:
+         ```
+  *  By default keycloak will be enabled as default oidc provider.
+       * To disable oidc and keycloak.
+       ```shell
+          .spec.keycloak.install = false
+          .spec.oidc.enabled =  false
+       ``` 
+       * To disable keycloak and enable external oidc.
+       ```shell
+          .spec.keycloak.install = false
+          .spec.oidc.enabled =  true
+          .spec.oidc.external = true
+          ##  update the below fields with external oidc configuration
+          .spec.oidc.accessTokenUri:
+          .spec.oidc.clientId:
+          .spec.oidc.clientSecret:
+          .spec.oidc.emailClaim:
+          .spec.oidc.external:
+          .spec.oidc.fullNameClaim:
+          .spec.oidc.issuer:
+          .spec.oidc.keyRetrievalUri:
+          .spec.oidc.logoutUri:
+          .spec.oidc.postLogoutRedirectUri:
+          .spec.oidc.redirectUri:
+          .spec.oidc.rolesClaim:
+          .spec.oidc.userAuthorizationUri:
+          .spec.oidc..userNameClaim:
+       ```
+       * If keycloak is enabled, then we will be using default embedded database.     
+         :::caution
+            Note:
+                * Post upgrade keycloak pod failed to start with below error. 
+                    Caused by: org.postgresql.util.PSQLException: FATAL: password authentication failed for user "keycloak"
+                * We need to Connect to the pod/dai-xlr-postgresql-0 pod and create the keycloak database.
+                    * kuebctl exec -it pod/dai-xlr-postgresql-0 -- bash
+                    * psql -U postgres
+                    * create database keycloak;
+                    * create user keycloak with encrypted password 'keycloak';
+                    * grant all privileges on database keycloak to keycloak;
+         :::
 
-* Bring up the xl-deploy in docker.
+## 7. Bring up the xl-deploy in docker.
 
 ```shell
  docker run -e "ADMIN_PASSWORD=desired-admin-password" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1
 ```
 
-* Run the following command.
+## 8. Run the following command.
 ```shell
 xl apply -f xebialabs/xebialabs.yaml
 ```
 
-* verify the PVC and PV.
+## 9. verify the PVC and PV.
 ```shell
 [sishwarya@localhost xl-release-kubernetes-operator] (D-21331) $ kubectl get pvc
 NAME                         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE
@@ -311,8 +313,8 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
 :::note
 Note:
  * We will see new PVC and PV created for rabbitmq, which we can delete.
-   kubectl delete pvc data-xlr-prod-rabbitmq-0 data-xlr-prod-rabbitmq-1 data-xlr-prod-rabbitmq-2
-   kubectl delete pv pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862, pvc-6d03813b-1438-41ee-93c9-3f32efe73e47, pvc-808b52b0-4851-44ff-a950-a61e4ff842ca
+    * kubectl delete pvc data-xlr-prod-rabbitmq-0 data-xlr-prod-rabbitmq-1 data-xlr-prod-rabbitmq-2
+    * kubectl delete pv pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862, pvc-6d03813b-1438-41ee-93c9-3f32efe73e47, pvc-808b52b0-4851-44ff-a950-a61e4ff842ca
  * We are reusing the existing claim for postgres.  
 :::
     
