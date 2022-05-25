@@ -178,12 +178,13 @@ eg: helm release name : xlr-prod
   ```
 
 ## 6. Do following changes in the xebialabs/dai-release/dairelease_cr.yaml, based on the requirement.
-  * Default  release admin password is "admin", if we need to change update the following in yaml.
-    ```shell
+### i. To update admin password 
+ * Default  release admin password is "admin", if we need to update below fields.
+```shell
     .spec.AdminPassword: <password from previous installation>
-    ```
-  * To setup haproxy/nginx.
-    * haproxy setup   
+```
+### ii.  To setup haproxy/nginx.
+  * haproxy setup   
     ```shell
        .spec.haproxy-ingress.install = true
        .spec.nginx-ingress-controller.install = false
@@ -199,77 +200,89 @@ eg: helm release name : xlr-prod
        ingress.kubernetes.io/config-backend: |
        option httpchk GET /ha/health HTTP/1.0
     ```
-    * nginx controller
+  * nginx controller
     ```shell
        .spec.haproxy-ingress.install = false
        .spec.nginx-ingress-controller.install = true
     ```
+
+### iii. To reuse existing claim for postgres/rabbitmq 
+* If the release name is different from "dai-xlr" and if we are using embedded database, we need to reuse the existing Claim, for data persistence.
+  
+  * Update the following field with existing claim.
     
-  * If the release name is different from "dai-xlr" and if we are using embedded database, we need to reuse the existing Claim, for data persistence.
-       * Update the following field with existing claim.
-        ```shell
+  ```shell
             .spec.postgresql.persistence.existingClaim
             .spec.rabbitmq.persistence.existingClaim --> not required, as we dont save any data.
-        ```
-      eg:
-      ```shell
-            .spec.postgresql.persistence.existingClaim: data-xlr-prod-postgresql-0
-      ```
+  ```  
+  ```shell
+  eg:
+      .spec.postgresql.persistence.existingClaim: data-xlr-prod-postgresql-0
+  ```
        
-       * Post helm uninstall, we can also edit postgres PV as follows, to create the new PVC with existing PV.
-         * Update the postgres pv with following details. 
-         ```shell
+  * Post helm uninstall, we can also edit postgres PV as follows, to create the new PVC with existing PV.
+    * Update the postgres pv with following details.      
+      ```shell
                   claimRef:
                     apiVersion: v1
                     kind: PersistentVolumeClaim
                     name: data-dai-xlr-postgresql-0
                     namespace: default   
-         ```
-         * Remove the following from postgres PV while editing.
-         ```shell
+      ```
+  * Update the rabbitmq pv with following details if we need to reuse the PV of rabbitmq.
+     ```shell
+                 claimRef:
+                   apiVersion: v1
+                   kind: PersistentVolumeClaim
+                   name: data-dai-xlr-rabbitmq-0
+                   namespace: default   
+     ```   
+    * Remove the following from PV [postgres/rabbitmq] while editing.
+      ```shell
                  claimRef:
                   uid:
                   resourceVersion:
-         ```
-  *  By default keycloak will be enabled as default oidc provider.
-       * To disable oidc and keycloak.
-       ```shell
-          .spec.keycloak.install = false
-          .spec.oidc.enabled =  false
-       ``` 
-       * To disable keycloak and enable external oidc.
-       ```shell
-          .spec.keycloak.install = false
-          .spec.oidc.enabled =  true
-          .spec.oidc.external = true
-          ##  update the below fields with external oidc configuration
-          .spec.oidc.accessTokenUri:
-          .spec.oidc.clientId:
-          .spec.oidc.clientSecret:
-          .spec.oidc.emailClaim:
-          .spec.oidc.external:
-          .spec.oidc.fullNameClaim:
-          .spec.oidc.issuer:
-          .spec.oidc.keyRetrievalUri:
-          .spec.oidc.logoutUri:
-          .spec.oidc.postLogoutRedirectUri:
-          .spec.oidc.redirectUri:
-          .spec.oidc.rolesClaim:
-          .spec.oidc.userAuthorizationUri:
-          .spec.oidc..userNameClaim:
-       ```
-       * If keycloak is enabled, then we will be using default embedded database.     
-         :::caution
-            Note:
-                * Post upgrade keycloak pod failed to start with below error. 
-                    Caused by: org.postgresql.util.PSQLException: FATAL: password authentication failed for user "keycloak"
-                * We need to Connect to the pod/dai-xlr-postgresql-0 pod and create the keycloak database.
-                    * kuebctl exec -it pod/dai-xlr-postgresql-0 -- bash
-                    * psql -U postgres
-                    * create database keycloak;
-                    * create user keycloak with encrypted password 'keycloak';
-                    * grant all privileges on database keycloak to keycloak;
-         :::
+      ```
+### iv. To setup oidc 
+ * By default keycloak will be enabled as default oidc provider.
+      * To disable oidc and keycloak.
+           ```shell
+              .spec.keycloak.install = false
+              .spec.oidc.enabled =  false
+           ```
+      * To disable keycloak and enable external oidc.
+           ```shell
+              .spec.keycloak.install = false
+              .spec.oidc.enabled =  true
+              .spec.oidc.external = true
+              ##  update the below fields with external oidc configuration
+              .spec.oidc.accessTokenUri:
+              .spec.oidc.clientId:
+              .spec.oidc.clientSecret:
+              .spec.oidc.emailClaim:
+              .spec.oidc.external:
+              .spec.oidc.fullNameClaim:
+              .spec.oidc.issuer:
+              .spec.oidc.keyRetrievalUri:
+              .spec.oidc.logoutUri:
+              .spec.oidc.postLogoutRedirectUri:
+              .spec.oidc.redirectUri:
+              .spec.oidc.rolesClaim:
+              .spec.oidc.userAuthorizationUri:
+              .spec.oidc..userNameClaim:
+           ```
+      * If keycloak is enabled, then we will be using default embedded database.
+        :::caution
+                Note:
+                    * Post upgrade keycloak pod failed to start with below error. 
+                        Caused by: org.postgresql.util.PSQLException: FATAL: password authentication failed for user "keycloak"
+                    * We need to Connect to the pod/dai-xlr-postgresql-0 pod and create the keycloak database.
+                        * kuebctl exec -it pod/dai-xlr-postgresql-0 -- bash
+                        * psql -U postgres
+                        * create database keycloak;
+                        * create user keycloak with encrypted password 'keycloak';
+                        * grant all privileges on database keycloak to keycloak;
+        :::
 
 ## 7. Bring up the xl-deploy in docker.
 
@@ -282,7 +295,7 @@ eg: helm release name : xlr-prod
 xl apply -f xebialabs/xebialabs.yaml
 ```
 
-## 9. verify the PVC and PV.
+## 9. Verify the PVC and PV.
 ```shell
 [sishwarya@localhost xl-release-kubernetes-operator] (D-21331) $ kubectl get pvc
 NAME                         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE
@@ -312,10 +325,11 @@ pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862   8Gi        RWO            Retain     
 ```
 :::note
 Note:
- * We will see new PVC and PV created for rabbitmq, which we can delete.
+ * We will see new PVC and PV created for rabbitmq, we can delete the old PVC and PV.
     * kubectl delete pvc data-xlr-prod-rabbitmq-0 data-xlr-prod-rabbitmq-1 data-xlr-prod-rabbitmq-2
     * kubectl delete pv pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862, pvc-6d03813b-1438-41ee-93c9-3f32efe73e47, pvc-808b52b0-4851-44ff-a950-a61e4ff842ca
- * We are reusing the existing claim for postgres.  
+ * We are reusing the existing claim for postgres.
+ * Newly created PVC dai-xlr-digitalai-release for xl-release pod.
 :::
     
-     
+   
