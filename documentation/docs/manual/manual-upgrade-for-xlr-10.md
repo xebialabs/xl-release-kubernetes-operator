@@ -10,9 +10,10 @@ sidebar_position: 15
 
 ## 1. [Backup everything](https://xebialabs.github.io/xl-release-kubernetes-operator/docs/manual/move_pvc_to_other_namespace#c1-backup-everything)
 ## 2. [Update PV  RECLAIM POLICY To Retain](https://xebialabs.github.io/xl-release-kubernetes-operator/docs/manual/move_pvc_to_other_namespace/#c2-be-sure-to-not-delete-pvs-with-your-actions)
-eg:
+
 ```shell
-kubectl patch pv pvc-1bc9fb12-b55b-4efa-a3b6-c25700b07c0e -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}';
+eg:
+> kubectl patch pv pvc-1bc9fb12-b55b-4efa-a3b6-c25700b07c0e -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}';
 
 [sishwarya@localhost xl-release-kubernetes-helm-chart] (10.0) $ kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                STORAGECLASS          REASON   AGE
@@ -89,7 +90,7 @@ eg: helm release name : xlr-prod
    pvc-dad9e7c3-ae1b-4b28-b595-4f4b281a0bf2   5Gi        RWO            Retain           Bound    default/dai-xlr-digitalai-release   aws-efs-provisioner            3m40s
   ```
 
-### vi. Start the following pod for accessing the newly created PVC [dai-xlr-digitalai-release] and copy the data.
+### vi. Start the following pod for accessing the newly created PVC [dai-xlr-digitalai-release].
   
   * Update the pod [pod-dai-xlr-digitalai-release.yaml] yaml with exact volumes which we mounted in previous installation.
   
@@ -131,19 +132,22 @@ eg: helm release name : xlr-prod
      total 0
      /opt/xebialabs/xl-release-server #
   ```
-  
+
+### vii. Copy data and Give Persmission.
  * Copy data from xlr-prod-digitalai-release-0 to pod-dai-xlr-digitalai-release
-   ```shell
-    kubectl exec -n default xlr-prod-digitalai-release-0 -- tar cf - /opt/xebialabs/xl-release-server/reports | kubectl exec -n default -i pod-dai-xlr-digitalai-release -- tar xvf - -C /
-    ```
-   ```shell
+
+```shell
+    > kubectl exec -n default xlr-prod-digitalai-release-0 -- tar cf - /opt/xebialabs/xl-release-server/reports | kubectl exec -n default -i pod-dai-xlr-digitalai-release -- tar xvf - -C /
+  ```
+```shell
+eg:
     [sishwarya@localhost docs] $ kubectl exec -n default xlr-prod-digitalai-release-0 -- tar cf - /opt/xebialabs/xl-release-server/reports | kubectl exec -n default -i pod-dai-xlr-digitalai-release -- tar xvf - -C /Defaulted container "digitalai-release" out of: digitalai-release, wait-for-db (init)
     tar: Removing leading `/' from member names
     opt/xebialabs/xl-release-server/reports/
     opt/xebialabs/xl-release-server/reports/testupgrade/
     opt/xebialabs/xl-release-server/reports/testupgrade/readme.txt
     opt/xebialabs/xl-release-server/reports/readme.txt
-    ```
+```
  * Give full Permission to the copied data in new PV.
   ```shell
     [sishwarya@localhost docs] $ kubectl exec -it pod/pod-dai-xlr-digitalai-release -- sh
@@ -154,7 +158,7 @@ eg: helm release name : xlr-prod
     -rwxrwxrwx 1 10001 40071 2036 May 25 03:50 readme.txt
     drwxrwsrwx 2 10001 40071 6144 May 25 03:54 testupgrade
   ```
-### vii.  Delete the pod.
+### viii.  Delete the pod.
 ```shell
       [sishwarya@localhost docs] $ kubectl delete pod/pod-dai-xlr-digitalai-release
        pod "pod-dai-xlr-digitalai-release" deleted
@@ -229,7 +233,7 @@ eg: helm release name : xlr-prod
                     name: data-dai-xlr-postgresql-0
                     namespace: default   
       ```
-  * Update the rabbitmq pv with following details if we need to reuse the PV of rabbitmq.
+    * Update the rabbitmq pv with following details if we need to reuse the PV of rabbitmq.
      ```shell
                  claimRef:
                    apiVersion: v1
