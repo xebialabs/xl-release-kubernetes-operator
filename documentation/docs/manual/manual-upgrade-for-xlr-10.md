@@ -225,8 +225,12 @@ eg:
   eg:
       .spec.postgresql.persistence.existingClaim: data-xlr-prod-postgresql-0
   ```
+   
+  :::note
+   If we are having more than one existing PVC for rabbitmq, we don't use  existingClaim for rabbitmq configuration, instead we can follow the other approach mentioned below for PV reuse.
+  :::
        
-  * Post helm uninstall, we can also edit postgres PV as follows, to create the new PVC with existing PV.
+  * Post helm uninstall, we can also edit postgres/rabbitmq PV as follows, to create the new PVC with existing PV.
     * Update the postgres pv with following details.      
       ```shell
                   claimRef:
