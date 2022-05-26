@@ -58,6 +58,15 @@ For example, here is list of PVCs that are usually in the default namespace:
 - data-dai-xlr-postgresql-0
 - data-dai-xlr-rabbitmq-0
 
+On the end check if all PVs have correct Reclaim Policy:
+
+```
+❯ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                      STORAGECLASS                                   REASON   AGE
+pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            Retain           Bound    default/ai-xlr-digitalai-release           vp-azure-aks-test-cluster-file-storage-class            7h
+...
+```
+
 
 ## C.3. Stop everything that is using XLR PVC-s (and other PVC if needed)
 
