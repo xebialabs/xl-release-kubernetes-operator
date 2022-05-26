@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Job
+metadata:
+  name: upgrade-release-config
+spec:
+  template:
+    spec:
+      containers:
+        - name: kubectl
+          image: bitnami/kubectl:latest
+          command:
+            # - "sh"
+            - "./upgrade-script.sh"
+          volumeMounts:
+            - name:  kube-config-volume
+              mountPath: /.kube/config
+            - name: upgrade-script-volume
+              mountPath: /
+      volumes:
+        - name: kube-config-volume
+          hostPath:
+            path: ~/.kube/config
+            # path: C:\Users\Administrator\.kube\config
+        - name: upgrade-script-volume
+          hostPath:
+            path: /xl-release-kubernetes-operator/release-operator-azure-aks/digitalai-release/kubernetes/job/update-script.sh
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xl-release-conf-config-map
+  labels:
+    app: digitalai-release
+data:
+  xl-release.conf: |
+
