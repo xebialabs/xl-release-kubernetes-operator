@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: "22.2.0-511.113"
+  ImageTag: "22.2.0-525.113"
   ## xebialabs/tiny-tools image version
   ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
   TinyToolsImageRepository: "xebialabs/tiny-tools"
@@ -23,17 +23,18 @@ spec:
   ForceRemoveMissingTypes: false
   Persistence:
     AccessMode: ReadWriteOnce
-    Annotations: {}
+    Annotations:
+      helm.sh/resource-policy: "keep"
     Enabled: true
     Size: 8Gi
-    StorageClass: < provide the storageClass for DAI-Release>
+    StorageClass: <Provide the storageClass for DAI-Release>
   # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
   # Convert repository-keystore.jceks files content to base64
   # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
   RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
   UseExistingDB:
     Enabled: false
-    # If you want to use a existing database, change 'postgresql.install' to 'false'.
+    # If you want to use a existing database, change 'postgresql.install' to 'false'. Only when we use existing or external Database for both release and keycloak.
     # Set 'UseExistingDB.Enabled' to 'true'.Uncomment the following lines and provide the values.
     # XLR_DB_URL:
     # XLR_DB_USER:
@@ -471,7 +472,7 @@ spec:
     route:
       annotations: {}
       enabled: true
-      host: <Provode DNS name for accessing UI of Keycloak>
+      host: <Provide DNS name for accessing UI of Keycloak>
       labels: {}
       path: /
       tls:
@@ -555,6 +556,7 @@ spec:
     rolesClaim: null
     userAuthorizationUri: null
     userNameClaim: null
+    scopes: ["openid"]
   postgresql:
     audit:
       clientMinMessages: error
@@ -705,7 +707,7 @@ spec:
       mountPath: /bitnami/postgresql
       selector: {}
       size: 8Gi
-      storageClass: <Provode Storage Class to be defined for PostgreSQL>
+      storageClass: <Provide Storage Class to be defined for PostgreSQL>
       subPath: ""
     pgHbaConfiguration: ""
     postgresqlConfiguration: {}
@@ -1196,7 +1198,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-      - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provide DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
