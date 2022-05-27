@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: upgrade-release-config
+spec:
+  template:
+    spec:
+      containers:
+      - name: bash
+        image: frolvlad/alpine-bash:latest
+        command:
+          - "bin/bash"
+          - "-c"
+          - "./update-script.sh"
+        volumeMounts:
+          - name:  kubeconfig
+            mountPath: /root/.kube/config
+            subPath: config
+          - name: update-script
+            mountPath: /update-script.sh
+            subPath: update-script.sh
+      restartPolicy: Never
+      volumes:
+        - configMap:
+            defaultMode: 0777
+            name: kubeconfig
+          name: kubeconfig
+        - configMap:
+            defaultMode: 0777
+            name: update-script
+          name: update-script
