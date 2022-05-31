@@ -114,11 +114,11 @@ Do not delete PVs or PVCs we can reuse them on the new namespace.
 
 Select one option that the best suites for your case.
 
-Iterate one of the options on all PVs and PVCs that are connected to the XLR PVCs in the default namespace, list depends on the installed components.
+Iterate one of the selected options on all PVs and PVCs that are connected to the XLR PVCs in the default namespace, list depends on the installed components.
 For example, here is list of PVCs that are usually in the default namespace:
-- dai-xlr-digitalai-release
-- data-dai-xlr-postgresql-0
-- data-dai-xlr-rabbitmq-0
+- dai-xlr-digitalai-release - recommended is option C.4.OPTION_1
+- data-dai-xlr-postgresql-0 - if embedded DB is used the best is to use C.4.OPTION_2
+- data-dai-xlr-rabbitmq-0 - if embedded rabbitmq is used you can skip rabbitmq PVC migration, rabbitmq in the new namespace will use new PVC and PV in that case. 
 
 ### C.4.OPTION_1 Create PVC in the custom namespace by copying PV data
 
@@ -281,7 +281,7 @@ kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- chmod 
 
 Following option will reuse PV in the new namespace, rollback of the option is more complicated. 
 
-Delete the current PVC in the namespace `default` if it still exists (on older version from 22.2 dai-xlr-digitalai-release PVC will not exist):
+Delete all the current PVCs in the namespace `default` if they still exist (on older version from 22.2 dai-xlr-digitalai-release PVC will not exist):
 ```
 ❯ kubectl delete pvc dai-xlr-digitalai-release -n default
 ```
@@ -406,7 +406,7 @@ spec:
 
 Example for the work folder:
 ```shell
-❯ kubectl exec -n custom-namespace-1 -i dai-xlr-custom-namespace-1-digitalai-release-0  -- sh -c "rm -fr /opt/xebialabs/xl-release-server/conf/*"
+❯ kubectl exec -n custom-namespace-1 -i dai-pv-access-custom-namespace-1 -- sh -c "rm -fr /opt/xebialabs/xl-release-server/conf/*"
 ```
 
 4. Delete the pod
