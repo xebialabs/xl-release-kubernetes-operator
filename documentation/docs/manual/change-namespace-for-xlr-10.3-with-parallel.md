@@ -72,7 +72,7 @@ In that case you will need to execute step 9.a to be able to access XLR pages be
 
 ### A.3. Prepare the release operator
 
-1. Get the release operator package zip for Azure: release-operator-azure-aks-22.1.1-517.1301.zip (correct operator image is already setup in the package).
+1. Get the release operator package zip for Azure: release-operator-azure-aks-22.1.0-519.949.zip (correct operator image is already setup in the package).
 2. Do the step 6 from the documentation [Step 7—Set up the XL Deploy Container instance](https://docs.xebialabs.com/v.22.1/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-7set-up-the-xl-deploy-container-instance-1)
    Use the 22.1.2 version of the deploy: `docker run -d -e "ADMIN_PASSWORD=admin" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1.2`
 3. Download and set up the XL CLI setup (xl cli version in this case 22.1.2) from https://dist.xebialabs.com/public/xl-cli/22.1.2/
