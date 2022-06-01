@@ -314,11 +314,12 @@ eg:
 ```shell
 helm uninstall <release name>
 ```
-
-## 9. Verify if we have clusterRole configured with assumeRole trustPolicy.
-* Update the clusterRole trustPolicy with assumeRole.
-  :::note : https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html
-  :::
+## 9. Below steps are specific to AWS EKS Cluster, with SSO access.
+### 1. Verify if we have clusterRole configured with assumeRole trustPolicy.
+* Update the ClusterRole TrustPolicy with AssumeRole.
+:::note
+ [Refer AWS Documentation - Creating a role to delegate permissions to an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html)  
+:::
 ```json
  {
             "Effect": "Allow",
@@ -328,6 +329,22 @@ helm uninstall <release name>
             "Action": "sts:AssumeRole"
         }
        
+```
+
+### 2. Configure IAM users or roles to your Amazon EKS cluster.
+* Update aws-auth configmap of Cluster with the RoleArn and RoleName.
+:::note
+[Refer AWS Documentation - Add IAM users or roles to your Amazon EKS cluster](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html)
+:::
+```yaml
+mapRoles:
+----
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: <add role arn>
+  username: <add role name>
+
 ```
 
 ## 10. Run the following command.
