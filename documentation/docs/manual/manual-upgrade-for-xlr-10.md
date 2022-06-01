@@ -352,7 +352,7 @@ mapRoles:
 xl apply -f xebialabs.yaml
 ```
 
-## 10. Verify the PVC and PV.
+## 11. Verify the PVC and PV.
 ```shell
 [sishwarya@localhost xl-release-kubernetes-operator] (D-21331) $ kubectl get pvc
 NAME                         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE
@@ -386,7 +386,7 @@ Note:
     * kubectl delete pvc data-xlr-prod-rabbitmq-0 data-xlr-prod-rabbitmq-1 data-xlr-prod-rabbitmq-2
     * kubectl delete pv pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862, pvc-6d03813b-1438-41ee-93c9-3f32efe73e47, pvc-808b52b0-4851-44ff-a950-a61e4ff842ca
  * We are reusing the existing claim for postgres.
- * Newly created PVC dai-xlr-digitalai-release for xl-release pod. 
+ * We are using newly created PVC dai-xlr-digitalai-release for xl-release pod. 
 :::
     
    
