@@ -95,26 +95,27 @@ eg: helm release name : xlr-prod
   * Update the pod [pod-dai-xlr-digitalai-release.yaml] yaml with exact volumes which we mounted in previous installation.
   
   ```shell
-      apiVersion: v1
-      kind: Pod
-      metadata:
-      name: pod-dai-xlr-digitalai-release
-      spec:  
-      containers:
-      - name: sleeper      
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-dai-xlr-digitalai-release
+spec:  
+  containers:
+    - name: sleeper      
       command: ["sleep", "1d"]
       image: xebialabs/tiny-tools:22.2.0
       imagePullPolicy: Always
       volumeMounts:
-      - mountPath: /opt/xebialabs/xl-release-server/reports
-      name: reports-dir
-      subPath: reports           
-      restartPolicy: Never
-      volumes:
-      - name: reports-dir
+        - mountPath: /opt/xebialabs/xl-release-server/reports
+          name: reports-dir
+          subPath: reports           
+  restartPolicy: Never
+  volumes:
+    - name: reports-dir
       persistentVolumeClaim:
-      claimName: dai-xlr-digitalai-release
+        claimName: dai-xlr-digitalai-release
   ```
+
   * Start the pod
   ```shell
     [sishwarya@localhost docs] $ kubectl apply -f pod-dai-xlr-digitalai-release.yaml
@@ -211,6 +212,11 @@ eg:
        .spec.haproxy-ingress.install = false
        .spec.nginx-ingress-controller.install = true
     ```
+    
+### iii. To update the rabbitmq Persistence storageclass.
+```shell
+   .spec.rabbitmq.persistence.storageClass: <Storage Class to be defined for RabbitMQ>
+```
 
 ### iii. To reuse existing claim for postgres/rabbitmq 
 * If the release name is different from "dai-xlr" and if we are using embedded database, we need to reuse the existing Claim, for data persistence.
@@ -301,15 +307,35 @@ eg:
 ## 7. Bring up the xl-deploy in docker.
 
 ```shell
- docker run -e "ADMIN_PASSWORD=desired-admin-password" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1
+ docker run -d -e "ADMIN_PASSWORD=admin" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1
 ```
 
-## 8. Run the following command.
+## 8. Uninstall helm.
 ```shell
-xl apply -f xebialabs/xebialabs.yaml
+helm uninstall <release name>
 ```
 
-## 9. Verify the PVC and PV.
+## 9. Verify if we have clusterRole configured with assumeRole trustPolicy.
+* Update the clusterRole trustPolicy with assumeRole.
+  :::note : https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html
+  :::
+```json
+ {
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "<add role or user arn here>"
+            },
+            "Action": "sts:AssumeRole"
+        }
+       
+```
+
+## 10. Run the following command.
+```shell
+xl apply -f xebialabs.yaml
+```
+
+## 10. Verify the PVC and PV.
 ```shell
 [sishwarya@localhost xl-release-kubernetes-operator] (D-21331) $ kubectl get pvc
 NAME                         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE
@@ -343,7 +369,7 @@ Note:
     * kubectl delete pvc data-xlr-prod-rabbitmq-0 data-xlr-prod-rabbitmq-1 data-xlr-prod-rabbitmq-2
     * kubectl delete pv pvc-f36a89a9-d48d-49dc-a210-a43c7d1a3862, pvc-6d03813b-1438-41ee-93c9-3f32efe73e47, pvc-808b52b0-4851-44ff-a950-a61e4ff842ca
  * We are reusing the existing claim for postgres.
- * Newly created PVC dai-xlr-digitalai-release for xl-release pod.
+ * Newly created PVC dai-xlr-digitalai-release for xl-release pod. 
 :::
     
    
