@@ -67,9 +67,8 @@ For the external database case the best option is to migrate database to a new d
 ### B.3. Prepare the release operator
 
 1. Get the release operator package zip for Azure: release-operator-azure-aks-22.1.0-519.949.zip (correct operator image is already setup in the package).
-2. Do the step 6 from the documentation [Step 7—Set up the XL Deploy Container instance](https://docs.xebialabs.com/v.22.1/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-7set-up-the-xl-deploy-container-instance-1)
-Use the 22.1.2 version of the deploy: `docker run -d -e "ADMIN_PASSWORD=admin" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1.2`
-3. Download and set up the XL CLI setup (xl cli version in this case 22.1.2) from https://dist.xebialabs.com/public/xl-cli/22.1.2/
+
+2. Download and set up the XL CLI setup (xl cli version in this case 22.1.2) from https://dist.xebialabs.com/public/xl-cli/22.1.2/
    Do the step 6 from the documentation [Step 6—Download and set up the XL CLI](https://docs.xebialabs.com/v.22.1/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-6download-and-set-up-the-xl-cli)
 ```shell
 ❯ ./xl version
@@ -82,7 +81,11 @@ Build date:              2022-04-18T12:39:39.622Z
 GO version:              go1.16
 OS/Arch:                 darwin/amd64
 ```
-3. Run the upgrade setup with a dry run and generate the blueprint file:
+
+3. Do the step 7 from the documentation [Step 7—Set up the XL Deploy Container instance](https://docs.xebialabs.com/v.22.1/deploy/how-to/k8s-operator/install-deploy-using-k8s-operator/#step-7set-up-the-xl-deploy-container-instance-1)
+Use the 22.1.2 version of the deploy: `docker run -d -e "ADMIN_PASSWORD=admin" -e "ACCEPT_EULA=Y" -p 4516:4516 --name xld xebialabs/xl-deploy:22.1.2`
+
+4. Run the upgrade setup with a dry run and generate the blueprint file:
 
 In the last question `Edit list of custom resource keys that will migrate to the new Release CR` append following keys to the of the file:
 ```
@@ -115,36 +118,44 @@ Here is sample of the responses:
 That will create files and directories in the working directory. The main directory is `xebialabs` and inside it are all template files that we need to edit.
 Check the `xebialabs/dai-release/dairelease_cr.yaml` if all values are correctly set there.
 
+:::note
+Note:
+Ignore question `Choose the version of the XL Deploy for Upgrader setup of operator`, we are not starting XL Deploy with this step,
+because we have it already running in the step B.3.3. 
+:::
 
 ### B.4. Update the release operator package to support custom namespace (common part)
 
 Update following files (relative to the provider's directory) with custom namespace name:
 
-| File name                                                                   | Yaml path                                     | Value to set                                        |
-|:----------------------------------------------------------------------------|:----------------------------------------------|:----------------------------------------------------|
-| xebialabs/xl-k8s-foundation.yaml [kind: Infrastructure]                     | spec[0].children[0].children[0].name          | custom-namespace-1                                  |
-| xebialabs/xl-k8s-foundation.yaml [kind: Infrastructure]                     | spec[0].children[0].children[0].namespaceName | custom-namespace-1                                  |
-| xebialabs/xl-k8s-foundation.yaml [kind: Environments]                       | spec[0].children[0].members[0]                | ~Infrastructure/k8s-infra/xlr/custom-namespace-1    |
-| xebialabs/dai-release/template-generic/cluster-role-digital-proxy-role.yaml | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-role          |
-| xebialabs/dai-release/template-generic/cluster-role-manager-role.yaml       | metadata.name                                 | custom-namespace-1-xlr-operator-manager-role        |
-| xebialabs/dai-release/template-generic/cluster-role-metrics-reader.yaml     | metadata.name                                 | custom-namespace-1-xlr-operator-metrics-reader      |
-| xebialabs/dai-release/template-generic/leader-election-rolebinding.yaml     | subjects[0].namespace                         | custom-namespace-1                                  |
-| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | metadata.name                                 | custom-namespace-1-xlr-operator-manager-rolebinding |
-| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | roleRef.name                                  | custom-namespace-1-xlr-operator-manager-role        |
-| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | subjects[0].namespace                         | custom-namespace-1                                  |
-| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-rolebinding   |
-| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | roleRef.name                                  | custom-namespace-1-xlr-operator-proxy-role          |
-| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | subjects[0].namespace                         | custom-namespace-1                                  |
-| xebialabs/dai-release/dairelease_cr.yaml                                    | metadata.name                                 | dai-xlr-custom-namespace-1                          |
+| File name                                                                   | Yaml path                                     | Value to set                                             |
+|:----------------------------------------------------------------------------|:----------------------------------------------|:---------------------------------------------------------|
+| xebialabs/xl-k8s-foundation.yaml [kind: Infrastructure]                     | spec[0].children[0].children[0].name          | custom-namespace-1                                       |
+| xebialabs/xl-k8s-foundation.yaml [kind: Infrastructure]                     | spec[0].children[0].children[0].namespaceName | custom-namespace-1                                       |
+| xebialabs/xl-k8s-foundation.yaml [kind: Environments]                       | spec[0].children[0].members[1]                | - Infrastructure/DIGITALAI/K8s-MASTER/custom-namespace-1 |
+| xebialabs/dai-release/template-generic/cluster-role-digital-proxy-role.yaml | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-role               |
+| xebialabs/dai-release/template-generic/cluster-role-manager-role.yaml       | metadata.name                                 | custom-namespace-1-xlr-operator-manager-role             |
+| xebialabs/dai-release/template-generic/cluster-role-metrics-reader.yaml     | metadata.name                                 | custom-namespace-1-xlr-operator-metrics-reader           |
+| xebialabs/dai-release/template-generic/leader-election-rolebinding.yaml     | subjects[0].namespace                         | custom-namespace-1                                       |
+| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | metadata.name                                 | custom-namespace-1-xlr-operator-manager-rolebinding      |
+| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | roleRef.name                                  | custom-namespace-1-xlr-operator-manager-role             |
+| xebialabs/dai-release/template-generic/manager-rolebinding.yaml             | subjects[0].namespace                         | custom-namespace-1                                       |
+| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | metadata.name                                 | custom-namespace-1-xlr-operator-proxy-rolebinding        |
+| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | roleRef.name                                  | custom-namespace-1-xlr-operator-proxy-role               |
+| xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | subjects[0].namespace                         | custom-namespace-1                                       |
+| xebialabs/dai-release/dairelease_cr.yaml                                    | metadata.name                                 | dai-xlr-custom-namespace-1                               |
 
 
 In the `xebialabs/dai-release/template-generic/deployment.yaml` add `env` section after `spec.template.spec.containers[1].image` (in the same level):
-```
+```yaml
+        image: xebialabs...
         env:
           - name: WATCH_NAMESPACE
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+        livenessProbe: 
+          ...
 ```
 
 In the `xebialabs/dai-release-operator.yaml` delete array element from the `spec[0].children[0].deployables`, where name is `name: custom-resource-definition`.
