@@ -149,7 +149,7 @@ If keycloak pod is not starting on OpenShift cluster, and you can see this error
 
 `Warning FailedCreate 2m11s (x3 over 2m11s) statefulset-controller create Pod dai-ocp-xlr-cn1502-k-0 in StatefulSet dai-ocp-xlr-cn1502-k failed error: pods "dai-ocp-xlr-cn1502-k-0" is forbidden: unable to validate against any security context constraint: [provider "anyuid": Forbidden: not usable by user or serviceaccount`
 
-then you have to add security constraint context for your custom namespace:
+then you have to add security constraint context for your custom namespace using any of these 3 options:
 1. Using oc command.
    * oc version above , Client Version: 4.7.5, Server Version: 4.9.21.
 ```shell
