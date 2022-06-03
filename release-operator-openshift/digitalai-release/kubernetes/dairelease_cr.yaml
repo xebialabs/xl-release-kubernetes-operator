@@ -34,8 +34,10 @@ spec:
   RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
   UseExistingDB:
     Enabled: false
-    # If you want to use a existing database, change 'postgresql.install' to 'false'.
-    # Set 'UseExistingDB.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # If you want to use a existing database.
+    # Set 'postgresql.install' to 'false', Only when we use existing Database for both Release and keycloak.
+    # Set 'UseExistingDB.Enabled' to 'true'.
+    # Uncomment the following lines and provide the values.
     # XLR_DB_URL:
     # XLR_DB_USER:
     # XLR_DB_PASS:
