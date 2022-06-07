@@ -144,6 +144,7 @@ Update following files (relative to the provider's directory) with custom namesp
 | xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | roleRef.name                                  | custom-namespace-1-xlr-operator-proxy-role               |
 | xebialabs/dai-release/template-generic/proxy-rolebinding.yaml               | subjects[0].namespace                         | custom-namespace-1                                       |
 | xebialabs/dai-release/dairelease_cr.yaml                                    | metadata.name                                 | dai-xlr-custom-namespace-1                               |
+| xebialabs/dai-release/dairelease_cr.yaml                                    | spec.keycloak.install                         | false                                                    |
 
 
 In the `xebialabs/dai-release/template-generic/deployment.yaml` add `env` section after `spec.template.spec.containers[1].image` (in the same level):
