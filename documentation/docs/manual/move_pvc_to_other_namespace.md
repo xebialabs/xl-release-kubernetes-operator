@@ -122,7 +122,42 @@ For example, here is list of PVCs that are usually in the default namespace:
 
 ### C.4.OPTION_1 Create PVC in the custom namespace by copying PV data
 
-Make the copy of the `pvc-dai-xlr-digitalai-release.yaml` for the later reference. 
+#### C.4.OPTION_1.1 Make the copy of the `pvc-dai-xlr-digitalai-release.yaml` for the later reference, to the `pvc-dai-xlr-digitalai-release-custom-namespace-1.yaml`. 
+Edit file `pvc-dai-xlr-digitalai-release-custom-namespace-1.yaml`:
+1. Delete all the lines under sections:
+- `status`
+- `spec.volumneMode`
+- `spec.volumneName`
+- `metadata.uid`
+- `metadata.resourceVersion`
+- `metadata.ownerReferences`
+- `metadata.namespace`
+- `metadata.creationTimestamp`
+- `metadata.finalizers`
+- `metadata.annotations.pv.kubernetes.io/bind-completed`
+- `metadata.annotations.pv.kubernetes.io/bound-by-controller`
+
+2. Rename following lines by adding namespace name:
+- `metadata.name` from dai-xlr-digitalai-release to dai-xlr-custom-namespace-1-digitalai-release
+- `metadata.labels.release` from dai-xlr to dai-xlr-custom-namespace-1
+- `metadata.annotations.meta.helm.sh/release-namespace` from default to custom-namespace-1
+- `metadata.annotations.meta.helm.sh/release-name` from dai-xlr to dai-xlr-custom-namespace-1
+  The renaming rule is to replace any occurrence of `dai-xlr` with `dai-xlr-{{custom_namespace_name}}`
+
+Create those PVCs, but inside the Namespace “custom-namespace-1”:
+```shell
+❯ kubectl apply -f pvc-dai-xlr-digitalai-release-custom-namespace-1.yaml -n custom-namespace-1
+persistentvolumeclaim/dai-xlr-custom-namespace-1-digitalai-release created
+```
+3. Check if PVC is bound
+   Check the PVCs state, which will probably in Pending state, and after some time in Bound state:
+```shell
+❯ kubectl get pvc -n custom-namespace-1
+NAME                                           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                                   AGE
+dai-xlr-custom-namespace-1-digitalai-release   Bound    pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            vp-azure-aks-test-cluster-file-storage-class   3m33s
+```
+
+#### C.4.OPTION_1.2 Similar procedure do for the default namespace, because PVC in default namespace was deleted
 Edit file `pvc-dai-xlr-digitalai-release.yaml`:
 1. Delete all the lines under sections:
 - `status`
@@ -136,27 +171,22 @@ Edit file `pvc-dai-xlr-digitalai-release.yaml`:
 - `metadata.finalizers`
 - `metadata.annotations.pv.kubernetes.io/bind-completed`
 - `metadata.annotations.pv.kubernetes.io/bound-by-controller`
-2. Rename following lines by adding namespace name:
-- `metadata.name` from dai-xlr-digitalai-release to dai-xlr-custom-namespace-1-digitalai-release
-- `metadata.labels.release` from dai-xlr to dai-xlr-custom-namespace-1
-- `metadata.annotations.meta.helm.sh/release-namespace` from default to custom-namespace-1
-- `metadata.annotations.meta.helm.sh/release-name` from dai-xlr to dai-xlr-custom-namespace-1
-  The renaming rule is to replace any occurrence of `dai-xlr` with `dai-xlr-{{custom_namespace_name}}`
 
-Create those PVCs, but inside the Namespace “custom-namespace-1”:
+2. Create those PVCs, but inside the Namespace “default”:
 ```shell
-❯ kubectl apply -f pvc-dai-xlr-digitalai-release.yaml -n custom-namespace-1
+❯ kubectl apply -f pvc-dai-xlr-digitalai-release.yaml -n default
 persistentvolumeclaim/dai-xlr-digitalai-release created
 ```
+
 3. Check if PVC is bound
    Check the PVCs state, which will probably in Pending state, and after some time in Bound state:
 ```shell
-❯ kubectl get pvc -n custom-namespace-1
+❯ kubectl get pvc -n default
 NAME                                           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                                   AGE
-dai-xlr-custom-namespace-1-digitalai-release   Bound    pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            vp-azure-aks-test-cluster-file-storage-class   3m33s
+dai-xlr-digitalai-release   Bound    pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            vp-azure-aks-test-cluster-file-storage-class   3m33s
 ```
 
-Start following pod:
+#### C.4.OPTION_1.3 Start following pods
 1. Put following in file `pod-dai-pv-access-custom-namespace-1.yaml` (don't forget to update custom-namespace-1 with real namespace name):
 ```yaml
 apiVersion: v1
@@ -317,7 +347,7 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            Retain           Available           vp-azure-aks-test-cluster-file-storage-class            8h
 ```
 
-Make the copy of the `pvc-dai-xlr-digitalai-release.yaml` for the later reference.
+#### C.4.OPTION_2.1 Make the copy of the `pvc-dai-xlr-digitalai-release.yaml` for the later reference.
 Edit file `pvc-dai-xlr-digitalai-release.yaml`:
 1. Delete all the lines under section:
 - `status`
@@ -349,7 +379,7 @@ NAME                                           STATUS   VOLUME                  
 dai-xlr-custom-namespace-1-digitalai-release   Bound    pvc-53564205-6e1e-45f0-9dcf-e21adefa6eaf   1Gi        RWO            vp-azure-aks-test-cluster-file-storage-class   3m33s
 ```
 
-On the moved PV for the release you will need to empty some folders, do that with following pod:
+#### C.4.OPTION_2.2 On the moved PV for the release you will need to empty some folders, do that with following pod
 1. Put following in file `pod-dai-pv-access-custom-namespace-1.yaml` (don't forget to update custom-namespace-1 with real namespace name):
 ```yaml
 apiVersion: v1
