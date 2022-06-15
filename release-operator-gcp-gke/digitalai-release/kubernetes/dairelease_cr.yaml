@@ -245,7 +245,7 @@ spec:
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-      - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provide DNS name for accessing UI of Digital.ai Release>
     path: /
   nginx-ingress-controller:
     addHeaders: {}
@@ -673,7 +673,7 @@ spec:
       selector: {}
       size: 8Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-      storageClass: <Provode Storage Class to be defined for PostgreSQL>
+      storageClass: <Provide Storage Class to be defined for PostgreSQL>
       subPath: ""
     pgHbaConfiguration: ""
     postgresqlConfiguration: {}

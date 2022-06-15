@@ -217,7 +217,7 @@ spec:
       mountPath: /bitnami/postgresql
       selector: {}
       size: 8Gi
-      storageClass: <Provode Storage Class to be defined for PostgreSQL>
+      storageClass: <Provide Storage Class to be defined for PostgreSQL>
       subPath: ""
     pgHbaConfiguration: ""
     postgresqlConfiguration: {}
@@ -708,7 +708,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-      - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provide DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
