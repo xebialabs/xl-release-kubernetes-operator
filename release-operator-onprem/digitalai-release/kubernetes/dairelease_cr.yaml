@@ -27,7 +27,7 @@ spec:
     Enabled: true
     Size: 5Gi
     # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-    StorageClass: < provide the storageClass for DAI-Release>
+    StorageClass: <Provide the storageClass for DAI-Release>
   # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
   # Convert repository-keystore.jceks files content to base64
   # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
@@ -215,7 +215,7 @@ spec:
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-      - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provide DNS name for accessing UI of Digital.ai Release>
     path: /xl-release(/|$)(.*)
   nginx-ingress-controller:
     addHeaders: {}
@@ -582,7 +582,7 @@ spec:
       mountPath: /bitnami/postgresql
       size: 50Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-      storageClass: <Provode Storage Class to be defined for PostgreSQL>
+      storageClass: <Provide Storage Class to be defined for PostgreSQL>
       subPath: ""
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null

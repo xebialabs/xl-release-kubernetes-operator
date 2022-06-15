@@ -24,7 +24,7 @@ spec:
     Annotations: {}
     Enabled: true
     Size: 5Gi
-    StorageClass: < provide the storageClass for DAI-Release>
+    StorageClass: <Provide the storageClass for DAI-Release>
   # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
   # Convert repository-keystore.jceks files content to base64
   # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
@@ -184,7 +184,7 @@ spec:
       existingClaim: null
       mountPath: /bitnami/postgresql
       size: 50Gi
-      storageClass: <Provode Storage Class to be defined for PostgreSQL>
+      storageClass: <Provide Storage Class to be defined for PostgreSQL>
       subPath: ""
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null
@@ -539,7 +539,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-      - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provide DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
