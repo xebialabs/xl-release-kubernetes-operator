@@ -544,11 +544,11 @@ spec:
   nodeSelector: {}
   oidc:
     enabled: true
-    external: false
     accessTokenUri: null
     clientId: null
     clientSecret: null
     emailClaim: null
+    external: false
     fullNameClaim: null
     issuer: null
     keyRetrievalUri: null
