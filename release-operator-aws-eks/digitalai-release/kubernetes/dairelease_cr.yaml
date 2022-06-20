@@ -94,7 +94,7 @@ spec:
         repository: quay.io/jcmoraisjr/haproxy-ingress
         tag: v0.13.4
       imagePullSecrets: []
-      ingressClass: haproxy
+      ingressClass: haproxy-dai-xlr
       initContainers: []
       kind: Deployment
       lifecycle: {}
@@ -239,7 +239,7 @@ spec:
   ingress:
     Enabled: true
     annotations:
-      kubernetes.io/ingress.class: nginx
+      kubernetes.io/ingress.class: nginx-dai-xlr
       nginx.ingress.kubernetes.io/affinity: cookie
       nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
       nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
@@ -366,7 +366,7 @@ spec:
     imagePullSecrets: []
     ingress:
       annotations:
-        kubernetes.io/ingress.class: nginx
+        kubernetes.io/ingress.class: nginx-dai-xlr
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
       console:
         annotations: {}
@@ -854,7 +854,8 @@ spec:
     dhParam: ""
     dnsPolicy: ClusterFirst
     electionID: ingress-controller-leader
-    extraArgs: {}
+    extraArgs:
+      ingress-class: nginx-dai-xlr
     extraDeploy: []
     extraEnvVars: []
     extraEnvVarsCM: ""
@@ -874,10 +875,10 @@ spec:
       repository: bitnami/nginx-ingress-controller
       tag: 1.0.4-debian-10-r13
     ingressClassResource:
-      controllerClass: k8s.io/ingress-nginx
+      controllerClass: k8s.io/ingress-nginx-dai-xlr
       default: false
       enabled: true
-      name: nginx
+      name: nginx-dai-xlr
       parameters: {}
     initContainers: []
     install: true
@@ -1569,7 +1570,7 @@ spec:
       selector: {}
       size: 8Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-      storageClass: <Storage Class to be defined for RabbitMQ>
+      storageClass: <Provide storage Class to be defined for RabbitMQ>
       volumes: []
     plugins: rabbitmq_management rabbitmq_peer_discovery_k8s
     podAffinityPreset: ""
