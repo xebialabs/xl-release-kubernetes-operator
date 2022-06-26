@@ -11,7 +11,7 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabs/xl-release
-  ImageTag: "10.3.9"
+  ImageTag: "10.3.14"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
   ## xebialabs/tiny-tools image version
@@ -178,7 +178,7 @@ spec:
     nodeSelector: {}
     persistence:
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       annotations: {}
       enabled: true
       existingClaim: null
@@ -189,7 +189,7 @@ spec:
     postgresqlDataDir: /bitnami/postgresql/data
     postgresqlDbUserConnectionLimit: null
     postgresqlExtendedConf:
-      listenAddresses: "'*'"
+      listenAddresses: '''*'''
       maxConnections: "500"
     postgresqlMaxConnections: null
     postgresqlPassword: postgres
@@ -539,7 +539,7 @@ spec:
       haproxy.router.openshift.io/disable_cookies: "false"
       haproxy.router.openshift.io/rewrite-target: /
     hosts:
-    - <Provode DNS name for accessing UI of Digital.ai Release>
+      - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
   tolerations: []
   xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
