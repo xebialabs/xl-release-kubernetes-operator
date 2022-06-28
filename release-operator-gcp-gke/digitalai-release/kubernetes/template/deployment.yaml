@@ -32,6 +32,11 @@ spec:
         - --leader-elect
         - --leader-election-id=xlr-operator-controller-manager
         image: xebialabs/release-operator:10.3.14
+        env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         livenessProbe:
           httpGet:
             path: /readyz
