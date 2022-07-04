@@ -10,8 +10,8 @@ spec:
   HealthProbesLivenessTimeout: 60
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
-  ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: "22.2.0-627.1347"
+  ImageRepository: xebialabs/xl-release
+  ImageTag: "22.2.0"
   ## xebialabs/tiny-tools image version
   ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
   TinyToolsImageRepository: "xebialabs/tiny-tools"
