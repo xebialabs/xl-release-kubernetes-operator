@@ -55,6 +55,13 @@ spec:
     # XLR_TASK_QUEUE_NAME:
     # XLR_TASK_QUEUE_URL:
   affinity: {}
+  release:
+    configurationManagement:
+      configuration:
+        enabled: true
+        resetFiles: ## Resets part of the configuration files and license
+          - xl-release-license.lic
+          - xlr-wrapper-linux.conf
   haproxy-ingress:
     controller:
       affinity: {}
