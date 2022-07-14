@@ -23,26 +23,22 @@ In CR file disable Keycloak and update OIDC properties:
 ```yaml
   oidc:
     enabled: true
-    accessTokenUri: "https://identity.staging.digital.ai/auth/realms/demoaccount/protocol/openid-connect/token"
     clientId: "<client_id>"
     clientSecret: "<client secret>"
-    emailClaim: email
     external: true
-    fullNameClaim: name
     issuer: "https://identity.staging.digital.ai/auth/realms/demoaccount"
-    keyRetrievalUri: "https://identity.staging.digital.ai/auth/realms/demoaccount/protocol/openid-connect/certs"
-    logoutUri: "https://identity.staging.digital.ai/auth/realms/demoaccount/protocol/openid-connect/logout"
     postLogoutRedirectUri: "<release url>/oidc-login"
     redirectUri: "<release url>/oidc-login"
-    rolesClaim: groups
-    userAuthorizationUri: "https://identity.staging.digital.ai/auth/realms/demoaccount/protocol/openid-connect/auth"
     userNameClaim: preferred_username
+    rolesClaim: "realm_access.roles"
     scopes: ["openid"]
 ```
 To find the client id and secret, edit the Release client created above, scroll down to the Credentials section, and copy the values from there.
 
-accessTokenUri, issuer, keyRetrievalUri, logoutUri, userAuthorizationUri can be found in the Identity Service UI also. There is a button 'Download OIDC config' under Clients page. These properties are saved in this conig.
+issuer can be found in the Identity Service Client section, in the OIDC config that can be downloaded from there.
+
+To check rolesClaimName value, decode the ID token to get the roles path.
 
 ## 3. Deploy Release
-Deploy Release and navigate to the Release site in the browser. Use admin user from the Identity Service to log in, or create a new user in the Identity Service.
+Deploy Release and navigate to the Release site in the browser. Log in to the XLR with user from the Identity Service.
    
