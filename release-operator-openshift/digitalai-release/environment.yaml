@@ -7,4 +7,4 @@ spec:
     - name: xlr
       type: udm.Environment
       members:
-      - ~Infrastructure/k8s-infra/xlr/default
+      - ~Infrastructure/k8s-infra/xlr/digitalai
