@@ -286,10 +286,10 @@ spec:
     args:
       - "start"
       - "--auto-build"
-      - "--hostname-strict=false"
+      # - "--hostname-strict=false"
       # - "hostname=keycloak-test1.northcentralus.cloudapp.azure.com"
-      - "--https-certificate-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host.pem"
-      - "--https-certificate-key-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host-key.pem"
+      # - "--https-certificate-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host.pem"
+      # - "--https-certificate-key-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host-key.pem"
     autoscaling:
       behavior:
         scaleDown:
@@ -316,9 +316,9 @@ spec:
     extraEnv: |
       - name: PROXY_ADDRESS_FORWARDING
         value: "true"
-      - name: KEYCLOAK_USER
+      - name: KEYCLOAK_ADMIN
         value: admin
-      - name: KEYCLOAK_PASSWORD
+      - name: KEYCLOAK_ADMIN_PASSWORD
         value: admin
       - name: JGROUPS_DISCOVERY_PROTOCOL
         value: dns.DNS_PING
@@ -335,20 +335,26 @@ spec:
           -Djava.net.preferIPv4Stack=true
           -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS
           -Djava.awt.headless=true
-      - name: DB_VENDOR
+      - name: KC_DB
         value: postgres
-      - name: DB_ADDR
+      - name: KC_DB_URL_HOST
         value: {{ .Release.Name }}-postgresql
-      - name: DB_PORT
+      - name: KC_DB_URL_PORT
         value: "5432"
-      - name: DB_DATABASE
+      - name: KC_DB_URL_DATABASE
         value: keycloak
-      - name: DB_USER
+      - name: KC_DB_USERNAME
         value: keycloak
-      - name: DB_PASSWORD
+      - name: KC_DB_PASSWORD
         value: keycloak
       - name: KEYCLOAK_IMPORT
         value: /realm/digitalai-platform-realm.json
+      - name: KC_HOSTNAME_STRICT
+        value: "false"
+      - name: KC_HTTPS_CERTIFICATE_FILE
+        value: /certs/host.pem
+      - name: KC_HTTPS_CERTIFICATE_KEY_FILE
+        value: /certs/host-key.pem
     extraEnvFrom: ""
     extraInitContainers: ""
     extraPorts: []
@@ -370,6 +376,10 @@ spec:
       - name: realm-config
         configMap:
           name: {{ .Release.Name }}-realm
+      - name: certs
+        secret:
+          defaultMode: 420
+          secretName: keycloak-tls
     fullnameOverride: ""
     global: {}
     hostAliases: []
