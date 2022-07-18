@@ -11,7 +11,8 @@ spec:
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
   ImageRepository: xebialabsunsupported/xl-release
-  ImageTag: "22.3.0-712.113"
+  ImageTag: "22.3.0-630.113"
+  # "22.3.0-712.113"
   ## xebialabs/tiny-tools image version
   ## Ref: https://hub.docker.com/r/xebialabs/tiny-tools/tags
   TinyToolsImageRepository: "xebialabs/tiny-tools"
@@ -20,7 +21,7 @@ spec:
   # ImagePullSecret: xlRelease
   K8sSetup:
     Platform: AzureAKS
-  KeystorePassphrase: <Provide store pass for the keystore>
+  KeystorePassphrase: test123
   GenerateXlConfig: true
   MetricsEnabled: false
   UseIpAsHostname: false
@@ -30,13 +31,13 @@ spec:
     Annotations:
       helm.sh/resource-policy: "keep"
     Enabled: true
-    Size: 8Gi
+    Size: 1Gi
     # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-    StorageClass: <Provide the storageClass for DAI-Release>
+    StorageClass: "xlr-operator-azurefile"
   # https://docs.xebialabs.com/v.9.8/release/how-to/update-the-xl-release-digital-certificate/#view-the-certificate
   # Convert repository-keystore.jceks files content to base64
   # ( cat repository-keystore.jceks | base64 -w 0 ) and put the output here
-  RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
+  RepositoryKeystore: zs7OzgAAAAIAAAABAAAAAwAWZGVwbG95aXQtcGFzc3N3b3JkLWtleQAAAYACvBaCrO0ABXNyADNjb20uc3VuLmNyeXB0by5wcm92aWRlci5TZWFsZWRPYmplY3RGb3JLZXlQcm90ZWN0b3LNV8pZ5zC7UwIAAHhyABlqYXZheC5jcnlwdG8uU2VhbGVkT2JqZWN0PjY9psO3VHACAARbAA1lbmNvZGVkUGFyYW1zdAACW0JbABBlbmNyeXB0ZWRDb250ZW50cQB+AAJMAAlwYXJhbXNBbGd0ABJMamF2YS9sYW5nL1N0cmluZztMAAdzZWFsQWxncQB+AAN4cHVyAAJbQqzzF/gGCFTgAgAAeHAAAAARMA8ECMaA+dC1XI0NAgMDDUB1cQB+AAUAAACQdkzJPb9FR7foMWrMfTFwl1IcY0KKkE9iolAkeO93bLsVOPZgYqq3D/AshJr5pno+vYPugi8sRt7rC0CTnc/T1kkAbRbEX9efK9rrczSF+EgXOuZ9bKKtv5xwHjX+AXuepqT80401MaOnlWTKlk4D9Gh97FRkJhoFhUjf893c4K0POnGhc51IOSbDqXH6TIOZdAAWUEJFV2l0aE1ENUFuZFRyaXBsZURFU3QAFlBCRVdpdGhNRDVBbmRUcmlwbGVERVMX720VBPxgQebTpbpB+8L8mnZYsA==
   UseExistingDB:
     Enabled: false
     # If you want to use a existing database.
@@ -248,7 +249,8 @@ spec:
       nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
-      - <Provide DNS name for accessing UI of Digital.ai Release>
+      - xlrelease-operator-1.northcentralus.cloudapp.azure.com
+      # - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
     # If you want to use TLS configuration uncomment the following lines and provide correct values.
     # You need to create secret, and provide the name under 'secretName'
@@ -281,7 +283,13 @@ spec:
                     values:
                       - test
               topologyKey: failure-domain.beta.kubernetes.io/zone
-    args: []
+    args:
+      - "start"
+      - "--auto-build"
+      - "--hostname-strict=false"
+      # - "hostname=keycloak-test1.northcentralus.cloudapp.azure.com"
+      - "--https-certificate-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host.pem"
+      - "--https-certificate-key-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host-key.pem"
     autoscaling:
       behavior:
         scaleDown:
@@ -367,8 +375,9 @@ spec:
     hostAliases: []
     image:
       pullPolicy: IfNotPresent
-      repository: docker.io/jboss/keycloak
-      tag: ""
+      repository: quay.io/keycloak/keycloak
+      tag: "18.0"
+      debug: "true"
     imagePullSecrets: []
     ingress:
       annotations:
@@ -379,7 +388,7 @@ spec:
         enabled: false
         ingressClassName: ""
         rules:
-          - host: 'keycloak.example.com'
+          - host: 'keycloak-test1.northcentralus.cloudapp.azure.com'
             paths:
               - path: /auth/admin/
                 pathType: Prefix
@@ -387,7 +396,7 @@ spec:
       ingressClassName: ""
       labels: {}
       rules:
-        - host: keycloak.example.com
+        - host: keycloak-test1.northcentralus.cloudapp.azure.com
           paths:
             - path: /
               pathType: Prefix
@@ -688,7 +697,9 @@ spec:
       runAsNonRoot: true
       runAsUser: 1000
     service:
-      annotations: {}
+      annotations: {
+        service.beta.kubernetes.io/azure-dns-label-name: keycloak-test1
+      }
       externalTrafficPolicy: Cluster
       extraPorts: []
       httpManagementPort: 9990
@@ -968,7 +979,9 @@ spec:
     scope:
       enabled: false
     service:
-      annotations: {}
+      annotations: {
+        service.beta.kubernetes.io/azure-dns-label-name: xlrelease-operator-1
+      }
       clusterIP: ""
       externalIPs: []
       externalTrafficPolicy: ""
@@ -1169,9 +1182,9 @@ spec:
       existingClaim: ""
       mountPath: /bitnami/postgresql
       selector: {}
-      size: 8Gi
+      size: 1Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-      storageClass: <Provide Storage Class to be defined for PostgreSQL>
+      storageClass: "xlr-operator-azuredisk"
       subPath: ""
     pgHbaConfiguration: ""
     postgresqlConfiguration: {}
@@ -1574,9 +1587,10 @@ spec:
       enabled: true
       existingClaim: ""
       selector: {}
-      size: 8Gi
+      size: 1Gi
       # Choose storage class provided by your cloud provider, example "ssd" on GKE, AWS and OpenStack
-      storageClass: <Provide storage Class to be defined for RabbitMQ>
+      storageClass: "xlr-operator-azurefile" 
+      # <Provide storage Class to be defined for RabbitMQ>
       volumes: []
     plugins: rabbitmq_management rabbitmq_peer_discovery_k8s
     podAffinityPreset: ""
@@ -1658,4 +1672,4 @@ spec:
   resources: {}
   tolerations: []
   # Convert xl-release.lic files content to base64 ( cat xl-release.lic | base64 -w 0 ) and put the output here
-  xlrLicense: <Provide license file for Digital.ai Release should be converted to the base64 form>
+  xlrLicense: LS0tIExpY2Vuc2UgLS0tCkxpY2Vuc2UgdmVyc2lvbjogMwpQcm9kdWN0OiBYTCBSZWxlYXNlCkxpY2Vuc2VkIHRvOiBYZWJpYUxhYnMKQ29udGFjdDogWGViaWFMYWJzIEludGVybmFsIFVzZSBPbmx5IDxpbmZvQHhlYmlhbGFicy5jb20+CkV4cGlyZXMgYWZ0ZXI6IDIwMzctMDEtMDEKU3VwcG9ydCBwb2xpY3k6IDh4NQpFZGl0aW9uOiBFbnRlcnByaXNlCi0tLSBTaWduYXR1cmUgKFNIQTF3aXRoRFNBKSAtLS0KMzAyYzAyMTQ1NzhiNzg5MjUwNWQxOGJlZWJmOTExYjVjNTdhZWQ0N2Q0NjU2N2E5MDIxNDA4NWMwZDJiMmViY2ZmNzkzYzBlMGMyNmM2NzIKNTI2NzY5N2ZlNGE3Ci0tLSBFbmQgb2YgU2lnbmF0dXJlIC0tLQo=
