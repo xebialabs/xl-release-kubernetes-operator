@@ -43,7 +43,7 @@ apply(from = "$rootDir/integration-tests/base-test-configuration.gradle")
 group = "ai.digital.release.operator"
 project.defaultTasks = listOf("build")
 
-val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: "22.2.0-${
+val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: "22.3.0-${
     LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))
 }"
 project.extra.set("releasedVersion", releasedVersion)
@@ -161,7 +161,7 @@ tasks {
                 commandLine(command.split(" "))
             } else {
                 commandLine("echo",
-                    "You have to specify which version you want to sync, ex. ./gradlew syncToDistServer -PversionToSync=22.2.0")
+                    "You have to specify which version you want to sync, ex. ./gradlew syncToDistServer -PversionToSync=22.3.0")
             }
         }
     }
