@@ -317,9 +317,11 @@ spec:
       - name: PROXY_ADDRESS_FORWARDING
         value: "true"
       - name: KEYCLOAK_ADMIN
-        value: admin
+        value: adminuser
       - name: KEYCLOAK_ADMIN_PASSWORD
-        value: admin
+        value: adminpassword
+      - name: KEYCLOAK_LOGLEVEL
+        value: DEBUG
       - name: JGROUPS_DISCOVERY_PROTOCOL
         value: dns.DNS_PING
       - name: JGROUPS_DISCOVERY_PROPERTIES
@@ -352,9 +354,9 @@ spec:
       - name: KC_HOSTNAME_STRICT
         value: "false"
       - name: KC_HTTPS_CERTIFICATE_FILE
-        value: /certs/host.pem
+        value: /etc/x509/https/host.pem
       - name: KC_HTTPS_CERTIFICATE_KEY_FILE
-        value: /certs/host-key.pem
+        value: /etc/x509/https/host-key.pem
     extraEnvFrom: ""
     extraInitContainers: ""
     extraPorts: []
@@ -371,6 +373,9 @@ spec:
     extraVolumeMounts: |
       - name: realm-config
         mountPath: "/realm/"
+        readOnly: true
+      - name: certs
+        mountPath: "/etc/x509/https/"
         readOnly: true
     extraVolumes: |
       - name: realm-config
