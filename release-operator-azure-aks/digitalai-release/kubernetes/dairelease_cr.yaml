@@ -319,9 +319,9 @@ spec:
       - name: KEYCLOAK_ADMIN
         value: adminuser
       - name: KEYCLOAK_ADMIN_PASSWORD
-        value: adminpassword
-      - name: KEYCLOAK_LOGLEVEL
-        value: DEBUG
+        value: change_me
+      - name: KC_LOGLEVEL
+        value: debug
       - name: JGROUPS_DISCOVERY_PROTOCOL
         value: dns.DNS_PING
       - name: JGROUPS_DISCOVERY_PROPERTIES
@@ -357,6 +357,8 @@ spec:
         value: /etc/x509/https/host.pem
       - name: KC_HTTPS_CERTIFICATE_KEY_FILE
         value: /etc/x509/https/host-key.pem
+      - name: KC_HTTP_RELATIVE_PATH
+        value: /auth
     extraEnvFrom: ""
     extraInitContainers: ""
     extraPorts: []
@@ -692,7 +694,7 @@ spec:
       httpGet:
         path: /auth/realms/master
         port: http
-      initialDelaySeconds: 30
+      initialDelaySeconds: 120
       timeoutSeconds: 1
     replicas: 1
     resources: {}
@@ -746,7 +748,7 @@ spec:
       httpGet:
         path: /auth/
         port: http
-      initialDelaySeconds: 30
+      initialDelaySeconds: 120
       timeoutSeconds: 1
       failureThreshold: 60
       periodSeconds: 5
