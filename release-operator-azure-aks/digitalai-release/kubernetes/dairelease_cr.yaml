@@ -254,10 +254,12 @@ spec:
     path: /
     # If you want to use TLS configuration uncomment the following lines and provide correct values.
     # You need to create secret, and provide the name under 'secretName'
-    # tls:
-    #   - secretName: NAME_OF_THE_TLS_SECRET
-    #     hosts:
-    #       - FQDN_MATCH_WITH_CERT_CN
+    tls:
+      # NAME_OF_THE_TLS_SECRET
+      - secretName: kc-jks-tls
+        hosts:
+          - keycloak-test1.northcentralus.cloudapp.azure.com
+          # - FQDN_MATCH_WITH_CERT_CN
   keycloak:
     affinity: |
       podAntiAffinity:
@@ -348,12 +350,14 @@ spec:
         value: "false"
       - name: KC_HTTP_RELATIVE_PATH
         value: /auth
-      - name: KC_HTTPS_CLIENT_AUTH
-        value: none
-      - name: KC_HTTP_ENABLED
-        value: "true"
       - name: KC_PROXY
         value: edge
+      - name: KC_HTTPS_CERTIFICATE_FILE
+        value: /certs/keycloak_test1.northcentralus.cloudapp.azure.com.cer
+      - name: KC_HTTPS_KEY_STORE_FILE
+        value: /certs/keycloak.jks
+      - name: KC_HTTPS_KEY_STORE_PASSWORD
+        value: "changeme"
     extraEnvFrom: ""
     extraInitContainers: ""
     extraPorts: []
@@ -372,7 +376,7 @@ spec:
         mountPath: "/realm/"
         readOnly: true
       - name: certs
-        mountPath: "/etc/x509/https/"
+        mountPath: "/certs/"
         readOnly: true
     extraVolumes: |
       - name: realm-config
@@ -381,7 +385,7 @@ spec:
       - name: certs
         secret:
           defaultMode: 420
-          secretName: keycloak-tls
+          secretName: kc-jks-tls
     fullnameOverride: ""
     global: {}
     hostAliases: []
