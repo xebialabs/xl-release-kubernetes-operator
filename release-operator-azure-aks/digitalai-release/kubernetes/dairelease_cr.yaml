@@ -400,10 +400,6 @@ spec:
             paths:
               - path: /auth/admin/
                 pathType: Prefix
-        tls:
-          - secretName: kc-jks-tls
-            hosts:
-              - keycloak-test1.northcentralus.cloudapp.azure.com
       enabled: true
       ingressClassName: ""
       labels: {}
@@ -413,7 +409,10 @@ spec:
             - path: /
               pathType: Prefix
       servicePort: http
-      tls: []
+      tls:
+      - hosts:
+        - keycloak-test1.northcentralus.cloudapp.azure.com
+        secretName: kc-jks-tls
     install: true
     lifecycleHooks: ""
     livenessProbe: |
