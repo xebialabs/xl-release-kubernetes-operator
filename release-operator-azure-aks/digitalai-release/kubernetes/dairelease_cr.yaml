@@ -252,14 +252,6 @@ spec:
       - xlrelease-operator-1.northcentralus.cloudapp.azure.com
       # - <Provode DNS name for accessing UI of Digital.ai Release>
     path: /
-    # If you want to use TLS configuration uncomment the following lines and provide correct values.
-    # You need to create secret, and provide the name under 'secretName'
-    tls:
-      # NAME_OF_THE_TLS_SECRET
-      - secretName: kc-jks-tls
-        hosts:
-          - keycloak-test1.northcentralus.cloudapp.azure.com
-          # - FQDN_MATCH_WITH_CERT_CN
   keycloak:
     affinity: |
       podAntiAffinity:
@@ -408,6 +400,10 @@ spec:
             paths:
               - path: /auth/admin/
                 pathType: Prefix
+        tls:
+          - secretName: kc-jks-tls
+            hosts:
+              - keycloak-test1.northcentralus.cloudapp.azure.com
       enabled: true
       ingressClassName: ""
       labels: {}
