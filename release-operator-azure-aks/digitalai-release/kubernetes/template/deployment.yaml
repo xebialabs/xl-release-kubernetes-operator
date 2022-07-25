@@ -31,12 +31,12 @@ spec:
         - --metrics-bind-address=127.0.0.1:8080
         - --leader-elect
         - --leader-election-id=xlr-operator-controller-manager
-        image: xebialabsunsupported/release-operator:10.3.0-626.1802
+        image: xebialabsunsupported/release-operator:10.3.0-722.400
         env:
-          - name: WATCH_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         livenessProbe:
           httpGet:
             path: /readyz
