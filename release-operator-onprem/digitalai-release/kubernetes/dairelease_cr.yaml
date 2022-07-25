@@ -39,8 +39,10 @@ spec:
   RepositoryKeystore: <Provide repositoryKeystore in base64 encoded form>
   UseExistingDB:
     Enabled: false
-    # If you want to use a existing database, change 'postgresql.install' to 'false'.
-    # Set 'UseExistingDB.Enabled' to 'true'.Uncomment the following lines and provide the values.
+    # If you want to use a existing database.
+    # Set 'postgresql.install' to 'false', Only when we use existing Database for both Release and keycloak.
+    # Set 'UseExistingDB.Enabled' to 'true'.
+    # Uncomment the following lines and provide the values.
     # XLR_DB_URL:
     # XLR_DB_USER:
     # XLR_DB_PASS:
@@ -99,7 +101,7 @@ spec:
         repository: quay.io/jcmoraisjr/haproxy-ingress
         tag: v0.13.4
       imagePullSecrets: []
-      ingressClass: haproxy
+      ingressClass: haproxy-dai-xlr
       initContainers: []
       kind: Deployment
       lifecycle: {}
@@ -244,7 +246,7 @@ spec:
   ingress:
     Enabled: true
     annotations:
-      kubernetes.io/ingress.class: nginx
+      kubernetes.io/ingress.class: nginx-dai-xlr
       nginx.ingress.kubernetes.io/affinity: cookie
       nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
       nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
@@ -377,7 +379,7 @@ spec:
     imagePullSecrets: []
     ingress:
       annotations:
-        kubernetes.io/ingress.class: nginx
+        kubernetes.io/ingress.class: nginx-dai-xlr
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
       console:
         annotations: {}
@@ -865,7 +867,8 @@ spec:
     dhParam: ""
     dnsPolicy: ClusterFirst
     electionID: ingress-controller-leader
-    extraArgs: {}
+    extraArgs:
+      ingress-class: nginx-dai-xlr
     extraDeploy: []
     extraEnvVars: []
     extraEnvVarsCM: ""
@@ -885,13 +888,13 @@ spec:
       repository: bitnami/nginx-ingress-controller
       tag: 1.0.4-debian-10-r13
     ingressClassResource:
-      controllerClass: k8s.io/ingress-nginx
+      controllerClass: k8s.io/ingress-nginx-dai-xlr
       default: false
       enabled: true
-      name: nginx
+      name: nginx-dai-xlr
       parameters: {}
     initContainers: []
-    install: true
+    install: false
     kind: Deployment
     lifecycle: {}
     livenessProbe:
