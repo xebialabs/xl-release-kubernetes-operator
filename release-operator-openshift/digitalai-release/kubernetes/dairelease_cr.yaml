@@ -55,6 +55,7 @@ spec:
         resetFiles: ## Resets part of the configuration files and license
           - xl-release-license.lic
           - xlr-wrapper-linux.conf
+          - jmx-exporter.yaml
   nodeSelector: {}
   oidc:
     enabled: false
