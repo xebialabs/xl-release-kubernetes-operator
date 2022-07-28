@@ -285,7 +285,10 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
     args:
       - "start"
+      - "--import-realm"
       - "--auto-build"
+      # set to this to false only when using http 
+      - --hostname-strict-https=false 
       # - "--hostname-strict=false"
       # - "hostname=keycloak-test1.northcentralus.cloudapp.azure.com"
       # - "--https-certificate-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host.pem"
@@ -317,11 +320,9 @@ spec:
       - name: PROXY_ADDRESS_FORWARDING
         value: "true"
       - name: KEYCLOAK_ADMIN
-        value: adminuser
+        value: admin
       - name: KEYCLOAK_ADMIN_PASSWORD
-        value: change_me
-      - name: KEYCLOAK_IMPORT
-        value: /realm/digitalai-platform-realm.json
+        value: admin
       - name: KC_LOG_LEVEL
         value: debug
       - name: JGROUPS_DISCOVERY_PROTOCOL
@@ -345,11 +346,13 @@ spec:
       - name: KC_DB_PASSWORD
         value: keycloak
       - name: KC_HOSTNAME_STRICT
-        value: "false"
+        value: "true"
+      - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+        value: "true"
+      - name: KC_HOSTNAME
+        value: "keycloak-test1.northcentralus.cloudapp.azure.com"
       - name: KC_HTTP_RELATIVE_PATH
         value: /auth
-      - name: KC_HTTPS_CLIENT_AUTH
-        value: none
       - name: KC_HTTP_ENABLED
         value: "true"
       - name: KC_PROXY
@@ -369,19 +372,12 @@ spec:
       scrapeTimeout: 10s
     extraVolumeMounts: |
       - name: realm-config
-        mountPath: "/realm/"
-        readOnly: true
-      - name: certs
-        mountPath: "/etc/x509/https/"
+        mountPath: "opt/keycloak/data/import/"
         readOnly: true
     extraVolumes: |
       - name: realm-config
         configMap:
           name: {{ .Release.Name }}-realm
-      - name: certs
-        secret:
-          defaultMode: 420
-          secretName: keycloak-tls
     fullnameOverride: ""
     global: {}
     hostAliases: []
