@@ -280,10 +280,12 @@ spec:
     args:
       - "start"
       - "--auto-build"
+      - "--import-realm"
+      # - "--hostname-strict-https=false"
       # - "--hostname-strict=false"
       # - "hostname=keycloak-test1.northcentralus.cloudapp.azure.com"
-      # - "--https-certificate-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host.pem"
-      # - "--https-certificate-key-file=D:\\xebialabs\\xl-release-kubernetes-operator\\release-operator-azure-aks\\keycloak\\host-key.pem"
+      # - "--https-certificate-file=host.pem"
+      # - "--https-certificate-key-file=host-key.pem"
     autoscaling:
       behavior:
         scaleDown:
@@ -311,13 +313,11 @@ spec:
       - name: PROXY_ADDRESS_FORWARDING
         value: "true"
       - name: KEYCLOAK_ADMIN
-        value: adminuser
+        value: admin
       - name: KEYCLOAK_ADMIN_PASSWORD
-        value: change_me
-      - name: KEYCLOAK_IMPORT
-        value: /realm/digitalai-platform-realm.json
+        value: admin
       - name: KC_LOG_LEVEL
-        value: debug
+        value: info
       - name: JGROUPS_DISCOVERY_PROTOCOL
         value: dns.DNS_PING
       - name: JGROUPS_DISCOVERY_PROPERTIES
@@ -338,18 +338,24 @@ spec:
         value: keycloak
       - name: KC_DB_PASSWORD
         value: keycloak
-      - name: KC_HOSTNAME_STRICT
-        value: "false"
+      # - name: KC_HOSTNAME_STRICT
+      #   value: "true"
+      # - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+      #   value: "true"
+      - name: KC_HOSTNAME
+        value: "keycloak-test1.northcentralus.cloudapp.azure.com"
       - name: KC_HTTP_RELATIVE_PATH
         value: /auth
-      - name: KC_PROXY
-        value: edge
       - name: KC_HTTPS_CERTIFICATE_FILE
-        value: /certs/keycloak_test1.northcentralus.cloudapp.azure.com.cer
+        value: /opt/keycloak/conf/keycloak_test1.northcentralus.cloudapp.azure.com.cer
       - name: KC_HTTPS_KEY_STORE_FILE
-        value: /certs/keycloak.jks
+        value: /opt/keycloak/conf/keycloak.jks
       - name: KC_HTTPS_KEY_STORE_PASSWORD
         value: "changeme"
+      - name: KC_HTTPS_PORT
+        value: "8443"
+      - name: KC_PROXY
+        value: edge
     extraEnvFrom: ""
     extraInitContainers: ""
     extraPorts: []
@@ -365,10 +371,10 @@ spec:
       scrapeTimeout: 10s
     extraVolumeMounts: |
       - name: realm-config
-        mountPath: "/realm/"
+        mountPath: "/opt/keycloak/data/import/"
         readOnly: true
       - name: certs
-        mountPath: "/certs/"
+        mountPath: "/opt/keycloak/conf/"
         readOnly: true
     extraVolumes: |
       - name: realm-config
@@ -390,10 +396,12 @@ spec:
     ingress:
       annotations:
         kubernetes.io/ingress.class: nginx-dai-xlr
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       console:
         annotations: {}
-        enabled: false
+        enabled: true
         ingressClassName: ""
         rules:
           - host: 'keycloak-test1.northcentralus.cloudapp.azure.com'
@@ -411,7 +419,7 @@ spec:
       servicePort: http
       tls:
       - hosts:
-        - keycloak-test1.northcentralus.cloudapp.azure.com
+          - keycloak-test1.northcentralus.cloudapp.azure.com
         secretName: kc-jks-tls
     install: true
     lifecycleHooks: ""
@@ -1029,18 +1037,18 @@ spec:
   nodeSelector: {}
   oidc:
     enabled: true
-    accessTokenUri: null
-    clientId: null
-    clientSecret: null
-    emailClaim: null
+    accessTokenUri: "https://keycloak-test1.northcentralus.cloudapp.azure.com/auth/realms/digitalai-platform/protocol/openid-connect/token"
+    clientId: release
+    clientSecret: "ab2088f6-2251-4233-9b22-e24db6a67483"
+    emailClaim: "email"
     external: false
-    fullNameClaim: null
-    issuer: null
-    keyRetrievalUri: null
-    logoutUri: null
-    postLogoutRedirectUri: null
-    redirectUri: null
-    rolesClaim: null
+    fullNameClaim: "name"
+    issuer: "https://keycloak-test1.northcentralus.cloudapp.azure.com/auth/realms/digitalai-platform"
+    keyRetrievalUri: "https://keycloak-test1.northcentralus.cloudapp.azure.com/auth/realms/digitalai-platform/protocol/openid-connect/certs"
+    # logoutUri: ""https://keycloak-test1.northcentralus.cloudapp.azure.com/auth/realms/digitalai-platform/protocol/openid-connect/logout"
+    # postLogoutRedirectUri: "http://xlrelease-operator-1.northcentralus.cloudapp.azure.com/oidc-login"
+    redirectUri: "http://xlrelease-operator-1.northcentralus.cloudapp.azure.com/oidc-login"
+    rolesClaim: "groups"
     userAuthorizationUri: null
     userNameClaim: null
     scopes: ["openid"]
