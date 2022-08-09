@@ -1012,22 +1012,47 @@ spec:
     watchIngressWithoutClass: false
   nodeSelector: {}
   oidc:
+    accessToken:
+      audience:
+      enable: false
+      issuer:
+      jwsAlg:
+      keyRetrievalUri:
+      secretKey:
+    accessTokenUri:
+    clientAuthJwt:
+      enable: false
+      jwsAlg:
+      keyStore:
+        enable: false
+        path:
+        password:
+        type:
+      key:
+        alias:
+        enable: false
+        password:
+      tokenKeyId:
+    clientAuthMethod:
+    clientId:
+    clientSecret:
+    emailClaim:
     enabled: true
-    accessTokenUri: null
-    clientId: null
-    clientSecret: null
-    emailClaim: null
     external: false
-    fullNameClaim: null
-    issuer: null
-    keyRetrievalUri: null
-    logoutUri: null
-    postLogoutRedirectUri: null
-    redirectUri: null
-    rolesClaim: null
-    userAuthorizationUri: null
-    userNameClaim: null
+    externalIdClaim:
+    fullNameClaim:
+    idTokenJWSAlg:
+    issuer:
+    keyRetrievalUri:
+    logoutUri:
+    postLogoutRedirectUri:
+    proxyHost:
+    proxyPort:
+    redirectUri:
+    rolesClaim:
     scopes: ["openid"]
+    userAuthorizationUri:
+    userNameClaim:
   postgresql:
     audit:
       clientMinMessages: error
