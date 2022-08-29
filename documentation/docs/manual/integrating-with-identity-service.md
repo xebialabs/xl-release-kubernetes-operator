@@ -37,7 +37,9 @@ To find the client id and secret, edit the Release client created above, scroll 
 
 issuer can be found in the Identity Service Client section, in the OIDC config that can be downloaded from there.
 
-To check rolesClaimName value, decode the ID token to get the roles path.
+To check rolesClaim value, decode the ID token.
+[Here](https://docs.xebialabs.com/v.22.2/deploy/concept/deploy-oidc-with-keycloak/#test-public-rest-apis) you can find how to fetch token.
+Use [jwt](https://jwt.io/) to decode ID token. Get the roles path from decoded value - this is rolesClaim.
 
 ## 3. Deploy Release
 Deploy Release and navigate to the Release site in the browser. Log in to the XLR with user from the Identity Service.
