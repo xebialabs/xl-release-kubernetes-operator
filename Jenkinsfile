@@ -109,12 +109,12 @@ pipeline {
                      if (params.PRODUCT == 'XL Release') {
                         dir("xl-release-kubernetes-operator") {
                            echo "Pushing Release Operator artifacts to XebiaLabs distribution"
-                           sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='release-operator-aws-eks-*.zip' --include='release-operator-azure-aks-*.zip' --include='release-operator-openshift-*.zip' --include='release-operator-onprem-*.zip' --include='release-operator-gcp-gke-*.zip'  --exclude='*'  /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Release/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
+                           sh "ssh xebialabs@nexus.xebialabs.com rsync --update -raz -i --include='release-operator-aws-eks-*.zip' --include='release-operator-azure-aks-*.zip' --include='release-operator-openshift-*.zip' --include='release-operator-onprem-*.zip' --include='release-operator-gcp-gke-*.zip'  --exclude='*'  /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Release/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/release"
                         }
                     } else {
                         dir("xl-deploy-kubernetes-operator") {
                             echo "Pushing Deploy Operator artifacts to XebiaLabs distribution"
-                            sh "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --include='deploy-operator-aws-eks-*.zip' --include='deploy-operator-azure-aks-*.zip' --include='deploy-operator-openshift-*.zip' --include='deploy-operator-onprem-*.zip' --include='deploy-operator-gcp-gke-*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
+                            sh "ssh xebialabs@nexus.xebialabs.com rsync --update -raz -i --include='deploy-operator-aws-eks-*.zip' --include='deploy-operator-azure-aks-*.zip' --include='deploy-operator-openshift-*.zip' --include='deploy-operator-onprem-*.zip' --include='deploy-operator-gcp-gke-*.zip' --exclude='*' /opt/sonatype-work/nexus/storage/releases/com/xebialabs/operator-based-installer/Deploy/ xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/customer/operator/deploy"
                         }
                     }
                 }
