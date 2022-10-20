@@ -2,6 +2,10 @@
 sidebar_position: 15
 ---
 
+:::caution
+This is internal documentation. This document can be used only if it was recommended by the Support Team.
+:::
+
 #  Manual helm to operator upgrade of xlr from version 10 to above 22.1 version. 
 
 ## Prerequisites
@@ -389,4 +393,3 @@ Note:
  * We are using newly created PVC dai-xlr-digitalai-release for xl-release pod. 
 :::
     
-   
