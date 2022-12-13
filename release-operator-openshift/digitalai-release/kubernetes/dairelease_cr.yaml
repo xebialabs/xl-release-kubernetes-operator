@@ -10,7 +10,7 @@ spec:
   HealthProbesLivenessTimeout: 60
   HealthProbesReadinessTimeout: 60
   ImagePullPolicy: Always
-  ImageRepository: xebialabsunsupported/xl-release
+  ImageRepository: xebialabs/xl-release
   ImageTag: "10.3.20"
   # Secrets must be manually created in the namespace
   # ImagePullSecret: xlRelease
