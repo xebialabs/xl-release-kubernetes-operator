@@ -3,11 +3,12 @@ sidebar_position: 1
 data : Internal Only
 ---
 
+# On Premises
+
 :::caution
 This is internal documentation. This document can be used only if it was recommended by the Support Team.
 :::
 
-# On Premises
 
 Here you will find a recipe of manual actions how to set up k8s cluster for Release locally with help of an operator.
 This document will describe how to do it on `minikube`. If you use another tool, you might need to do it a bit differently.

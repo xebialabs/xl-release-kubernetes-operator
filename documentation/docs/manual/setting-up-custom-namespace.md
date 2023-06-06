@@ -2,6 +2,8 @@
 sidebar_position: 8
 ---
 
+# Setting up custom namespace
+
 :::caution
 This is internal documentation. This document can be used only if it was recommended by the Support Team.
 :::
@@ -9,8 +11,6 @@ This is internal documentation. This document can be used only if it was recomme
 :::caution
 This setup is deprecated from the 22.3 version.
 :::
-
-# Setting up custom namespace
 
 ## Manual setup
 
